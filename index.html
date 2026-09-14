@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M Squared Interactive Offer System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg-color: #0b1329;
+      --card-bg: #131b31;
+      --text-color: #f1f5f9;
+      --border-color: #1e293b;
+      --input-bg: #090d16;
+      --muted-color: #64748b;
+      --greeting-bg: #090d16;
+      --greeting-text: #93c5fd;
+      --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      --sync-gradient: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+      --preview-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      --pdf-gradient: linear-gradient(135deg, #10b981 0%, #047857 100%);
+      --danger-gradient: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-color: #0f172a;
+      --border-color: #e2e8f0;
+      --input-bg: #f1f5f9;
+      --muted-color: #64748b;
+      --greeting-bg: #f8fafc;
+      --greeting-text: #1e40af;
+      --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      --sync-gradient: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+      --preview-gradient: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+      --pdf-gradient: linear-gradient(135deg, #059669 0%, #065f46 100%);
+      --danger-gradient: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+    }
+
+    body {
+      font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      transition: background 0.3s, color 0.3s;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .theme-toggle-container { position: absolute; top: 20px; right: 20px; z-index: 1000; display:flex; gap:8px; }
+    .btn-theme, .btn-logout {
+      background: var(--card-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      padding: 8px 14px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: all 0.2s ease;
+    }
+    .btn-theme:hover, .btn-logout:hover { transform: translateY(-1px); }
+
+    .controls {
+      background: var(--card-bg);
+      padding: 15px 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+      margin: 5px auto 20px auto;
+      display: inline-block;
+      border: 1px solid var(--border-color);
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    input, select, textarea {
+      padding: 10px 14px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      border: 1px solid var(--border-color);
+      background: var(--input-bg);
+      color: var(--text-color);
+      border-radius: 8px;
+      margin: 4px;
+      outline: none;
+      transition: all 0.2s;
+      box-sizing: border-box;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+    input[type="text"] { width: 140px; text-transform: uppercase; font-weight: 600; }
+    input#clientInput { text-transform: none; width: 160px; }
+
+    button {
+      padding: 10px 16px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      margin: 4px;
+      transition: all 0.25s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    }
+    button:hover { transform: translateY(-1px); filter: brightness(1.1); }
+    button:active { transform: translateY(0); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .btn-search { background: var(--primary-gradient); color: white; }
+    .btn-sync { background: var(--sync-gradient); color: white; }
+    .btn-preview { background: var(--preview-gradient); color: #0f172a; }
+    .btn-pdf { background: var(--pdf-gradient); color: white; }
+    .btn-danger { background: var(--danger-gradient); color: white; }
+
+    /* ---------- LOGIN SCREEN ---------- */
+    #login-screen {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 50px 30px;
+      max-width: 380px;
+      margin: 60px auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    #login-screen h2 { margin-bottom: 20px; }
+    #login-screen input { width: 100%; max-width: 280px; }
+    #loginError { color: #f87171; font-size: 13px; margin-top: 10px; min-height: 18px; }
+
+    #welcome-screen {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 50px 30px;
+      max-width: 650px;
+      margin: 30px auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    #welcome-screen h2 { color: var(--text-color); font-size: 1.8rem; margin-bottom: 15px; }
+    #welcome-screen p { color: var(--muted-color); font-size: 1.05rem; }
+
+    #main-app-content { display: none; max-width: 850px; margin: 0 auto; text-align: left; }
+
+    .global-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      background: var(--card-bg);
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .nav-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tab-btn {
+      background: var(--input-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: none;
+      margin: 0;
+    }
+    .tab-btn:hover { background: rgba(59, 130, 246, 0.15); border-color: #3b82f6; transform: none; }
+    .tab-btn.active { background: var(--primary-gradient); color: white; border-color: transparent; }
+
+    .action-buttons { display: flex; gap: 8px; }
+
+    #full-offer-container { display: flex; flex-direction: column; gap: 20px; }
+
+    .offer-page-section {
+      background: var(--card-bg);
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-sizing: border-box;
+      page-break-after: always;
+      break-after: page;
+    }
+    .offer-page-section:last-child { page-break-after: avoid; break-after: avoid; }
+
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding-bottom: 12px; margin-bottom: 20px; }
+    .company-logo { max-height: 40px; width: auto; object-fit: contain; }
+    .project-logo { max-height: 35px; max-width: 140px; width: auto; object-fit: contain; }
+
+    .greeting-box {
+      display: none;
+      background: var(--greeting-bg);
+      border-left: 4px solid #3b82f6;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      color: var(--greeting-text);
+      font-size: 13px;
+      line-height: 1.5;
+      border: 1px solid var(--border-color);
+      text-align: left;
+    }
+    .greeting-box .client-highlight { font-size: 15px; font-weight: 700; color: #3b82f6; }
+
+    .summary-hero-card {
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      text-align: center;
+      border-top: 4px solid #3b82f6;
+    }
+    .summary-hero-card h4 { margin: 0 0 5px 0; font-size: 12px; color: var(--muted-color); text-transform: uppercase; letter-spacing: 0.5px; }
+    .summary-hero-card .unit-big-text { font-size: 24px; font-weight: 700; color: #3b82f6; margin-bottom: 4px; }
+    .summary-hero-card .project-small-text { font-size: 14px; font-weight: 600; color: var(--text-color); }
+
+    .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; text-align: left; }
+    .detail-card { background: var(--input-bg); padding: 12px 16px; border-radius: 8px; border-left: 3px solid #3b82f6; border: 1px solid var(--border-color); }
+    .detail-card strong { display: block; font-size: 10px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
+    .detail-card span { font-size: 13px; font-weight: 700; color: var(--text-color); }
+
+    .pictures-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .gallery-card-item { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+    .gallery-card-item img { width: 100%; height: 180px; object-fit: cover; display: block; }
+
+    .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .masterplan-section {
+      position: relative; width: 100%; background: var(--input-bg); border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;
+      min-height: 380px; max-height: 450px;
+    }
+    .masterplan-img { width: 100%; height: 100%; max-height: 430px; display: block; object-fit: contain; cursor: crosshair; }
+
+    .unit-marker {
+      position: absolute; font-size: 28px; pointer-events: none; display: none; z-index: 10;
+      transform: translate(-50%, -100%); filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.5));
+    }
+
+    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; }
+    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 12px 14px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
+    .payment-table td { padding: 10px 14px; border-bottom: 1px solid var(--border-color); color: var(--text-color); }
+    .payment-table tr:last-child td { border-bottom: none; }
+
+    .status { margin-top: 10px; font-size: 13px; font-weight: 600; text-align: center; }
+
+    /* ---------- ADMIN TAB ---------- */
+    #sec-admin { display: none; }
+    .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .admin-form-block { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; }
+    .admin-form-block h4 { margin-top: 0; font-size: 14px; }
+    .admin-form-block input, .admin-form-block textarea { width: 100%; display: block; }
+    .admin-form-block textarea { min-height: 70px; font-family: monospace; font-size: 12px; }
+    .admin-msg { font-size: 12px; margin-top: 6px; min-height: 16px; }
+
+    @media (max-width: 768px) {
+      .details-grid { grid-template-columns: 1fr; }
+      .pictures-grid { grid-template-columns: 1fr; }
+      .global-actions { flex-direction: column; align-items: stretch; }
+      .nav-tabs { justify-content: center; }
+      .action-buttons { justify-content: center; }
+      .admin-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <div class="theme-toggle-container">
+    <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="logout()">🚪 Logout</button>
+    <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">☀️ Light Mode</button>
+  </div>
+
+  <!-- ============ LOGIN SCREEN ============ -->
+  <div id="login-screen">
+    <h2>M Squared Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email" autocomplete="username"><br>
+    <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"><br>
+    <button class="btn-search" style="width:100%; max-width:280px;" onclick="login()">Login</button>
+    <div id="loginError"></div>
+  </div>
+
+  <!-- ============ APP (hidden until logged in) ============ -->
+  <div id="app-root" style="display:none;">
+
+    <div style="text-align: center;">
+      <div class="controls">
+        <input type="text" id="unitInput" placeholder="Unit Code" onkeypress="if(event.key==='Enter') searchUnit()">
+        <input type="text" id="clientInput" placeholder="Client Name">
+        <select id="projectSelect" onchange="changeMasterplanManual()">
+          <option value="auto">Auto Project</option>
+        </select>
+        <button class="btn-search" onclick="searchUnit()">🔍 Search</button>
+        <button class="btn-sync" onclick="loadCloudData()">🔄 Sync</button>
+        <div id="status" class="status">🔄 Loading data...</div>
+      </div>
+    </div>
+
+    <div id="welcome-screen">
+      <h2>Welcome to M Squared Offer System</h2>
+      <p>Please enter a unit code and click search to view your full interactive offer.</p>
+    </div>
+
+    <div id="main-app-content">
+
+      <div class="global-actions">
+        <div class="nav-tabs">
+          <button class="tab-btn active" onclick="scrollToSection('sec-summary', this)">Summary</button>
+          <button class="tab-btn" onclick="scrollToSection('sec-pictures', this)">Gallery</button>
+          <button class="tab-btn" onclick="scrollToSection('sec-masterplan', this)">Masterplan</button>
+          <button class="tab-btn" onclick="scrollToSection('sec-layout', this)">Layout</button>
+          <button class="tab-btn" onclick="scrollToSection('sec-payment', this)">Payment</button>
+          <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="scrollToSection('sec-admin', this)">⚙️ Admin</button>
+        </div>
+        <div class="action-buttons">
+          <button class="btn-preview" onclick="previewFullPDF()">👁️ Preview PDF</button>
+          <button class="btn-pdf" onclick="exportFullPDF()">📥 Download PDF</button>
+        </div>
+      </div>
+
+      <div id="full-offer-container">
+
+        <div class="offer-page-section" id="sec-summary">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgSummary" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+          </div>
+          <div class="greeting-box" id="greetingBox"></div>
+          <div class="summary-hero-card">
+            <h4>Selected Unit & Project</h4>
+            <div class="unit-big-text" id="uNameSummary">-</div>
+            <div class="project-small-text" id="uProjectDisplay">M Squared</div>
+          </div>
+          <div id="detailsGrid" class="details-grid">
+            <div class="detail-card"><strong>Status</strong><span>Search for a unit code...</span></div>
+          </div>
+        </div>
+
+        <div class="offer-page-section" id="sec-pictures">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgPictures" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+          </div>
+          <h3 style="margin: 0 0 15px 0; font-size: 16px; text-align: left;">Project Gallery & Views</h3>
+          <div class="pictures-grid" id="picturesGridContainer"></div>
+        </div>
+
+        <div class="offer-page-section" id="sec-masterplan">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgMasterplan" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+          </div>
+          <div class="masterplan-header">
+            <h3 style="margin: 0; font-size:16px;">Project Masterplan Location</h3>
+            <small id="currentProjectLabel" style="color: var(--muted-color); font-weight: bold; font-size: 13px;"></small>
+          </div>
+          <div class="masterplan-section" id="masterplanContainer">
+            <div id="mapWrapper" style="position: relative; display: inline-block; line-height: 0;">
+              <img src="" alt="Masterplan" class="masterplan-img" id="mpImg" crossorigin="anonymous" onclick="handleMapClick(event)">
+              <div id="marker" class="unit-marker">📍</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="offer-page-section" id="sec-layout">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgLayout" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+          </div>
+          <div class="masterplan-header">
+            <h3 style="margin: 0; font-size:16px;">Unit Floor Plan & Architectural Layout</h3>
+            <small style="color: var(--muted-color); font-weight: bold; font-size: 13px;" id="layoutSubLabel">Detailed Schematic</small>
+          </div>
+          <div class="masterplan-section">
+            <img src="" alt="Unit Layout" class="masterplan-img" id="unitLayoutImg" crossorigin="anonymous">
+          </div>
+        </div>
+
+        <div class="offer-page-section" id="sec-payment">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+          </div>
+          <h3 style="margin: 0 0 12px 0; font-size: 16px; text-align: left;">Complete Payment Schedule & Installments</h3>
+          <div class="summary-hero-card" style="margin-bottom: 15px; text-align: left; padding: 12px 18px;">
+            <div style="font-size: 13px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 18px; font-weight: 700; color: #3b82f6;">-</span></div>
+          </div>
+          <div class="payment-table-container">
+            <table class="payment-table">
+              <thead><tr><th>Milestone / Payment #</th><th>Timeline / Due</th><th>Amount (EGP)</th></tr></thead>
+              <tbody id="paymentTableBody">
+                <tr><td colspan="3" style="text-align: center; color: var(--muted-color);">Search a unit to generate complete payment schedule...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ADMIN TAB (only visible to role = admin) -->
+        <div class="offer-page-section" id="sec-admin">
+          <h3 style="margin: 0 0 12px 0; font-size: 16px; text-align: left;">⚙️ Admin Panel</h3>
+          <div class="admin-grid">
+            <div class="admin-form-block">
+              <h4>➕ Add / Update Unit</h4>
+              <input type="text" id="adm_unit_code" placeholder="Unit Code (e.g. 31W-101)">
+              <input type="text" id="adm_project_name" placeholder="Project Name (e.g. 31 West)">
+              <input type="text" id="adm_price" placeholder="Price (numbers only)">
+              <input type="text" id="adm_delivery_year" placeholder="Delivery Year">
+              <input type="text" id="adm_area" placeholder="Area (e.g. 150 sqm)">
+              <input type="text" id="adm_bedrooms" placeholder="Bedrooms">
+              <input type="text" id="adm_layout_image_url" placeholder="Layout Image URL">
+              <textarea id="adm_extra" placeholder='Extra fields as JSON, e.g. {"View":"Sea View","Floor":"3rd"}'></textarea>
+              <button class="btn-search" onclick="adminSaveUnit()">💾 Save Unit</button>
+              <div class="admin-msg" id="adminUnitMsg"></div>
+            </div>
+            <div class="admin-form-block">
+              <h4>🏗️ Add / Update Project</h4>
+              <input type="text" id="adm_proj_name" placeholder="Project Name (e.g. 41 Business District)">
+              <input type="text" id="adm_proj_logo" placeholder="Logo Image URL">
+              <input type="text" id="adm_proj_masterplan" placeholder="Masterplan Image URL">
+              <textarea id="adm_proj_gallery" placeholder="Gallery image URLs, one per line"></textarea>
+              <button class="btn-search" onclick="adminSaveProject()">💾 Save Project</button>
+              <div class="admin-msg" id="adminProjMsg"></div>
+            </div>
+          </div>
+          <p style="font-size:12px; color:var(--muted-color); margin-top:14px;">
+            Note: masterplan pin locations are set directly from the Masterplan tab — just search a unit, go to the Masterplan tab, and click on the map.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================================
+    // ⚠️ SETUP REQUIRED: paste your own Supabase project values here
+    // (Supabase Dashboard > Project Settings > API)
+    // ============================================================
+    const SUPABASE_URL = 'https://qiflwudikwuavyljlhnx.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_CXh9qukpJYZbS6glxcPwlQ_X57JR4sC';
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Simple inline placeholder (no external service, never breaks)
+    function placeholderImg(label) {
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'>
+        <rect width='100%' height='100%' fill='#1e293b'/>
+        <text x='50%' y='50%' font-family='sans-serif' font-size='28' fill='#64748b' text-anchor='middle' dominant-baseline='middle'>${label}</text>
+      </svg>`;
+      return 'data:image/svg+xml;base64,' + btoa(svg);
+    }
+
+    let currentUser = null;
+    let currentProfile = null;
+
+    let liveUnitsData = {};       // unit_code -> unit row
+    let projectsByName = {};      // lowercased project name -> project row
+    let currentLoadedBuildingKey = "";
+    let currentUnitCode = "";
+
+    // ---------------- AUTH ----------------
+    async function login() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const errBox = document.getElementById('loginError');
+      errBox.innerText = '';
+      if (!email || !password) { errBox.innerText = 'Please enter email and password.'; return; }
+
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) { errBox.innerText = error.message; return; }
+      await onLoggedIn(data.user);
+    }
+
+    async function logout() {
+      await supabaseClient.auth.signOut();
+      currentUser = null; currentProfile = null;
+      document.getElementById('app-root').style.display = 'none';
+      document.getElementById('logoutBtn').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'block';
+    }
+
+    async function onLoggedIn(user) {
+      currentUser = user;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app-root').style.display = 'block';
+      document.getElementById('logoutBtn').style.display = 'inline-block';
+
+      const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+      currentProfile = profile;
+      if (profile && profile.role === 'admin') {
+        document.getElementById('adminTabBtn').style.display = 'inline-block';
+      }
+      loadCloudData();
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      const savedTheme = localStorage.getItem('m2_theme') || 'dark';
+      document.body.setAttribute('data-theme', savedTheme);
+      document.getElementById('themeToggleBtn').innerHTML = savedTheme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
+
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session && session.user) {
+        await onLoggedIn(session.user);
+      }
+    });
+
+    // ---------------- THEME / NAV ----------------
+    function toggleTheme() {
+      const body = document.body;
+      const btn = document.getElementById('themeToggleBtn');
+      if (body.getAttribute('data-theme') === 'dark') {
+        body.setAttribute('data-theme', 'light'); btn.innerHTML = '🌙 Dark Mode'; localStorage.setItem('m2_theme', 'light');
+      } else {
+        body.setAttribute('data-theme', 'dark'); btn.innerHTML = '☀️ Light Mode'; localStorage.setItem('m2_theme', 'dark');
+      }
+    }
+
+    function scrollToSection(sectionId, btnElement) {
+      const target = document.getElementById(sectionId);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      if (btnElement) btnElement.classList.add('active');
+    }
+
+    // ---------------- DATA LOADING ----------------
+    async function loadCloudData() {
+      const st = document.getElementById('status');
+      st.style.color = "#60a5fa";
+      st.innerText = "🔄 Syncing data...";
+
+      try {
+        const [{ data: units, error: uErr }, { data: projects, error: pErr }, { data: locations, error: lErr }] = await Promise.all([
+          supabaseClient.from('units').select('*'),
+          supabaseClient.from('projects').select('*'),
+          supabaseClient.from('unit_locations').select('*')
+        ]);
+        if (uErr || pErr || lErr) throw (uErr || pErr || lErr);
+
+        liveUnitsData = {};
+        (units || []).forEach(u => { liveUnitsData[u.unit_code.toUpperCase()] = u; });
+
+        projectsByName = {};
+        (projects || []).forEach(p => { projectsByName[p.name.toLowerCase().trim()] = p; });
+
+        window.cloudLocations = {};
+        (locations || []).forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
+
+        // populate project dropdown
+        const sel = document.getElementById('projectSelect');
+        sel.innerHTML = '<option value="auto">Auto Project</option>';
+        (projects || []).forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.name; opt.innerText = p.name;
+          sel.appendChild(opt);
+        });
+
+        st.style.color = "#34d399";
+        st.innerText = `✅ Ready (${(units || []).length} units, ${(projects || []).length} projects)!`;
+      } catch (err) {
+        console.error(err);
+        st.style.color = "#f87171";
+        st.innerText = "❌ Could not load data. Check Supabase setup / connection.";
+      }
+    }
+
+    function extractBuildingKey(unitCode) {
+      const code = unitCode.trim().toUpperCase();
+      const match31 = code.match(/^([A-Z]+\d+[A-Z]?)/);
+      if (match31) return match31[1];
+      if (code.includes('-')) {
+        const parts = code.split('-');
+        if (parts.length >= 2) return parts[0] + '-' + parts[1];
+      }
+      const matchL = code.match(/(L\d+)/);
+      if (matchL) return matchL[1];
+      return code.substring(0, 4);
+    }
+
+    // ---------------- MASTERPLAN PIN ----------------
+    async function handleMapClick(event) {
+      if (!currentLoadedBuildingKey) { alert("Please search for a unit first!"); return; }
+      if (!currentProfile || currentProfile.role !== 'admin') { alert("Only admins can set the masterplan pin."); return; }
+
+      const img = document.getElementById('mpImg');
+      const rect = img.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
+      const clickY = event.clientY - rect.top;
+      if (clickX < 0 || clickX > rect.width || clickY < 0 || clickY > rect.height) return;
+
+      const x = parseFloat(((clickX / rect.width) * 100).toFixed(2));
+      const y = parseFloat(((clickY / rect.height) * 100).toFixed(2));
+
+      window.cloudLocations[currentLoadedBuildingKey] = { x, y };
+      const marker = document.getElementById('marker');
+      marker.style.display = 'block'; marker.style.left = `${x}%`; marker.style.top = `${y}%`;
+
+      const projName = liveUnitsData[currentUnitCode] ? liveUnitsData[currentUnitCode].project_name : null;
+      const { error } = await supabaseClient.from('unit_locations').upsert({
+        building_key: currentLoadedBuildingKey, x, y, project_name: projName, updated_at: new Date().toISOString()
+      });
+      if (error) console.error(error);
+    }
+
+    // ---------------- PROJECT VISUALS ----------------
+    function setupProjectVisuals(projectName) {
+      const pLower = (projectName || '').toLowerCase().trim();
+      const label = document.getElementById('currentProjectLabel');
+      let proj = projectsByName[pLower];
+      if (!proj) {
+        // fuzzy fallback: partial match
+        const foundKey = Object.keys(projectsByName).find(k => pLower.includes(k) || k.includes(pLower));
+        proj = foundKey ? projectsByName[foundKey] : null;
+      }
+
+      const logoUrl = proj && proj.logo_url ? proj.logo_url : placeholderImg('No Logo');
+      ['Summary','Pictures','Masterplan','Layout','Payment'].forEach(sec => {
+        document.getElementById('projectLogoImg' + sec).src = logoUrl;
+      });
+
+      const picGrid = document.getElementById('picturesGridContainer');
+      picGrid.innerHTML = '';
+      const gallery = (proj && Array.isArray(proj.gallery) && proj.gallery.length) ? proj.gallery : [placeholderImg('No Gallery Images')];
+      gallery.forEach(imgUrl => {
+        const div = document.createElement('div');
+        div.className = 'gallery-card-item';
+        div.innerHTML = `<img src="${imgUrl}" alt="Project View" crossorigin="anonymous" onerror="this.src='${placeholderImg('Image Unavailable')}'">`;
+        picGrid.appendChild(div);
+      });
+
+      document.getElementById('mpImg').src = (proj && proj.masterplan_image_url) ? proj.masterplan_image_url : placeholderImg('No Masterplan Image');
+      label.innerText = `Project: ${projectName || 'M Squared'}`;
+    }
+
+    function changeMasterplanManual() {
+      const selected = document.getElementById('projectSelect').value;
+      if (selected !== 'auto') setupProjectVisuals(selected);
+    }
+
+    // ---------------- SEARCH ----------------
+    function searchUnit() {
+      const val = document.getElementById('unitInput').value.trim().toUpperCase();
+      const clientName = document.getElementById('clientInput').value.trim();
+      const st = document.getElementById('status');
+      const grid = document.getElementById('detailsGrid');
+      const marker = document.getElementById('marker');
+      const greetingBox = document.getElementById('greetingBox');
+      const welcomeScreen = document.getElementById('welcome-screen');
+      const mainAppContent = document.getElementById('main-app-content');
+
+      if (!val) return;
+      marker.style.display = 'none';
+
+      const uData = liveUnitsData[val];
+      if (uData) {
+        currentUnitCode = val;
+        welcomeScreen.style.display = 'none';
+        mainAppContent.style.display = 'block';
+
+        document.getElementById('uNameSummary').innerText = val;
+        const projName = uData.project_name || 'M Squared';
+        document.getElementById('uProjectDisplay').innerText = projName;
+
+        if (clientName) {
+          greetingBox.style.display = 'block';
+          greetingBox.innerHTML = `Dear <span class="client-highlight">${clientName}</span>,<br><span style="margin-top: 4px; display:inline-block;">Kindly find your exclusive offer details below.</span>`;
+        } else {
+          greetingBox.style.display = 'none';
+        }
+
+        const manualSelect = document.getElementById('projectSelect').value;
+        setupProjectVisuals(manualSelect === 'auto' ? projName : manualSelect);
+
+        // Layout image now comes directly from the unit's own data (fixed bug: no more guessing a Drive file ID from the unit code)
+        const layoutImgElement = document.getElementById('unitLayoutImg');
+        const layoutSubLabel = document.getElementById('layoutSubLabel');
+        layoutImgElement.src = uData.layout_image_url || placeholderImg('No Layout Image for ' + val);
+        layoutImgElement.onerror = function () { this.src = placeholderImg('Layout Unavailable for ' + val); };
+        layoutSubLabel.innerText = `Layout Code: ${val}`;
+
+        currentLoadedBuildingKey = extractBuildingKey(val);
+        if (window.cloudLocations && window.cloudLocations[currentLoadedBuildingKey]) {
+          const coords = window.cloudLocations[currentLoadedBuildingKey];
+          marker.style.display = 'block'; marker.style.left = `${coords.x}%`; marker.style.top = `${coords.y}%`;
+        }
+
+        // Detail cards: known columns + any extra JSON fields
+        grid.innerHTML = '';
+        const known = [
+          ['Price', uData.price ? Number(uData.price).toLocaleString() + ' EGP' : '-'],
+          ['Delivery Year', uData.delivery_year || '-'],
+          ['Area', uData.area || '-'],
+          ['Bedrooms', uData.bedrooms || '-']
+        ];
+        known.forEach(([label, value]) => {
+          const card = document.createElement('div');
+          card.className = 'detail-card';
+          card.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+          grid.appendChild(card);
+        });
+        const extra = uData.extra || {};
+        Object.entries(extra).forEach(([key, value]) => {
+          const card = document.createElement('div');
+          card.className = 'detail-card';
+          card.innerHTML = `<strong>${key}</strong><span>${value}</span>`;
+          grid.appendChild(card);
+        });
+
+        // Payment schedule
+        const unitPriceVal = Number(uData.price) || 0;
+        document.getElementById('paymentUnitPrice').innerText = unitPriceVal > 0 ? unitPriceVal.toLocaleString() + ' EGP' : 'Refer to contract / sheet';
+        const paymentTbody = document.getElementById('paymentTableBody');
+        paymentTbody.innerHTML = '';
+        if (unitPriceVal > 0) {
+          const dpAmount = unitPriceVal * 0.05;
+          const remainingAmount = unitPriceVal - dpAmount;
+          const quarterlyAmount = remainingAmount / 40;
+          const rows = [
+            { milestone: "Down Payment (5%)", timeline: "Immediate", amount: dpAmount.toLocaleString('en-US', { maximumFractionDigits: 0 }) + " EGP" },
+            { milestone: "Quarterly Installment (x40)", timeline: "Over 10 Years", amount: quarterlyAmount.toLocaleString('en-US', { maximumFractionDigits: 0 }) + " EGP / Quarter" },
+            { milestone: "Maintenance Deposit", timeline: "Upon Delivery", amount: (unitPriceVal * 0.07).toLocaleString('en-US', { maximumFractionDigits: 0 }) + " EGP" }
+          ];
+          rows.forEach(r => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${r.milestone}</td><td>${r.timeline}</td><td>${r.amount}</td>`;
+            paymentTbody.appendChild(tr);
+          });
+        } else {
+          paymentTbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--muted-color);">No unit price found to calculate schedule.</td></tr>`;
+        }
+
+        st.style.color = "#34d399";
+        st.innerText = `✅ Unit [${val}] loaded!`;
+      } else {
+        st.style.color = "#f87171";
+        st.innerText = `❌ Unit [${val}] not found.`;
+      }
+    }
+
+    // ---------------- ADMIN: SAVE UNIT / PROJECT ----------------
+    async function adminSaveUnit() {
+      const msg = document.getElementById('adminUnitMsg');
+      msg.style.color = '#60a5fa'; msg.innerText = 'Saving...';
+
+      const unit_code = document.getElementById('adm_unit_code').value.trim().toUpperCase();
+      if (!unit_code) { msg.style.color = '#f87171'; msg.innerText = 'Unit code is required.'; return; }
+
+      let extra = {};
+      const extraRaw = document.getElementById('adm_extra').value.trim();
+      if (extraRaw) {
+        try { extra = JSON.parse(extraRaw); }
+        catch (e) { msg.style.color = '#f87171'; msg.innerText = 'Extra fields must be valid JSON.'; return; }
+      }
+
+      const row = {
+        unit_code,
+        project_name: document.getElementById('adm_project_name').value.trim(),
+        price: parseFloat(document.getElementById('adm_price').value) || null,
+        delivery_year: document.getElementById('adm_delivery_year').value.trim(),
+        area: document.getElementById('adm_area').value.trim(),
+        bedrooms: document.getElementById('adm_bedrooms').value.trim(),
+        layout_image_url: document.getElementById('adm_layout_image_url').value.trim(),
+        extra,
+        updated_at: new Date().toISOString()
+      };
+
+      const { error } = await supabaseClient.from('units').upsert(row, { onConflict: 'unit_code' });
+      if (error) { msg.style.color = '#f87171'; msg.innerText = '❌ ' + error.message; return; }
+      msg.style.color = '#34d399'; msg.innerText = '✅ Unit saved!';
+      loadCloudData();
+    }
+
+    async function adminSaveProject() {
+      const msg = document.getElementById('adminProjMsg');
+      msg.style.color = '#60a5fa'; msg.innerText = 'Saving...';
+
+      const name = document.getElementById('adm_proj_name').value.trim();
+      if (!name) { msg.style.color = '#f87171'; msg.innerText = 'Project name is required.'; return; }
+
+      const galleryRaw = document.getElementById('adm_proj_gallery').value.trim();
+      const gallery = galleryRaw ? galleryRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
+
+      const row = {
+        name,
+        logo_url: document.getElementById('adm_proj_logo').value.trim(),
+        masterplan_image_url: document.getElementById('adm_proj_masterplan').value.trim(),
+        gallery
+      };
+
+      const { error } = await supabaseClient.from('projects').upsert(row, { onConflict: 'name' });
+      if (error) { msg.style.color = '#f87171'; msg.innerText = '❌ ' + error.message; return; }
+      msg.style.color = '#34d399'; msg.innerText = '✅ Project saved!';
+      loadCloudData();
+    }
+
+    // ---------------- PDF EXPORT ----------------
+    function previewFullPDF() {
+      const element = document.getElementById('full-offer-container');
+      const opt = { margin: [10, 10, 10, 10], filename: 'M_Squared_Complete_Offer.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true, logging: false }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+      document.getElementById('status').innerText = "📄 Generating Full Offer Preview...";
+      html2pdf().from(element).set(opt).toPdf().get('pdf').then(function (pdf) {
+        window.open(pdf.output('bloburl'), '_blank');
+        document.getElementById('status').innerText = "✅ Preview opened!";
+      });
+    }
+
+    function exportFullPDF() {
+      const element = document.getElementById('full-offer-container');
+      const opt = { margin: [10, 10, 10, 10], filename: 'M_Squared_Complete_Offer.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true, logging: false }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+      document.getElementById('status').innerText = "📥 Downloading Full Offer PDF...";
+      html2pdf().from(element).set(opt).save().then(() => {
+        document.getElementById('status').innerText = "✅ PDF Downloaded!";
+      });
+    }
+  </script>
+</body>
+</html>
