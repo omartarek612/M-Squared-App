@@ -51,7 +51,7 @@
       box-sizing: border-box;
     }
 
-    /* Topmost Global Action Bar (Theme & Logout) - Translucent & Compact */
+    /* Topmost Global Action Bar - Transparent Completely */
     .top-global-bar {
       position: -webkit-sticky !important;
       position: sticky !important;
@@ -61,13 +61,10 @@
       justify-content: flex-end;
       align-items: center;
       gap: 6px;
-      background: rgba(11, 19, 41, 0.75);
+      background: transparent !important;
       padding: 4px 10px;
-      border-bottom: 1px solid var(--border-color);
-      backdrop-filter: blur(8px);
-    }
-    [data-theme="light"] .top-global-bar {
-      background: rgba(248, 250, 252, 0.75);
+      border-bottom: none;
+      backdrop-filter: none;
     }
 
     .btn-theme, .btn-logout {
@@ -84,20 +81,17 @@
     }
     .btn-theme:hover, .btn-logout:hover { transform: translateY(-1px); }
 
-    /* Freezed Sticky Header - Compact & Transparent */
+    /* Freezed Sticky Header - Fully Transparent */
     .sticky-header {
       position: -webkit-sticky !important;
       position: sticky !important;
-      top: 35px !important;
+      top: 25px !important;
       z-index: 99999 !important;
-      background: rgba(11, 19, 41, 0.75) !important;
+      background: transparent !important;
       padding: 4px 0;
-      border-bottom: 1px solid var(--border-color);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      backdrop-filter: blur(8px);
-    }
-    [data-theme="light"] .sticky-header {
-      background: rgba(248, 250, 252, 0.75) !important;
+      border-bottom: none;
+      box-shadow: none;
+      backdrop-filter: none;
     }
 
     .controls {
@@ -210,7 +204,6 @@
       pointer-events: none;
     }
 
-    /* Toggle Tab on the edge of the sidebar */
     .sidebar-toggle-btn {
       position: fixed;
       top: 100px;
@@ -350,7 +343,6 @@
     }
     .approval-item button { margin:0; padding:4px 10px; font-size:11px; }
 
-    /* App Copyrights - Visible strictly in UI */
     .app-copyrights {
       display: block !important;
       visibility: visible !important;
@@ -367,7 +359,6 @@
       border: 1px solid var(--border-color);
     }
 
-    /* Completely hide UI-only elements during print/PDF generation */
     @media print {
       .app-copyrights, .top-global-bar, .sticky-header, .app-sidebar, .sidebar-toggle-btn, #sec-inventory, #sec-admin { display: none !important; visibility: hidden !important; }
     }
@@ -388,7 +379,7 @@
 </head>
 <body data-theme="dark">
 
-  <!-- TOPMOST GLOBAL BAR (Theme & Logout) -->
+  <!-- TOPMOST GLOBAL BAR (Theme & Logout) - Fully Transparent -->
   <div class="top-global-bar">
     <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
     <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">Light Mode</button>
@@ -426,13 +417,13 @@
   <!-- MAIN APP CONTAINER -->
   <div id="app-root" style="display:none;">
 
-    <!-- Sticky Header: Search & Inputs Top Bar -->
+    <!-- Sticky Header: Search & Inputs Top Bar - Fully Transparent -->
     <div class="sticky-header">
       <div class="controls">
         <input type="text" id="unitInput" placeholder="Unit Code" onkeypress="if(event.key==='Enter') searchUnit()">
         <input type="text" id="clientInput" placeholder="Client Name">
         <select id="projectSelect" onchange="changeMasterplanManual()">
-          <!-- تم إزالة زرار أو خيار Auto Project بناءً على الطلب -->
+          <!-- تم إزالة خيار Auto Project نهائياً -->
         </select>
         <button class="btn-search" onclick="searchUnit()">Search</button>
         <button class="btn-sync" onclick="loadCloudData()">Sync</button>
@@ -468,7 +459,7 @@
         </div>
       </div>
 
-      <!-- PDF / Preview Container (Only contains offer sections) -->
+      <!-- PDF / Preview Container -->
       <div id="full-offer-container">
 
         <div class="offer-page-section" id="sec-summary">
@@ -589,7 +580,6 @@
         </div>
       </div>
 
-      <!-- Copyrights visible only in App UI -->
       <div class="app-copyrights">
         Developed by Omar Tarek - 01003666683
       </div>
@@ -817,7 +807,7 @@
         (locations || []).forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
 
         const sel = document.getElementById('projectSelect');
-        sel.innerHTML = ''; // تم إزالة خيار Auto Project والبدء بقائمة المشاريع مباشرة
+        sel.innerHTML = '';
         (projects || []).forEach(p => {
           const opt = document.createElement('option');
           opt.value = p.name; opt.innerText = p.name;
@@ -933,7 +923,6 @@
         }
 
         setupProjectVisuals(projName);
-        // تحديث الاختيار في السلكت تلقائياً للمشروع الخاص بالوحدة
         const sel = document.getElementById('projectSelect');
         if (sel) {
           for (let opt of sel.options) {
