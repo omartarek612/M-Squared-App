@@ -212,19 +212,27 @@
     .action-buttons { display: flex; flex-direction: column; gap: 6px; }
     .action-buttons button { width: 100%; padding: 7px; }
 
-    /* Long Single Page Container */
-    #full-offer-container { display: flex; flex-direction: column; gap: 15px; background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); }
+    /* Multi-Page Presentation Container */
+    #full-offer-container { display: flex; flex-direction: column; gap: 20px; background: transparent; }
 
     .offer-page-section {
       background: var(--card-bg);
-      padding: 16px;
-      border-radius: 12px;
+      padding: 20px;
+      border-radius: 16px;
       border: 1px solid var(--border-color);
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       overflow: hidden;
+      /* Ensures each section breaks into its own distinct page in PDF */
+      break-before: page;
+      page-break-before: always;
+    }
+    /* First section doesn't need a break before */
+    #full-offer-container .offer-page-section:first-child {
+      break-before: auto;
+      page-break-before: auto;
     }
 
-    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.2); padding-bottom: 10px; margin-bottom: 12px; }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.2); padding-bottom: 10px; margin-bottom: 15px; }
     .company-logo { max-height: 32px; width: auto; object-fit: contain; }
     .project-logo { max-height: 28px; max-width: 120px; width: auto; object-fit: contain; }
 
@@ -266,7 +274,7 @@
 
     .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     
-    /* Fixed Aspect Ratio Masterplan & Layout Container to maintain exact size in browser and PDF export */
+    /* Fixed Aspect Ratio Masterplan & Layout Container */
     .masterplan-section {
       position: relative; 
       width: 100%; 
@@ -396,7 +404,7 @@
         
         <div class="sidebar-section-title">Actions</div>
         <div class="action-buttons">
-          <button class="btn-preview" onclick="previewFullPDF()">Preview (One Page)</button>
+          <button class="btn-preview" onclick="previewFullPDF()">Preview (Multi-Page)</button>
           <button class="btn-pdf" onclick="exportFullPDF()">Download PDF</button>
         </div>
       </div>
@@ -480,7 +488,7 @@
 
       </div>
 
-      <div class="offer-page-section" id="sec-inventory" style="margin-top: 15px;">
+      <div class="offer-page-section" id="sec-inventory" style="margin-top: 15px; break-before: auto; page-break-before: auto;">
         <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
         <div class="admin-grid">
           <div class="admin-form-block">
@@ -500,7 +508,7 @@
         <div class="import-log-list" id="importLogList"><p style="font-size:11px; color:var(--muted-color);">No imports yet.</p></div>
       </div>
 
-      <div class="offer-page-section" id="sec-admin" style="display:none; margin-top: 15px;">
+      <div class="offer-page-section" id="sec-admin" style="display:none; margin-top: 15px; break-before: auto; page-break-before: auto;">
         <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Admin Control Panel</h3>
         <h4 style="font-size:12px;">Pending Accounts</h4>
         <div class="approval-list" id="approvalList"><p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p></div>
@@ -1013,6 +1021,7 @@
       }
     }
 
+    // PDF Preview & Download as Multi-Page Presentation (A4 format respecting page-breaks)
     async function prepareAndGeneratePDF(actionType) {
       const element = document.getElementById('full-offer-container');
       
@@ -1024,14 +1033,12 @@
 
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      const totalHeightMm = (element.scrollHeight * 0.264583) + 40;
-
       const opt = {
-        margin:       5,
+        margin:       10,
         filename:     `M-Squared-Offer-${currentUnitCode || 'Unit'}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true, logging: false, scrollY: 0 },
-        jsPDF:        { unit: 'mm', format: [210, totalHeightMm], orientation: 'portrait' }
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
       if (actionType === 'preview') {
