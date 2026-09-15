@@ -215,18 +215,21 @@
     /* Multi-Page Presentation Container */
     #full-offer-container { display: flex; flex-direction: column; gap: 20px; background: transparent; }
 
+    /* Elegant framed pages with clean professional border */
     .offer-page-section {
       background: var(--card-bg);
-      padding: 20px;
+      padding: 22px;
       border-radius: 16px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border: 2px solid rgba(59, 130, 246, 0.35);
+      box-shadow: 0 6px 22px rgba(0,0,0,0.18);
       overflow: hidden;
-      /* Ensures each section breaks into its own distinct page in PDF */
       break-before: page;
       page-break-before: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 850px;
     }
-    /* First section doesn't need a break before */
     #full-offer-container .offer-page-section:first-child {
       break-before: auto;
       page-break-before: auto;
@@ -274,11 +277,12 @@
 
     .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     
-    /* Fixed Aspect Ratio Masterplan & Layout Container */
+    /* Expanded Masterplan Section filling the page completely */
     .masterplan-section {
       position: relative; 
       width: 100%; 
-      aspect-ratio: 16 / 10; 
+      flex-grow: 1;
+      min-height: 620px;
       background: var(--input-bg); 
       border-radius: 10px; 
       overflow: hidden;
@@ -1021,7 +1025,6 @@
       }
     }
 
-    // PDF Preview & Download as Multi-Page Presentation (A4 format respecting page-breaks)
     async function prepareAndGeneratePDF(actionType) {
       const element = document.getElementById('full-offer-container');
       
