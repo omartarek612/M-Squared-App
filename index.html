@@ -577,7 +577,7 @@
         <div class="admin-form-block" style="margin-top:15px; border: 1px solid rgba(59, 130, 246, 0.4);">
           <h4 style="color: #3b82f6;">Unit Layouts Manager (Independent)</h4>
           
-          <!-- Sequential Batch Upload By Filename -->
+          <!-- Throttled Safe Batch Upload By Filename -->
           <div style="margin-bottom:12px; background:var(--card-bg); padding:10px; border-radius:6px;">
             <div style="font-size:11px; font-weight:700; margin-bottom:4px;">1. Batch Upload Layouts (Files named by Unit Code, e.g., A101.jpg):</div>
             <input type="file" id="adm_batch_layout_files" accept="image/*" multiple style="font-size:11px; margin-bottom:6px;">
@@ -957,7 +957,7 @@
       }
     }
 
-    // --- SEQUENTIAL SAFE BATCH UPLOAD FOR LAYOUTS ---
+    // --- THROTTLED & SAFE BATCH UPLOAD FOR LAYOUTS ---
     async function adminUploadBatchLayouts() {
       if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
       const msg = document.getElementById('adminBatchLayoutMsg');
@@ -980,7 +980,8 @@
         if (!unitCode) continue;
 
         try {
-          const compressedDataUrl = await compressImage(file, 1200, 0.9);
+          // Optimized compression for batch upload to keep request payload light
+          const compressedDataUrl = await compressImage(file, 800, 0.8);
 
           const { error } = await supabaseClient
             .from('units')
@@ -993,6 +994,9 @@
               liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
             }
           }
+
+          // 250ms throttle delay between each request to prevent Supabase Rate Limiting (Too Many Requests)
+          await new Promise(resolve => setTimeout(resolve, 250));
         } catch (e) {
           console.warn(`Failed to upload layout for ${unitCode}:`, e);
         }
