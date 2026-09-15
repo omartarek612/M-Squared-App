@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>M Squared - Digital Offer & Inventory System</title>
-  <!-- مكتبات النظام الأساسية -->
+  <!-- Core Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -22,7 +22,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: var(--bg); color: var(--text); line-height: 1.5; padding: 15px; }
 
-    /* شاشة تسجيل الدخول / الانتظار */
+    /* Auth Overlay */
     #auth-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(15, 23, 42, 0.85); display: flex; justify-content: center; align-items: center; z-index: 9999;
@@ -36,13 +36,13 @@
     .auth-card button { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
     .auth-card button:hover { background: var(--accent-hover); }
 
-    /* الهيدر العلوي وشريط الأدوات */
+    /* Top Global Bar */
     .top-global-bar {
       display: flex; justify-content: space-between; align-items: center;
       background: white; padding: 12px 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);
       margin-bottom: 20px; border: 1px solid var(--border); flex-wrap: wrap; gap: 10px;
     }
-    .search-box-area { display: flex; gap: 10px; align-items: center; }
+    .search-box-area { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
     .search-box-area input, .search-box-area select {
       padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none;
     }
@@ -52,138 +52,136 @@
     .btn-action:hover { background: var(--accent-hover); }
     .btn-secondary { background: #475569; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
 
-    /* الحاوية الرئيسية الطويلة (للعرض والطباعة كصفحة واحدة مستمرة) */
+    /* Main Long Continuous Offer Container */
     .full-offer-container {
       max-width: 900px; margin: 0 auto; background: var(--card-bg);
       border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
       border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column;
     }
 
-    /* أقسام العرض المختلفة داخل الصفحة الطويلة */
+    /* Offer Sections */
     .offer-section { padding: 30px; border-bottom: 1px solid var(--border); }
     .offer-section:last-child { border-bottom: none; }
     .section-title { font-size: 18px; color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
     .section-title::before { content: ''; width: 4px; height: 18px; background: var(--accent); border-radius: 2px; }
 
-    /* هيدر العرض */
-    .offer-header { background: var(--primary); color: white; padding: 25px; text-align: center; display: flex; justify-content: space-between; align-items: center; }
+    /* Offer Header */
+    .offer-header { background: var(--primary); color: white; padding: 25px; text-align: left; display: flex; justify-content: space-between; align-items: center; }
     .offer-header img { height: 40px; background: white; padding: 4px; border-radius: 6px; }
 
-    /* شبكة التفاصيل */
+    /* Details Grid */
     .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
     .detail-card { background: #f8fafc; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
     .detail-card strong { color: #64748b; font-size: 13px; }
     .detail-card span { color: var(--primary); font-weight: 600; }
 
-    /* الماستربرلان والخريطة التفاعلية */
+    /* Masterplan Interactive Container */
     .masterplan-container { position: relative; width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
     .masterplan-container img { width: 100%; height: auto; display: block; }
     .map-marker {
       position: absolute; width: 22px; height: 22px; background: #ef4444; border: 3px solid white;
-      border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 10px rgba(0,0,0,0.5); display: none; animation: pulse 1.5px infinite;
+      border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 10px rgba(0,0,0,0.5); display: none;
     }
-    @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.2); } 100% { transform: translate(-50%, -50%) scale(1); } }
 
-    /* الصور والغاليري */
+    /* Gallery Grid */
     .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .gallery-item img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
 
-    /* الجدول المالي */
+    /* Data Table */
     .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    .data-table th, .data-table td { padding: 12px; text-align: center; border: 1px solid var(--border); font-size: 14px; }
+    .data-table th, .data-table td { padding: 12px; text-align: left; border: 1px solid var(--border); font-size: 14px; }
     .data-table th { background: #f1f5f9; color: var(--primary); }
 
-    /* لوحة التحكم والأدمن (مخفية افتراضياً وتظهر للأدمن) */
-    .admin-panel { background: #1e293b; color: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; display: none; }
+    /* Admin Panel */
+    .admin-panel { background: #1e293b; color: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; display: none; max-width: 900px; margin-left: auto; margin-right: auto; }
     .admin-panel h3 { margin-bottom: 15px; color: #38bdf8; }
     .admin-row { display: flex; gap: 15px; margin-bottom: 10px; flex-wrap: wrap; }
     .admin-row input { padding: 8px; border-radius: 6px; border: none; }
 
-    /* رسائل الحالة */
     #status { font-size: 13px; font-weight: bold; margin-right: 10px; }
   </style>
 </head>
 <body>
 
-  <!-- شاشة تسجيل الدخول / التحقق -->
+  <!-- Auth Overlay -->
   <div id="auth-overlay">
     <div class="auth-card">
-      <h2>تسجيل الدخول - M Squared</h2>
-      <input type="email" id="authEmail" placeholder="البريد الإلكتروني">
-      <input type="password" id="authPassword" placeholder="كلمة المرور">
-      <button onclick="handleLogin()">دخول للنظام</button>
+      <h2>M Squared Login</h2>
+      <input type="email" id="authEmail" placeholder="Email Address">
+      <input type="password" id="authPassword" placeholder="Password">
+      <button onclick="handleLogin()">Login to System</button>
       <p id="authMsg" style="margin-top: 15px; font-size: 13px; color: #ef4444;"></p>
     </div>
   </div>
 
-  <!-- لوحة تحكم الأدمن -->
+  <!-- Admin Panel -->
   <div id="adminPanel" class="admin-panel">
-    <h3>لوحة تحكم المدير (Admin Dashboard)</h3>
+    <h3>Admin Control Panel</h3>
     <div class="admin-row">
       <input type="file" id="adm_import_file" accept=".xlsx, .xls">
-      <button class="btn-action" onclick="adminImportFile()">استيراد الوحدات من Excel</button>
+      <button class="btn-action" onclick="adminImportFile()">Import Units from Excel</button>
     </div>
     <p id="adminImportMsg" style="font-size: 13px; color: #34d399;"></p>
   </div>
 
-  <!-- الشريط العلوي للتحكم والبحث -->
+  <!-- Top Global Bar -->
   <div class="top-global-bar">
     <div class="search-box-area">
       <select id="projectSelect" onchange="changeMasterplanManual()">
-        <option value="31 West">مشروع 31 West</option>
+        <option value="31 West">31 West Project</option>
       </select>
-      <input type="text" id="unitInput" placeholder="كود الوحدة (مثل 31-A1)">
-      <button class="btn-action" onclick="searchUnit()">بحث وتحميل</button>
-      <input type="text" id="clientInput" placeholder="اسم العميل (اختياري)" oninput="renderUnitDetails(currentUnitCode)">
+      <input type="text" id="unitInput" placeholder="Unit Code (e.g. 31-A1)" onkeypress="if(event.key==='Enter') searchUnit()">
+      <button class="btn-action" onclick="searchUnit()">Search</button>
+      <input type="text" id="clientInput" placeholder="Client Name (Optional)">
     </div>
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <span id="status" style="color: #64748b;">جاري الاتصال...</span>
-      <button class="btn-secondary" onclick="previewFullPDF()">معاينة (صفحة واحدة)</button>
-      <button class="btn-action" onclick="exportFullPDF()">تحميل PDF</button>
+    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+      <span id="status" style="color: #64748b;">Connecting...</span>
+      <button class="btn-secondary" onclick="previewFullPDF()">Preview (One Page)</button>
+      <button class="btn-action" onclick="exportFullPDF()">Download PDF</button>
     </div>
   </div>
 
-  <!-- الحاوية الكبرى المتصلة (One Continuous Page) -->
+  <!-- Full Continuous Offer Container -->
   <div id="full-offer-container" class="full-offer-container">
     
-    <!-- 1. الهيدر -->
+    <!-- 1. Header -->
     <div class="offer-header">
       <div>
-        <h1 id="uProjectDisplay" style="font-size: 24px; margin-bottom: 5px;">مشروع 31 West</h1>
-        <p style="font-size: 13px; color: #94a3b8;">مقترح عرض الوحدة الحصري</p>
+        <h1 id="uProjectDisplay" style="font-size: 24px; margin-bottom: 5px;">31 West Project</h1>
+        <p style="font-size: 13px; color: #94a3b8;">Exclusive Property Proposal</p>
       </div>
       <img id="projectLogoImgSummary" src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="Logo">
     </div>
 
-    <!-- رسالة الترحيب بالعميل -->
+    <!-- Client Greeting Box -->
     <div id="greetingBox" class="offer-section" style="display: none; background: #f0fdf4; border-bottom: 1px solid #bbf7d0;"></div>
 
-    <!-- 2. ملخص الوحدة -->
+    <!-- 2. Unit Summary -->
     <div class="offer-section">
-      <h2 class="section-title" id="uNameSummary">مواصفات الوحدة العقارية</h2>
+      <h2 class="section-title" id="uNameSummary">Unit Specifications</h2>
       <div class="details-grid" id="detailsGrid">
-        <div class="detail-card"><strong>المرحلة / المبنى</strong><span>-</span></div>
-        <div class="detail-card"><strong>نوع الوحدة</strong><span>-</span></div>
-        <div class="detail-card"><strong>المساحة (BUA)</strong><span>-</span></div>
-        <div class="detail-card"><strong>الحديقة / الأرض</strong><span>-</span></div>
-        <div class="detail-card"><strong>إجمالي السعر</strong><span style="color: var(--accent);">-</span></div>
-        <div class="detail-card"><strong>الحالة</strong><span style="color: var(--success);">متاحة</span></div>
+        <div class="detail-card"><strong>Building / Phase</strong><span>-</span></div>
+        <div class="detail-card"><strong>Unit Type</strong><span>-</span></div>
+        <div class="detail-card"><strong>Area (BUA)</strong><span>-</span></div>
+        <div class="detail-card"><strong>Garden / Land</strong><span>-</span></div>
+        <div class="detail-card"><strong>Total Price</strong><span style="color: var(--accent);">-</span></div>
+        <div class="detail-card"><strong>Status</strong><span style="color: var(--success);">Available</span></div>
       </div>
     </div>
 
-    <!-- 3. الماستربرلان والخريطة التفاعلية -->
+    <!-- 3. Masterplan Location -->
     <div class="offer-section">
-      <h2 class="section-title">موقع الوحدة على الماستربرلان</h2>
+      <h2 class="section-title">Masterplan Location</h2>
       <div class="masterplan-container" onclick="handleMapClick(event)">
         <img id="mpImg" src="https://via.placeholder.com/900x450?text=Masterplan+Loading" alt="Masterplan">
         <div id="marker" class="map-marker"></div>
       </div>
-      <p style="font-size: 11px; color: #94a3b8; margin-top: 5px; text-align: center;">اضغط على الخريطة لتحديث موقع الوحدة (للأدمن فقط)</p>
+      <p style="font-size: 11px; color: #94a3b8; margin-top: 5px; text-align: center;">Click on the map to update unit marker (Admin only)</p>
     </div>
 
-    <!-- 4. معرض الصور (Gallery) -->
+    <!-- 4. Project Gallery -->
     <div class="offer-section">
-      <h2 class="section-title">صور ومخططات المشروع</h2>
+      <h2 class="section-title">Project Gallery</h2>
       <div class="gallery-grid" id="picturesGridContainer">
         <div class="gallery-item"><img src="https://via.placeholder.com/300x150" alt="Gallery"></div>
         <div class="gallery-item"><img src="https://via.placeholder.com/300x150" alt="Gallery"></div>
@@ -191,30 +189,30 @@
       </div>
     </div>
 
-    <!-- 5. مخطط تفاصيل الوحدة (Layout) -->
+    <!-- 5. Unit Floor Plan Layout -->
     <div class="offer-section">
-      <h2 class="section-title">مسقط الوحدة (Layout)</h2>
+      <h2 class="section-title">Unit Floor Plan (Layout)</h2>
       <div style="text-align: center; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
         <img id="unitLayoutImg" src="https://via.placeholder.com/600x300?text=Unit+Layout" alt="Unit Layout" style="max-width: 100%; height: auto; border-radius: 6px;">
       </div>
     </div>
 
-    <!-- 6. خطة وسداد الأقساط -->
+    <!-- 6. Payment Schedule -->
     <div class="offer-section">
-      <h2 class="section-title">خطة السداد والدفع المعتمدة</h2>
-      <p style="margin-bottom: 10px; font-size: 14px;">إجمالي سعر الوحدة: <strong id="paymentUnitPrice" style="color: var(--accent);">0 EGP</strong></p>
+      <h2 class="section-title">Payment Schedule</h2>
+      <p style="margin-bottom: 10px; font-size: 14px;">Total Unit Price: <strong id="paymentUnitPrice" style="color: var(--accent);">0 EGP</strong></p>
       <table class="data-table">
         <thead>
           <tr>
-            <th>الدفعة / البيان</th>
-            <th>التوقيت</th>
-            <th>القيمة (EGP)</th>
+            <th>Milestone</th>
+            <th>Timeline</th>
+            <th>Amount (EGP)</th>
           </tr>
         </thead>
         <tbody id="paymentTableBody">
-          <tr><td>مقدم التعاقد (10%)</td><td>فوري</td><td>-</td></tr>
-          <tr><td>الدفعة الأولى (5%)</td><td>بعد 3 أشهر</td><td>-</td></tr>
-          <tr><td>المتبقي</td><td>أقساط متساوية على 7 سنوات</td><td>-</td></tr>
+          <tr><td>Down Payment (10%)</td><td>Immediate</td><td>-</td></tr>
+          <tr><td>First Installment (5%)</td><td>After 3 Months</td><td>-</td></tr>
+          <tr><td>Remaining Balance</td><td>Equal Installments over 7 Years</td><td>-</td></tr>
         </tbody>
       </table>
     </div>
@@ -222,27 +220,24 @@
   </div>
 
   <script>
-    // إعدادات اتصال Supabase الخاصة بك
-    const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    // Real Supabase Credentials
+    const SUPABASE_URL = 'https://qiflwudikwuavyljlhnx.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_CXh9qukpJYZbS6glxcPwlQ_X57JR4sC';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let liveUnitsData = {};
-    let projectsByName = { "31 west": { name: "31 West", masterplan_url: "", logo_url: "" } };
     let currentUnitCode = "";
-    let currentLoadedBuildingKey = "";
     let currentProfile = null;
 
-    // التحقق من الجلسة وتسجيل الدخول
     async function handleLogin() {
       const email = document.getElementById('authEmail').value.trim();
       const password = document.getElementById('authPassword').value.trim();
       const msg = document.getElementById('authMsg');
-      msg.innerText = "جاري التحقق...";
+      msg.innerText = "Checking...";
 
       const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
       if (error) {
-        msg.innerText = "خطأ في تسجيل الدخول: " + error.message;
+        msg.innerText = "Login Error: " + error.message;
         return;
       }
       checkUserSession();
@@ -256,7 +251,6 @@
       }
       document.getElementById('auth-overlay').style.display = 'none';
       
-      // جلب صلاحيات المستخدم
       const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
       currentProfile = profile;
       if (profile && profile.role === 'admin') {
@@ -272,12 +266,12 @@
     async function loadCloudData() {
       const st = document.getElementById('status');
       st.style.color = "#d97706";
-      st.innerText = "جاري مزامنة بيانات الوحدات...";
+      st.innerText = "Syncing units...";
 
       const { data: units, error } = await supabaseClient.from('units').select('*');
       if (error) {
         st.style.color = "#ef4444";
-        st.innerText = "فشل مزامنة الوحدات";
+        st.innerText = "Sync failed";
         return;
       }
 
@@ -287,18 +281,16 @@
       });
 
       st.style.color = "var(--success)";
-      st.innerText = `تم المزامنة بنجاح (${units.length} وحدة)`;
+      st.innerText = `Ready (${units.length} units synced)`;
     }
 
-    function changeMasterplanManual() {
-      // تحديث بيانات المشروع عند الاختيار
-    }
+    function changeMasterplanManual() {}
 
     function searchUnit() {
       const code = document.getElementById('unitInput').value.trim().toUpperCase();
       if (!code) return;
       if (!liveUnitsData[code]) {
-        alert(`الوحدة ${code} غير موجودة في المخزون!`);
+        alert(`Unit ${code} not found in inventory!`);
         return;
       }
       currentUnitCode = code;
@@ -309,49 +301,48 @@
       const unit = liveUnitsData[code];
       if (!unit) return;
 
-      document.getElementById('uNameSummary').innerText = `تفاصيل الوحدة ${unit.unit_code}`;
+      document.getElementById('uNameSummary').innerText = `Unit Details: ${unit.unit_code}`;
       
       const clientName = document.getElementById('clientInput').value.trim();
       const greetingBox = document.getElementById('greetingBox');
       if (clientName) {
         greetingBox.style.display = 'block';
-        greetingBox.innerHTML = `عزيزي العميل <strong>${clientName}</strong>، يسعدنا أن نقدم لك هذا العرض الحصري للوحدة المختارة.`;
+        greetingBox.innerHTML = `Dear <strong>${clientName}</strong>, we are pleased to present this exclusive property offer for you.`;
       } else {
         greetingBox.style.display = 'none';
       }
 
       const grid = document.getElementById('detailsGrid');
       grid.innerHTML = `
-        <div class="detail-card"><strong>المرحلة / المبنى</strong><span>${unit.building || '-'}</span></div>
-        <div class="detail-card"><strong>نوع الوحدة</strong><span>${unit.unit_type || '-'}</span></div>
-        <div class="detail-card"><strong>المساحة (BUA)</strong><span>${unit.bua ? unit.bua + ' م²' : '-'}</span></div>
-        <div class="detail-card"><strong>الحديقة / الأرض</strong><span>${unit.garden ? unit.garden + ' م²' : 'N/A'}</span></div>
-        <div class="detail-card"><strong>إجمالي السعر</strong><span style="color: var(--accent);">${unit.total_price ? Number(unit.total_price).toLocaleString() + ' EGP' : '-'}</span></div>
-        <div class="detail-card"><strong>الحالة</strong><span style="color: var(--success);">متاحة</span></div>
+        <div class="detail-card"><strong>Building / Phase</strong><span>${unit.building || '-'}</span></div>
+        <div class="detail-card"><strong>Unit Type</strong><span>${unit.unit_type || '-'}</span></div>
+        <div class="detail-card"><strong>Area (BUA)</strong><span>${unit.bua ? unit.bua + ' m²' : '-'}</span></div>
+        <div class="detail-card"><strong>Garden / Land</strong><span>${unit.garden ? unit.garden + ' m²' : 'N/A'}</span></div>
+        <div class="detail-card"><strong>Total Price</strong><span style="color: var(--accent);">${unit.total_price ? Number(unit.total_price).toLocaleString() + ' EGP' : '-'}</span></div>
+        <div class="detail-card"><strong>Status</strong><span style="color: var(--success);">Available</span></div>
       `;
 
       document.getElementById('paymentUnitPrice').innerText = unit.total_price ? Number(unit.total_price).toLocaleString() + ' EGP' : '-';
       
       const tbody = document.getElementById('paymentTableBody');
       tbody.innerHTML = `
-        <tr><td>مقدم التعاقد (10%)</td><td>فوري</td><td>${unit.total_price ? (unit.total_price * 0.1).toLocaleString() + ' EGP' : '-'}</td></tr>
-        <tr><td>الدفعة الأولى (5%)</td><td>بعد 3 أشهر</td><td>${unit.total_price ? (unit.total_price * 0.05).toLocaleString() + ' EGP' : '-'}</td></tr>
-        <tr><td>المتبقي</td><td>أقساط متساوية على 7 سنوات</td><td>${unit.total_price ? (unit.total_price * 0.85).toLocaleString() + ' EGP' : '-'}</td></tr>
+        <tr><td>Down Payment (10%)</td><td>Immediate</td><td>${unit.total_price ? (unit.total_price * 0.1).toLocaleString() + ' EGP' : '-'}</td></tr>
+        <tr><td>First Installment (5%)</td><td>After 3 Months</td><td>${unit.total_price ? (unit.total_price * 0.05).toLocaleString() + ' EGP' : '-'}</td></tr>
+        <tr><td>Remaining Balance</td><td>Equal Installments over 7 Years</td><td>${unit.total_price ? (unit.total_price * 0.85).toLocaleString() + ' EGP' : '-'}</td></tr>
       `;
 
       document.getElementById('unitLayoutImg').src = unit.layout_url || 'https://via.placeholder.com/600x300?text=Layout+Not+Available';
-      document.getElementById('status').innerText = `تم تحميل الوحدة ${code} بنجاح`;
+      document.getElementById('status').innerText = `Loaded Unit ${code}`;
     }
 
     function handleMapClick(event) {
       if (!currentProfile || currentProfile.role !== 'admin') return;
-      // تفاعلات الماستربرلان للأدمن
     }
 
     async function adminImportFile() {
       const fileInput = document.getElementById('adm_import_file');
       const msg = document.getElementById('adminImportMsg');
-      if (!fileInput.files.length) { msg.innerText = 'اختر ملف أولاً'; return; }
+      if (!fileInput.files.length) { msg.innerText = 'Select a file first'; return; }
 
       const file = fileInput.files[0];
       const reader = new FileReader();
@@ -376,13 +367,13 @@
           }, { onConflict: 'unit_code' });
           count++;
         }
-        msg.innerText = `تم استيراد ${count} وحدة بنجاح!`;
+        msg.innerText = `Successfully imported ${count} units!`;
         loadCloudData();
       };
       reader.readAsArrayBuffer(file);
     }
 
-    // دوال المعاينة والتحميل PDF كصفحة واحدة مستمرة وطويلة (One Page / Continuous Roll)
+    // PDF Preview & Download as One Single Continuous Roll Page
     function previewFullPDF() {
       const element = document.getElementById('full-offer-container');
       const opt = {
@@ -390,7 +381,6 @@
         filename:     `M-Squared-Offer-${currentUnitCode || 'Unit'}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true, logging: false },
-        // ضبط الـ jsPDF ليتكيف مع الارتفاع الكامل للعنصر ليصبح صفحة واحدة مستمرة بدون تقطيع للـ slides
         jsPDF:        { unit: 'px', format: [element.scrollWidth, element.scrollHeight + 50], orientation: 'portrait' }
       };
       html2pdf().from(element).set(opt).toPdf().get('pdf').then((pdf) => {
