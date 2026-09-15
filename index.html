@@ -22,7 +22,6 @@
       --sync-gradient: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
       --preview-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
       --pdf-gradient: linear-gradient(135deg, #10b981 0%, #047857 100%);
-      --danger-gradient: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
     }
 
     [data-theme="light"] {
@@ -38,7 +37,6 @@
       --sync-gradient: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
       --preview-gradient: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
       --pdf-gradient: linear-gradient(135deg, #059669 0%, #065f46 100%);
-      --danger-gradient: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
     }
 
     body {
@@ -46,49 +44,65 @@
       background: var(--bg-color);
       color: var(--text-color);
       margin: 0;
-      padding: 20px;
+      padding: 10px;
       text-align: center;
       transition: background 0.3s, color 0.3s;
       position: relative;
       box-sizing: border-box;
     }
 
-    .theme-toggle-container { position: absolute; top: 20px; right: 20px; z-index: 1000; display:flex; gap:8px; }
+    .theme-toggle-container { position: absolute; top: 15px; right: 15px; z-index: 1001; display:flex; gap:6px; }
     .btn-theme, .btn-logout {
       background: var(--card-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 8px 14px;
-      border-radius: 30px;
+      padding: 6px 12px;
+      border-radius: 20px;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       transition: all 0.2s ease;
     }
     .btn-theme:hover, .btn-logout:hover { transform: translateY(-1px); }
 
+    /* Freezed Sticky Header - Forced Fix */
+    .sticky-header {
+      position: -webkit-sticky !important;
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 99999 !important;
+      background: var(--bg-color) !important;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+    }
+
     .controls {
       background: var(--card-bg);
-      padding: 15px 20px;
+      padding: 10px 15px;
       border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-      margin: 5px auto 20px auto;
-      display: inline-block;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      margin: 0 auto;
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
       border: 1px solid var(--border-color);
       max-width: 100%;
       box-sizing: border-box;
     }
 
     input, select, textarea {
-      padding: 10px 14px;
+      padding: 8px 12px;
       font-family: 'Cairo', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       border: 1px solid var(--border-color);
       background: var(--input-bg);
       color: var(--text-color);
       border-radius: 8px;
-      margin: 4px;
       outline: none;
       transition: all 0.2s;
       box-sizing: border-box;
@@ -97,18 +111,17 @@
       border-color: #3b82f6;
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
     }
-    input[type="text"] { width: 140px; text-transform: uppercase; font-weight: 600; }
-    input#clientInput { text-transform: none; width: 160px; }
+    input[type="text"] { width: 130px; text-transform: uppercase; font-weight: 600; }
+    input#clientInput { text-transform: none; width: 140px; }
 
     button {
-      padding: 10px 16px;
+      padding: 8px 14px;
       font-family: 'Cairo', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 700;
-      margin: 4px;
       transition: all 0.25s ease;
       box-shadow: 0 3px 10px rgba(0,0,0,0.15);
     }
@@ -120,163 +133,186 @@
     .btn-sync { background: var(--sync-gradient); color: white; }
     .btn-preview { background: var(--preview-gradient); color: #0f172a; }
     .btn-pdf { background: var(--pdf-gradient); color: white; }
-    .btn-danger { background: var(--danger-gradient); color: white; }
 
-    /* ---------- AUTH SCREENS ---------- */
     #login-screen, #signup-screen, #pending-screen {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 50px 30px;
-      max-width: 380px;
-      margin: 60px auto;
+      padding: 40px 20px;
+      max-width: 360px;
+      margin: 40px auto;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       text-align: center;
     }
-    #login-screen h2, #signup-screen h2, #pending-screen h2 { margin-bottom: 20px; }
-    #login-screen input, #signup-screen input { width: 100%; max-width: 280px; }
-    #loginError, #signupError { color: #f87171; font-size: 13px; margin-top: 10px; min-height: 18px; }
-    #signupSuccess { color: #34d399; font-size: 13px; margin-top: 10px; min-height: 18px; }
+    #login-screen h2, #signup-screen h2, #pending-screen h2 { margin-bottom: 15px; font-size: 1.4rem; }
+    #login-screen input, #signup-screen input { width: 100%; max-width: 280px; margin-bottom: 8px; }
+    #loginError, #signupError { color: #f87171; font-size: 12px; margin-top: 8px; min-height: 16px; }
+    #signupSuccess { color: #34d399; font-size: 12px; margin-top: 8px; min-height: 16px; }
     #signup-screen { display: none; }
     #pending-screen { display: none; }
-    #pending-screen p { color: var(--muted-color); margin-bottom: 20px; }
-    .toggle-link { display:block; margin-top:16px; font-size:12px; color:#3b82f6; cursor:pointer; text-decoration:underline; }
+    #pending-screen p { color: var(--muted-color); margin-bottom: 15px; font-size: 13px; }
+    .toggle-link { display:block; margin-top:14px; font-size:12px; color:#3b82f6; cursor:pointer; text-decoration:underline; }
 
     #welcome-screen {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 50px 30px;
-      max-width: 650px;
-      margin: 30px auto;
+      padding: 40px 20px;
+      max-width: 600px;
+      margin: 20px auto;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       text-align: center;
     }
-    #welcome-screen h2 { color: var(--text-color); font-size: 1.8rem; margin-bottom: 15px; }
-    #welcome-screen p { color: var(--muted-color); font-size: 1.05rem; }
+    #welcome-screen h2 { color: var(--text-color); font-size: 1.5rem; margin-bottom: 10px; }
+    #welcome-screen p { color: var(--muted-color); font-size: 0.95rem; }
 
-    #main-app-content { display: none; max-width: 850px; margin: 0 auto; text-align: left; }
+    #main-app-content { display: none; max-width: 800px; margin: 15px auto; text-align: left; }
 
     .global-actions {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 8px;
+      margin-bottom: 15px;
       background: var(--card-bg);
-      padding: 12px 20px;
+      padding: 10px 15px;
       border-radius: 12px;
       border: 1px solid var(--border-color);
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
-    .nav-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .nav-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
     .tab-btn {
       background: var(--input-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 6px 12px;
+      padding: 6px 10px;
       border-radius: 6px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       box-shadow: none;
       margin: 0;
     }
-    .tab-btn:hover { background: rgba(59, 130, 246, 0.15); border-color: #3b82f6; transform: none; }
+    .tab-btn:hover { background: rgba(59, 130, 246, 0.15); border-color: #3b82f6; }
     .tab-btn.active { background: var(--primary-gradient); color: white; border-color: transparent; }
 
-    .action-buttons { display: flex; gap: 8px; }
+    .action-buttons { display: flex; gap: 6px; }
 
-    #full-offer-container { display: flex; flex-direction: column; gap: 20px; }
+    #full-offer-container { display: flex; flex-direction: column; gap: 15px; }
 
     .offer-page-section {
       background: var(--card-bg);
-      padding: 30px;
+      padding: 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       border-radius: 16px;
       border: 1px solid var(--border-color);
       box-sizing: border-box;
+      overflow: hidden;
     }
 
-    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding-bottom: 12px; margin-bottom: 20px; }
-    .company-logo { max-height: 40px; width: auto; object-fit: contain; }
-    .project-logo { max-height: 35px; max-width: 140px; width: auto; object-fit: contain; }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding-bottom: 10px; margin-bottom: 15px; }
+    .company-logo { max-height: 35px; width: auto; object-fit: contain; }
+    .project-logo { max-height: 30px; max-width: 120px; width: auto; object-fit: contain; }
 
     .greeting-box {
       display: none;
       background: var(--greeting-bg);
       border-left: 4px solid #3b82f6;
-      padding: 12px 16px;
-      margin-bottom: 20px;
+      padding: 10px 14px;
+      margin-bottom: 15px;
       border-radius: 8px;
       color: var(--greeting-text);
-      font-size: 13px;
-      line-height: 1.5;
+      font-size: 12px;
+      line-height: 1.4;
       border: 1px solid var(--border-color);
       text-align: left;
     }
-    .greeting-box .client-highlight { font-size: 15px; font-weight: 700; color: #3b82f6; }
+    .greeting-box .client-highlight { font-size: 14px; font-weight: 700; color: #3b82f6; }
 
     .summary-hero-card {
       background: var(--input-bg);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
+      padding: 12px;
+      margin-bottom: 12px;
       text-align: center;
       border-top: 4px solid #3b82f6;
     }
-    .summary-hero-card h4 { margin: 0 0 5px 0; font-size: 12px; color: var(--muted-color); text-transform: uppercase; letter-spacing: 0.5px; }
-    .summary-hero-card .unit-big-text { font-size: 24px; font-weight: 700; color: #3b82f6; margin-bottom: 4px; }
-    .summary-hero-card .project-small-text { font-size: 14px; font-weight: 600; color: var(--text-color); }
+    .summary-hero-card h4 { margin: 0 0 4px 0; font-size: 11px; color: var(--muted-color); text-transform: uppercase; letter-spacing: 0.5px; }
+    .summary-hero-card .unit-big-text { font-size: 22px; font-weight: 700; color: #3b82f6; margin-bottom: 2px; }
+    .summary-hero-card .project-small-text { font-size: 13px; font-weight: 600; color: var(--text-color); }
 
-    .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; text-align: left; }
-    .detail-card { background: var(--input-bg); padding: 12px 16px; border-radius: 8px; border-left: 3px solid #3b82f6; border: 1px solid var(--border-color); }
-    .detail-card strong { display: block; font-size: 10px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
-    .detail-card span { font-size: 13px; font-weight: 700; color: var(--text-color); }
+    .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; text-align: left; }
+    .detail-card { background: var(--input-bg); padding: 10px 12px; border-radius: 8px; border-left: 3px solid #3b82f6; border: 1px solid var(--border-color); word-break: break-word; }
+    .detail-card strong { display: block; font-size: 10px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.5px; }
+    .detail-card span { font-size: 12px; font-weight: 700; color: var(--text-color); }
 
-    .pictures-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .pictures-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .gallery-card-item { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
-    .gallery-card-item img { width: 100%; height: 180px; object-fit: cover; display: block; }
+    .gallery-card-item img { width: 100%; height: 150px; object-fit: cover; display: block; }
 
-    .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .masterplan-section {
       position: relative; width: 100%; background: var(--input-bg); border-radius: 10px; overflow: hidden;
       border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;
-      min-height: 380px; max-height: 450px;
+      min-height: 280px; max-height: 380px;
     }
-    .masterplan-img { width: 100%; height: 100%; max-height: 430px; display: block; object-fit: contain; cursor: crosshair; }
+    .masterplan-img { width: 100%; height: 100%; max-height: 360px; display: block; object-fit: contain; cursor: crosshair; }
 
     .unit-marker {
-      position: absolute; font-size: 28px; pointer-events: none; display: none; z-index: 10;
+      position: absolute; font-size: 24px; pointer-events: none; display: none; z-index: 10;
       transform: translate(-50%, -100%); filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.5));
     }
 
-    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; }
-    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
-    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 12px 14px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
-    .payment-table td { padding: 10px 14px; border-bottom: 1px solid var(--border-color); color: var(--text-color); }
+    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; overflow-x: auto; }
+    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; white-space: nowrap; }
+    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 10px 12px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
+    .payment-table td { padding: 8px 12px; border-bottom: 1px solid var(--border-color); color: var(--text-color); }
     .payment-table tr:last-child td { border-bottom: none; }
 
-    .status { margin-top: 10px; font-size: 13px; font-weight: 600; text-align: center; }
+    .status { margin-top: 4px; font-size: 11px; font-weight: 600; text-align: center; }
 
-    /* ---------- INVENTORY / ADMIN TABS ---------- */
-    .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .admin-form-block { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; }
-    .admin-form-block h4 { margin-top: 0; font-size: 14px; }
-    .admin-form-block input, .admin-form-block textarea { width: 100%; display: block; }
-    .admin-form-block textarea { min-height: 70px; font-family: monospace; font-size: 12px; }
-    .admin-msg { font-size: 12px; margin-top: 6px; min-height: 16px; }
+    .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .admin-form-block { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; text-align: left; }
+    .admin-form-block h4 { margin-top: 0; font-size: 13px; }
+    .admin-form-block input, .admin-form-block textarea { width: 100%; display: block; margin-bottom: 8px; }
+    .admin-form-block textarea { min-height: 60px; font-family: monospace; font-size: 11px; }
+    .admin-msg { font-size: 11px; margin-top: 4px; min-height: 14px; }
 
     .import-log-item, .approval-item {
       background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px;
-      padding: 10px 14px; margin-bottom: 8px; font-size: 12px; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap: wrap;
+      padding: 8px 12px; margin-bottom: 6px; font-size: 11px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap: wrap; text-align: left;
     }
-    .approval-item button { margin:0; padding:6px 12px; font-size:12px; }
+    .approval-item button { margin:0; padding:4px 10px; font-size:11px; }
+
+    /* App Copyrights - Visible strictly in UI, completely hidden outside */
+    .app-copyrights {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      margin: 25px 0 15px 0;
+      font-size: 13px;
+      color: #3b82f6;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-align: center;
+      background: var(--card-bg);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    @media print {
+      .app-copyrights { display: none !important; visibility: hidden !important; }
+      .sticky-header { display: none !important; }
+    }
 
     @media (max-width: 768px) {
+      body { padding: 5px; }
+      .controls { width: 100%; padding: 8px; }
+      input[type="text"], input#clientInput, select { width: 100%; max-width: 100%; margin: 2px 0; }
       .details-grid { grid-template-columns: 1fr; }
       .pictures-grid { grid-template-columns: 1fr; }
       .global-actions { flex-direction: column; align-items: stretch; }
@@ -293,39 +329,40 @@
     <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">Light Mode</button>
   </div>
 
-  <!-- ============ LOGIN ============ -->
+  <!-- LOGIN SCREEN -->
   <div id="login-screen">
     <h2>M Squared Login</h2>
     <input type="email" id="loginEmail" placeholder="Email" autocomplete="username"><br>
     <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"><br>
-    <button class="btn-search" style="width:100%; max-width:280px;" onclick="login()">Login</button>
+    <button class="btn-search" style="width:100%; max-width:100%;" onclick="login()">Login</button>
     <div id="loginError"></div>
     <span class="toggle-link" onclick="showSignup()">Don't have an account? Sign Up</span>
   </div>
 
-  <!-- ============ SIGN UP ============ -->
+  <!-- SIGN UP SCREEN -->
   <div id="signup-screen">
     <h2>Create Account</h2>
     <input type="text" id="signupName" placeholder="Full Name"><br>
     <input type="email" id="signupEmail" placeholder="Email" autocomplete="username"><br>
     <input type="password" id="signupPassword" placeholder="Password" autocomplete="new-password"><br>
-    <button class="btn-search" style="width:100%; max-width:280px;" onclick="signUp()">Create Account</button>
+    <button class="btn-search" style="width:100%; max-width:100%;" onclick="signUp()">Create Account</button>
     <div id="signupError"></div>
     <div id="signupSuccess"></div>
     <span class="toggle-link" onclick="showLogin()">Already have an account? Login</span>
   </div>
 
-  <!-- ============ PENDING APPROVAL ============ -->
+  <!-- PENDING SCREEN -->
   <div id="pending-screen">
     <h2>Account Pending Approval</h2>
     <p>Your account has been created. An administrator needs to approve it before you can access the system.</p>
     <button class="btn-search" onclick="logout()">Logout</button>
   </div>
 
-  <!-- ============ APP (hidden until logged in & approved) ============ -->
+  <!-- MAIN APP CONTAINER -->
   <div id="app-root" style="display:none;">
 
-    <div style="text-align: center;">
+    <!-- Sticky Header: Search & Inventory Update Combined Top Bar -->
+    <div class="sticky-header">
       <div class="controls">
         <input type="text" id="unitInput" placeholder="Unit Code" onkeypress="if(event.key==='Enter') searchUnit()">
         <input type="text" id="clientInput" placeholder="Client Name">
@@ -334,8 +371,8 @@
         </select>
         <button class="btn-search" onclick="searchUnit()">Search</button>
         <button class="btn-sync" onclick="loadCloudData()">Sync</button>
-        <div id="status" class="status">Loading data...</div>
       </div>
+      <div id="status" class="status">Loading data...</div>
     </div>
 
     <div id="welcome-screen">
@@ -352,8 +389,8 @@
           <button class="tab-btn" onclick="scrollToSection('sec-masterplan', this)">Masterplan</button>
           <button class="tab-btn" onclick="scrollToSection('sec-layout', this)">Layout</button>
           <button class="tab-btn" onclick="scrollToSection('sec-payment', this)">Payment</button>
-          <button class="tab-btn" id="inventoryTabBtn" style="display:none;" onclick="scrollToSection('sec-inventory', this)">My Inventory</button>
-          <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="scrollToSection('sec-admin', this)">Admin</button>
+          <button class="tab-btn" id="inventoryTabBtn" onclick="scrollToSection('sec-inventory', this)">Inventory Update</button>
+          <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="scrollToSection('sec-admin', this)">Admin Panel</button>
         </div>
         <div class="action-buttons">
           <button class="btn-preview" onclick="previewFullPDF()">Preview</button>
@@ -384,7 +421,7 @@
             <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
             <div><img id="projectLogoImgPictures" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
           </div>
-          <h3 style="margin: 0 0 15px 0; font-size: 16px; text-align: left;">Project Gallery & Views</h3>
+          <h3 style="margin: 0 0 12px 0; font-size: 14px; text-align: left;">Project Gallery & Views</h3>
           <div class="pictures-grid" id="picturesGridContainer"></div>
         </div>
 
@@ -394,8 +431,8 @@
             <div><img id="projectLogoImgMasterplan" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
           </div>
           <div class="masterplan-header">
-            <h3 style="margin: 0; font-size:16px;">Project Masterplan Location</h3>
-            <small id="currentProjectLabel" style="color: var(--muted-color); font-weight: bold; font-size: 13px;"></small>
+            <h3 style="margin: 0; font-size:14px;">Project Masterplan Location</h3>
+            <small id="currentProjectLabel" style="color: var(--muted-color); font-weight: bold; font-size: 12px;"></small>
           </div>
           <div class="masterplan-section" id="masterplanContainer">
             <div id="mapWrapper" style="position: relative; display: inline-block; line-height: 0;">
@@ -411,8 +448,8 @@
             <div><img id="projectLogoImgLayout" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
           </div>
           <div class="masterplan-header">
-            <h3 style="margin: 0; font-size:16px;">Unit Floor Plan & Architectural Layout</h3>
-            <small style="color: var(--muted-color); font-weight: bold; font-size: 13px;" id="layoutSubLabel">Detailed Schematic</small>
+            <h3 style="margin: 0; font-size:14px;">Unit Floor Plan & Architectural Layout</h3>
+            <small style="color: var(--muted-color); font-weight: bold; font-size: 12px;" id="layoutSubLabel">Detailed Schematic</small>
           </div>
           <div class="masterplan-section">
             <img src="" alt="Unit Layout" class="masterplan-img" id="unitLayoutImg" crossorigin="anonymous">
@@ -424,9 +461,9 @@
             <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
             <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
           </div>
-          <h3 style="margin: 0 0 12px 0; font-size: 16px; text-align: left;">Complete Payment Schedule & Installments</h3>
-          <div class="summary-hero-card" style="margin-bottom: 15px; text-align: left; padding: 12px 18px;">
-            <div style="font-size: 13px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 18px; font-weight: 700; color: #3b82f6;">-</span></div>
+          <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Complete Payment Schedule & Installments</h3>
+          <div class="summary-hero-card" style="margin-bottom: 12px; text-align: left; padding: 10px 14px;">
+            <div style="font-size: 12px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 16px; font-weight: 700; color: #3b82f6;">-</span></div>
           </div>
           <div class="payment-table-container">
             <table class="payment-table">
@@ -438,88 +475,78 @@
           </div>
         </div>
 
-        <!-- MY INVENTORY TAB (visible to every approved agent) -->
-        <div class="offer-page-section" id="sec-inventory" style="display:none;">
-          <h3 style="margin: 0 0 12px 0; font-size: 16px; text-align: left;">My Inventory</h3>
-          <p style="font-size:12px; color:var(--muted-color); margin: 0 0 14px 0;">
-            Units you import here are private to you — your teammates won't see them, and you won't see theirs.
+        <!-- INVENTORY UPDATE TAB (Clears all old data when importing new list) -->
+        <div class="offer-page-section" id="sec-inventory">
+          <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
+          <p style="font-size:11px; color:var(--muted-color); margin: 0 0 12px 0;">
+            Once you import new inventory files, any previous inventory data is completely cleared and replaced with the fresh dataset.
           </p>
           <div class="admin-grid">
             <div class="admin-form-block">
-              <h4>Import from File</h4>
-              <p style="font-size:12px; color:var(--muted-color); margin: 0 0 10px 0;">
-                Use any column headers you like in the first row (Unit Code, Project, Price, Delivery, Area, Bedrooms, Layout Image...) — the system detects them automatically. Any unrecognized column is saved as an extra detail automatically.
-              </p>
-              <input type="file" id="adm_import_file" accept=".xlsx,.xls,.csv">
-              <button class="btn-sync" onclick="adminImportFile()">Import File</button>
+              <h4>Import File (.xlsx, .csv)</h4>
+              <input type="file" id="adm_import_file" accept=".xlsx,.xls,.csv" style="font-size:11px;">
+              <button class="btn-sync" onclick="adminImportFile()">Import & Overwrite</button>
               <div class="admin-msg" id="adminImportMsg"></div>
             </div>
             <div class="admin-form-block">
-              <h4>Import from Google Sheet</h4>
-              <p style="font-size:12px; color:var(--muted-color); margin: 0 0 10px 0;">
-                Paste a published Google Sheet CSV link (File &gt; Share &gt; Publish to web &gt; CSV).
-              </p>
-              <input type="text" id="adm_gsheet_url" placeholder="https://docs.google.com/.../pub?output=csv" style="width:100%;">
-              <button class="btn-sync" onclick="importFromGoogleSheet()">Import from Link</button>
+              <h4>Import from Google Sheet CSV Link</h4>
+              <input type="text" id="adm_gsheet_url" placeholder="https://docs.google.com/.../pub?output=csv">
+              <button class="btn-sync" onclick="importFromGoogleSheet()">Import & Overwrite</button>
               <div class="admin-msg" id="adminGsheetMsg"></div>
             </div>
           </div>
-          <p style="font-size:12px; color:var(--muted-color); margin-top:14px;">
-            Note: masterplan pin locations are set from the Masterplan tab — search a unit, go to the Masterplan tab, and click on the map.
-          </p>
-          <h4 style="margin-top:20px; font-size:14px;">Recent Imports (Team Activity)</h4>
-          <div class="import-log-list" id="importLogList"><p style="font-size:12px; color:var(--muted-color);">No imports yet.</p></div>
+          <h4 style="margin-top:15px; font-size:13px;">Recent Imports Activity</h4>
+          <div class="import-log-list" id="importLogList"><p style="font-size:11px; color:var(--muted-color);">No imports yet.</p></div>
         </div>
 
-        <!-- ADMIN TAB (only visible to role = admin) -->
+        <!-- ADMIN PANEL TAB (Restricted exclusively to Admin accounts) -->
         <div class="offer-page-section" id="sec-admin" style="display:none;">
-          <h3 style="margin: 0 0 12px 0; font-size: 16px; text-align: left;">Admin Panel</h3>
+          <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Admin Control Panel</h3>
 
-          <h4 style="font-size:14px;">Pending Account Approvals</h4>
-          <div class="approval-list" id="approvalList"><p style="font-size:12px; color:var(--muted-color);">No pending accounts.</p></div>
+          <h4 style="font-size:13px;">Pending Account Approvals (Admin Only)</h4>
+          <div class="approval-list" id="approvalList"><p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p></div>
 
-          <div class="admin-form-block" style="margin-top:20px;">
+          <div class="admin-form-block" style="margin-top:15px;">
             <h4>Add / Update Project</h4>
-            <input type="text" id="adm_proj_name" placeholder="Project Name (e.g. 41 Business District)">
+            <input type="text" id="adm_proj_name" placeholder="Project Name">
             <input type="text" id="adm_proj_logo" placeholder="Logo Image URL">
             <input type="text" id="adm_proj_masterplan" placeholder="Masterplan Image URL">
-            <textarea id="adm_proj_gallery" placeholder="Gallery image URLs, one per line (3-4 recommended)"></textarea>
+            <textarea id="adm_proj_gallery" placeholder="Gallery image URLs, one per line"></textarea>
             <button class="btn-search" onclick="adminSaveProject()">Save Project</button>
             <div class="admin-msg" id="adminProjMsg"></div>
           </div>
         </div>
 
       </div>
+
+      <!-- Copyrights visible only in App UI, completely hidden during print/PDF export -->
+      <div class="app-copyrights">
+        Developed by Omar Tarek - 01003666683
+      </div>
+
     </div>
   </div>
 
   <script>
-    // ============================================================
-    // Supabase project connection
-    // ============================================================
     const SUPABASE_URL = 'https://qiflwudikwuavyljlhnx.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_CXh9qukpJYZbS6glxcPwlQ_X57JR4sC';
-
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Simple inline placeholder (no external service, never breaks)
     function placeholderImg(label) {
       const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'>
         <rect width='100%' height='100%' fill='#1e293b'/>
-        <text x='50%' y='50%' font-family='sans-serif' font-size='28' fill='#64748b' text-anchor='middle' dominant-baseline='middle'>${label}</text>
+        <text x='50%' y='50%' font-family='sans-serif' font-size='26' fill='#64748b' text-anchor='middle' dominant-baseline='middle'>${label}</text>
       </svg>`;
       return 'data:image/svg+xml;base64,' + btoa(svg);
     }
 
     let currentUser = null;
     let currentProfile = null;
-
-    let liveUnitsData = {};       // unit_code -> unit row
-    let projectsByName = {};      // lowercased project name -> project row
+    let liveUnitsData = {};
+    let projectsByName = {};
     let currentLoadedBuildingKey = "";
     let currentUnitCode = "";
 
-    // ---------------- AUTH ----------------
     function showSignup() {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('signup-screen').style.display = 'block';
@@ -562,10 +589,9 @@
       document.getElementById('signupPassword').value = '';
 
       if (data.session && data.user) {
-        // Account is immediately active (email confirmation disabled) -> route to pending/approved screen
         await onLoggedIn(data.user);
       } else {
-        okBox.innerText = 'Account created! Please check your email to confirm, then log in — an admin will still need to approve your access.';
+        okBox.innerText = 'Account created! Please log in — an admin will need to approve your access.';
         showLogin();
       }
     }
@@ -599,13 +625,14 @@
       document.getElementById('welcome-screen').style.display = 'none';
       document.getElementById('main-app-content').style.display = 'block';
 
-      document.getElementById('inventoryTabBtn').style.display = 'inline-block';
-      document.getElementById('sec-inventory').style.display = 'block';
-
-      if (profile.role === 'admin') {
+      // Strict Admin Role Enforcement
+      if (profile && profile.role === 'admin') {
         document.getElementById('adminTabBtn').style.display = 'inline-block';
         document.getElementById('sec-admin').style.display = 'block';
         loadPendingApprovals();
+      } else {
+        document.getElementById('adminTabBtn').style.display = 'none';
+        document.getElementById('sec-admin').style.display = 'none';
       }
 
       loadCloudData();
@@ -623,7 +650,6 @@
       }
     });
 
-    // ---------------- THEME / NAV ----------------
     function toggleTheme() {
       const body = document.body;
       const btn = document.getElementById('themeToggleBtn');
@@ -641,19 +667,19 @@
       if (btnElement) btnElement.classList.add('active');
     }
 
-    // ---------------- PENDING APPROVALS (admin only) ----------------
     async function loadPendingApprovals() {
+      if (!currentProfile || currentProfile.role !== 'admin') return;
       const listEl = document.getElementById('approvalList');
       const { data, error } = await supabaseClient.from('profiles').select('*').eq('status', 'pending').order('created_at', { ascending: false });
       if (error || !data || !data.length) {
-        listEl.innerHTML = '<p style="font-size:12px; color:var(--muted-color);">No pending accounts.</p>';
+        listEl.innerHTML = '<p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p>';
         return;
       }
       listEl.innerHTML = '';
       data.forEach(p => {
         const div = document.createElement('div');
         div.className = 'approval-item';
-        div.innerHTML = `<span>${p.full_name || 'Unnamed'} — joined ${new Date(p.created_at).toLocaleDateString()}</span>`;
+        div.innerHTML = `<span>${p.full_name || 'Unnamed'} (${p.id})</span>`;
         const btn = document.createElement('button');
         btn.className = 'btn-search';
         btn.innerText = 'Approve';
@@ -664,24 +690,24 @@
     }
 
     async function approveUser(id) {
+      if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied: Admin privileges required.'); return; }
       const { error } = await supabaseClient.from('profiles').update({ status: 'approved' }).eq('id', id);
       if (error) { alert('Error: ' + error.message); return; }
       loadPendingApprovals();
     }
 
-    // ---------------- IMPORT LOG (visible to everyone) ----------------
     async function loadImportLogs() {
       const listEl = document.getElementById('importLogList');
-      const { data, error } = await supabaseClient.from('import_logs').select('*').order('created_at', { ascending: false }).limit(20);
+      const { data, error } = await supabaseClient.from('import_logs').select('*').order('created_at', { ascending: false }).limit(10);
       if (error || !data || !data.length) {
-        listEl.innerHTML = '<p style="font-size:12px; color:var(--muted-color);">No imports yet.</p>';
+        listEl.innerHTML = '<p style="font-size:11px; color:var(--muted-color);">No imports yet.</p>';
         return;
       }
       listEl.innerHTML = '';
       data.forEach(log => {
         const div = document.createElement('div');
         div.className = 'import-log-item';
-        div.innerHTML = `<span>${log.agent_name || 'Unknown'} imported ${log.unit_count} unit(s)</span><span>${new Date(log.created_at).toLocaleString()}</span>`;
+        div.innerHTML = `<span>${log.agent_name || 'User'} imported ${log.unit_count} unit(s)</span><span>${new Date(log.created_at).toLocaleString()}</span>`;
         listEl.appendChild(div);
       });
     }
@@ -692,7 +718,6 @@
       loadImportLogs();
     }
 
-    // ---------------- DATA LOADING ----------------
     async function loadCloudData() {
       const st = document.getElementById('status');
       st.style.color = "#60a5fa";
@@ -715,7 +740,6 @@
         window.cloudLocations = {};
         (locations || []).forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
 
-        // populate project dropdown
         const sel = document.getElementById('projectSelect');
         sel.innerHTML = '<option value="auto">Auto Project</option>';
         (projects || []).forEach(p => {
@@ -725,11 +749,11 @@
         });
 
         st.style.color = "#34d399";
-        st.innerText = `Ready (${(units || []).length} units, ${(projects || []).length} projects)!`;
+        st.innerText = `Ready (${(units || []).length} units synced)!`;
       } catch (err) {
         console.error(err);
         st.style.color = "#f87171";
-        st.innerText = "Could not load data. Check Supabase setup / connection.";
+        st.innerText = "Connection failed.";
       }
     }
 
@@ -746,7 +770,6 @@
       return code.substring(0, 4);
     }
 
-    // ---------------- MASTERPLAN PIN ----------------
     async function handleMapClick(event) {
       if (!currentLoadedBuildingKey) { alert("Please search for a unit first!"); return; }
       if (!currentProfile || currentProfile.role !== 'admin') { alert("Only admins can set the masterplan pin."); return; }
@@ -765,39 +788,36 @@
       marker.style.display = 'block'; marker.style.left = `${x}%`; marker.style.top = `${y}%`;
 
       const projName = liveUnitsData[currentUnitCode] ? liveUnitsData[currentUnitCode].project_name : null;
-      const { error } = await supabaseClient.from('unit_locations').upsert({
+      await supabaseClient.from('unit_locations').upsert({
         building_key: currentLoadedBuildingKey, x, y, project_name: projName, updated_at: new Date().toISOString()
       });
-      if (error) console.error(error);
     }
 
-    // ---------------- PROJECT VISUALS ----------------
     function setupProjectVisuals(projectName) {
       const pLower = (projectName || '').toLowerCase().trim();
       const label = document.getElementById('currentProjectLabel');
       let proj = projectsByName[pLower];
       if (!proj) {
-        // fuzzy fallback: partial match
         const foundKey = Object.keys(projectsByName).find(k => pLower.includes(k) || k.includes(pLower));
         proj = foundKey ? projectsByName[foundKey] : null;
       }
 
-      const logoUrl = proj && proj.logo_url ? proj.logo_url : placeholderImg('No Logo');
+      const logoUrl = proj && proj.logo_url ? proj.logo_url : placeholderImg('Logo');
       ['Summary','Pictures','Masterplan','Layout','Payment'].forEach(sec => {
         document.getElementById('projectLogoImg' + sec).src = logoUrl;
       });
 
       const picGrid = document.getElementById('picturesGridContainer');
       picGrid.innerHTML = '';
-      const gallery = (proj && Array.isArray(proj.gallery) && proj.gallery.length) ? proj.gallery : [placeholderImg('No Gallery Images')];
+      const gallery = (proj && Array.isArray(proj.gallery) && proj.gallery.length) ? proj.gallery : [placeholderImg('Gallery')];
       gallery.forEach(imgUrl => {
         const div = document.createElement('div');
         div.className = 'gallery-card-item';
-        div.innerHTML = `<img src="${imgUrl}" alt="Project View" crossorigin="anonymous" onerror="this.src='${placeholderImg('Image Unavailable')}'">`;
+        div.innerHTML = `<img src="${imgUrl}" alt="View" crossorigin="anonymous" onerror="this.src='${placeholderImg('Image Unavailable')}'">`;
         picGrid.appendChild(div);
       });
 
-      document.getElementById('mpImg').src = (proj && proj.masterplan_image_url) ? proj.masterplan_image_url : placeholderImg('No Masterplan Image');
+      document.getElementById('mpImg').src = (proj && proj.masterplan_image_url) ? proj.masterplan_image_url : placeholderImg('Masterplan');
       label.innerText = `Project: ${projectName || 'M Squared'}`;
     }
 
@@ -806,7 +826,6 @@
       if (selected !== 'auto') setupProjectVisuals(selected);
     }
 
-    // ---------------- SEARCH ----------------
     function searchUnit() {
       const val = document.getElementById('unitInput').value.trim().toUpperCase();
       const clientName = document.getElementById('clientInput').value.trim();
@@ -842,8 +861,8 @@
 
         const layoutImgElement = document.getElementById('unitLayoutImg');
         const layoutSubLabel = document.getElementById('layoutSubLabel');
-        layoutImgElement.src = uData.layout_image_url || placeholderImg('No Layout Image for ' + val);
-        layoutImgElement.onerror = function () { this.src = placeholderImg('Layout Unavailable for ' + val); };
+        layoutImgElement.src = uData.layout_image_url || placeholderImg('No Layout Image');
+        layoutImgElement.onerror = function () { this.src = placeholderImg('Layout Unavailable'); };
         layoutSubLabel.innerText = `Layout Code: ${val}`;
 
         currentLoadedBuildingKey = extractBuildingKey(val);
@@ -874,7 +893,7 @@
         });
 
         const unitPriceVal = Number(uData.price) || 0;
-        document.getElementById('paymentUnitPrice').innerText = unitPriceVal > 0 ? unitPriceVal.toLocaleString() + ' EGP' : 'Refer to contract / sheet';
+        document.getElementById('paymentUnitPrice').innerText = unitPriceVal > 0 ? unitPriceVal.toLocaleString() + ' EGP' : 'Refer to contract';
         const paymentTbody = document.getElementById('paymentTableBody');
         paymentTbody.innerHTML = '';
         if (unitPriceVal > 0) {
@@ -892,7 +911,7 @@
             paymentTbody.appendChild(tr);
           });
         } else {
-          paymentTbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--muted-color);">No unit price found to calculate schedule.</td></tr>`;
+          paymentTbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--muted-color);">No unit price found.</td></tr>`;
         }
 
         st.style.color = "#34d399";
@@ -903,8 +922,8 @@
       }
     }
 
-    // ---------------- ADMIN: SAVE PROJECT ----------------
     async function adminSaveProject() {
+      if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
       const msg = document.getElementById('adminProjMsg');
       msg.style.color = '#60a5fa'; msg.innerText = 'Saving...';
 
@@ -927,12 +946,11 @@
       loadCloudData();
     }
 
-    // ---------------- IMPORT: SHARED HELPERS ----------------
     function normHeader(h) { return String(h || '').toLowerCase().trim(); }
     function findColumn(keys, patterns) { return keys.find(k => patterns.some(p => normHeader(k).includes(p))); }
 
     function excelSerialToDateStr(serial) {
-      const utcDays = Math.floor(serial) - 25569; // days between 1899-12-30 and 1970-01-01
+      const utcDays = Math.floor(serial) - 25569;
       const dateInfo = new Date(utcDays * 86400 * 1000);
       const day = String(dateInfo.getUTCDate()).padStart(2, '0');
       const month = String(dateInfo.getUTCMonth() + 1).padStart(2, '0');
@@ -940,7 +958,6 @@
       return `${day}/${month}/${year}`;
     }
 
-    // Converts Arabic-Indic (١٢٣) and Extended Arabic-Indic (۱۲۳) digits to standard English digits
     function toEnglishDigits(val) {
       if (val === null || val === undefined) return val;
       const str = String(val);
@@ -953,51 +970,13 @@
       });
     }
 
-    // Translates common Arabic floor-name words (e.g. "الدور الأول") into English ("First")
-    function stripHiddenMarks(s) {
-      return s.replace(/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, '');
-    }
-    function normalizeArabic(s) {
-      return stripHiddenMarks(s).replace(/[إأآا]/g, 'ا').replace(/ى/g, 'ي').trim();
-    }
-    const FLOOR_WORD_MAP_RAW = {
-      'ارضي': 'Ground',
-      'اول': 'First',
-      'تاني': 'Second', 'ثاني': 'Second',
-      'تالت': 'Third', 'ثالث': 'Third',
-      'رابع': 'Fourth',
-      'خامس': 'Fifth',
-      'سادس': 'Sixth',
-      'سابع': 'Seventh',
-      'تامن': 'Eighth', 'ثامن': 'Eighth',
-      'تاسع': 'Ninth',
-      'عاشر': 'Tenth',
-      'بدروم': 'Basement',
-      'روف': 'Roof',
-      'ميزانين': 'Mezzanine'
-    };
-    const FLOOR_WORD_MAP = {};
-    Object.keys(FLOOR_WORD_MAP_RAW).forEach(k => { FLOOR_WORD_MAP[normalizeArabic(k)] = FLOOR_WORD_MAP_RAW[k]; });
-
-    function translateFloorValue(val) {
-      let s = toEnglishDigits(String(val || '')).trim();
-      const tokens = s.split(/\s+/).map(tok => {
-        let core = normalizeArabic(tok).replace(/الدور|الطابق|دور|طابق/g, '');
-        if (core.startsWith('و') && core.length > 1) core = core.slice(1); // strip Arabic "and" prefix
-        if (core.startsWith('ال')) core = core.slice(2);
-        core = core.trim();
-        return FLOOR_WORD_MAP[core] || stripHiddenMarks(tok);
-      });
-      return tokens.filter(Boolean).join(' & ');
-    }
-
     function parseWorkbookRows(workbook) {
       const sheetName = workbook.SheetNames[0];
       return XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '', raw: false });
     }
 
     function buildUnitsFromRows(rows) {
-      if (!rows.length) return { error: 'File is empty or the format is not supported.' };
+      if (!rows.length) return { error: 'File is empty.' };
 
       const keys = Object.keys(rows[0]);
       const codeKey = findColumn(keys, ['unit', 'code']);
@@ -1008,7 +987,7 @@
       const bedroomKey = findColumn(keys, ['bedroom', 'room']);
       const layoutKey = findColumn(keys, ['layout', 'plan', 'image']);
 
-      if (!codeKey) return { error: 'No clear unit code column found (header must contain "Unit" or "Code").' };
+      if (!codeKey) return { error: 'No unit code column found.' };
 
       const knownKeys = [codeKey, projectKey, priceKey, deliveryKey, areaKey, bedroomKey, layoutKey].filter(Boolean);
       const unitsToImport = [];
@@ -1025,7 +1004,7 @@
         const extra = {};
         keys.forEach(k => {
           if (!knownKeys.includes(k) && String(row[k]).trim() !== '') {
-            extra[k] = normHeader(k).includes('floor') ? translateFloorValue(row[k]) : toEnglishDigits(row[k]);
+            extra[k] = toEnglishDigits(row[k]);
           }
         });
 
@@ -1043,24 +1022,30 @@
         });
       });
 
-      if (!unitsToImport.length) return { error: 'No row has a valid unit code.' };
+      if (!unitsToImport.length) return { error: 'No valid unit found.' };
       return { units: unitsToImport };
     }
 
     async function performBulkImport(unitsToImport, msgEl) {
-      msgEl.style.color = '#60a5fa'; msgEl.innerText = `Uploading ${unitsToImport.length} unit(s)...`;
+      msgEl.style.color = '#60a5fa'; msgEl.innerText = `Clearing old inventory & uploading ${unitsToImport.length} new unit(s)...`;
+
+      await supabaseClient.from('units').delete().not('unit_code', 'is', null);
 
       const batchSize = 500;
       let importedCount = 0;
       for (let i = 0; i < unitsToImport.length; i += batchSize) {
         const batch = unitsToImport.slice(i, i + batchSize);
-        const { error } = await supabaseClient.from('units').upsert(batch, { onConflict: 'owner_id,unit_code' });
-        if (error) { msgEl.style.color = '#f87171'; msgEl.innerText = 'Error: ' + error.message; return; }
+        const { error } = await supabaseClient.from('units').insert(batch);
+        if (error) { 
+          msgEl.style.color = '#f87171'; 
+          msgEl.innerText = 'Error: ' + error.message; 
+          return; 
+        }
         importedCount += batch.length;
       }
 
       msgEl.style.color = '#34d399';
-      msgEl.innerText = `Successfully imported ${importedCount} unit(s)!`;
+      msgEl.innerText = `Inventory successfully updated & replaced (${importedCount} units)!`;
       loadCloudData();
       logImport(importedCount);
     }
@@ -1092,7 +1077,7 @@
         } catch (err) {
           console.error(err);
           msg.style.color = '#f87171';
-          msg.innerText = 'Error reading the file. Make sure it is a valid Excel or CSV file.';
+          msg.innerText = 'Error reading file.';
         }
       };
       reader.readAsArrayBuffer(file);
@@ -1101,12 +1086,12 @@
     async function importFromGoogleSheet() {
       const msg = document.getElementById('adminGsheetMsg');
       const url = document.getElementById('adm_gsheet_url').value.trim();
-      if (!url) { msg.style.color = '#f87171'; msg.innerText = 'Please paste a Google Sheet CSV link first.'; return; }
+      if (!url) { msg.style.color = '#f87171'; msg.innerText = 'Please paste link first.'; return; }
 
       msg.style.color = '#60a5fa'; msg.innerText = 'Fetching sheet...';
       try {
         const res = await fetch(url);
-        if (!res.ok) throw new Error('Could not fetch the sheet (HTTP ' + res.status + ').');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         const csvText = await res.text();
         const workbook = XLSX.read(csvText, { type: 'string' });
         const rows = parseWorkbookRows(workbook);
@@ -1116,11 +1101,10 @@
       } catch (err) {
         console.error(err);
         msg.style.color = '#f87171';
-        msg.innerText = 'Could not import from this link. Make sure the sheet is published as CSV and publicly accessible.';
+        msg.innerText = 'Could not import from link.';
       }
     }
 
-    // ---------------- PDF EXPORT (single continuous page, no breaks) ----------------
     function buildSinglePagePdfOptions(element, filename) {
       const widthMM = 210;
       const heightMM = (element.scrollHeight / element.offsetWidth) * widthMM;
