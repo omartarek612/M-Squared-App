@@ -266,12 +266,12 @@
 
     .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     
-    /* Masterplan & Layout Frame Properly Filled without being squished */
+    /* Masterplan & Layout Frame Perfectly Scaled & Clear without distortion */
     .masterplan-section {
       position: relative; width: 100%; background: var(--input-bg); border-radius: 10px; overflow: hidden;
-      border: 1px solid var(--border-color); text-align: center; padding: 10px;
+      border: 1px solid var(--border-color); text-align: center; padding: 10px; display: flex; justify-content: center; align-items: center;
     }
-    .masterplan-img { width: 100%; height: auto; max-height: 520px; object-fit: cover; display: block; cursor: crosshair; margin: 0 auto; }
+    .masterplan-img { width: 100%; height: auto; max-height: 520px; object-fit: contain; display: block; cursor: crosshair; margin: 0 auto; }
 
     .unit-marker {
       position: absolute; font-size: 24px; pointer-events: none; display: none; z-index: 10;
@@ -354,7 +354,7 @@
         <input type="text" id="clientInput" placeholder="Client Name">
         <select id="projectSelect" onchange="changeMasterplanManual()"></select>
         <button class="btn-search" onclick="searchUnit()">Search</button>
-        <button class="btn-sync" onclick="loadCloudData()">Sync</button>
+        <button class="btn-sync" onclick="loadCloudData(true)">Sync</button>
       </div>
       <div id="status" class="status">Loading...</div>
     </div>
@@ -390,8 +390,8 @@
 
         <div class="offer-page-section" id="sec-summary">
           <div class="header">
-            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
-            <div><img id="projectLogoImgSummary" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
+            <div><img id="projectLogoImgSummary" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
           </div>
           <div class="greeting-box" id="greetingBox"></div>
           <div class="summary-hero-card">
@@ -406,8 +406,8 @@
 
         <div class="offer-page-section" id="sec-pictures">
           <div class="header">
-            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
-            <div><img id="projectLogoImgPictures" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
+            <div><img id="projectLogoImgPictures" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
           </div>
           <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Project Gallery</h3>
           <div class="pictures-grid" id="picturesGridContainer"></div>
@@ -415,8 +415,8 @@
 
         <div class="offer-page-section" id="sec-masterplan">
           <div class="header">
-            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
-            <div><img id="projectLogoImgMasterplan" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
+            <div><img id="projectLogoImgMasterplan" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
           </div>
           <div class="masterplan-header">
             <h3 style="margin: 0; font-size:14px;">Masterplan Location</h3>
@@ -424,7 +424,7 @@
           </div>
           <div class="masterplan-section" id="masterplanContainer">
             <div id="mapWrapper" style="position: relative; display: inline-block; line-height: 0; width: 100%;">
-              <img src="" alt="Masterplan" class="masterplan-img" id="mpImg" crossorigin="anonymous" onclick="handleMapClick(event)">
+              <img src="" alt="Masterplan" class="masterplan-img" id="mpImg" crossorigin="anonymous" loading="lazy" onclick="handleMapClick(event)">
               <div id="marker" class="unit-marker">📍</div>
             </div>
           </div>
@@ -432,22 +432,22 @@
 
         <div class="offer-page-section" id="sec-layout">
           <div class="header">
-            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
-            <div><img id="projectLogoImgLayout" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
+            <div><img id="projectLogoImgLayout" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
           </div>
           <div class="masterplan-header">
             <h3 style="margin: 0; font-size:14px;">Unit Floor Plan</h3>
             <small style="color: var(--muted-color); font-weight: bold; font-size: 11px;" id="layoutSubLabel">Schematic</small>
           </div>
           <div class="masterplan-section">
-            <img src="" alt="Unit Layout" class="masterplan-img" id="unitLayoutImg" crossorigin="anonymous">
+            <img src="" alt="Unit Layout" class="masterplan-img" id="unitLayoutImg" crossorigin="anonymous" loading="lazy">
           </div>
         </div>
 
         <div class="offer-page-section" id="sec-payment">
           <div class="header">
-            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
-            <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
+            <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
           </div>
           <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Payment Schedule</h3>
           <div class="summary-hero-card" style="margin-bottom: 10px; text-align: left; padding: 10px 14px;">
@@ -579,6 +579,7 @@
     async function logout() {
       await supabaseClient.auth.signOut();
       currentUser = null; currentProfile = null;
+      sessionStorage.clear();
       document.getElementById('app-root').style.display = 'none';
       document.getElementById('pending-screen').style.display = 'none';
       document.getElementById('logoutBtn').style.display = 'none';
@@ -609,7 +610,7 @@
         document.getElementById('sec-admin').style.display = 'block';
         loadPendingApprovals();
       }
-      loadCloudData();
+      loadCloudData(false);
       loadImportLogs();
     }
 
@@ -669,29 +670,64 @@
       });
     }
 
-    async function loadCloudData() {
+    // High Performance Caching for Instant Loading Speed
+    async function loadCloudData(forceRefresh = false) {
       const st = document.getElementById('status');
-      st.style.color = "#60a5fa"; st.innerText = "Syncing...";
+      
+      if (!forceRefresh) {
+        const cachedUnits = sessionStorage.getItem('m2_units');
+        const cachedProjects = sessionStorage.getItem('m2_projects');
+        const cachedLocations = sessionStorage.getItem('m2_locations');
+
+        if (cachedUnits && cachedProjects) {
+          try {
+            const units = JSON.parse(cachedUnits);
+            const projects = JSON.parse(cachedProjects);
+            const locations = cachedLocations ? JSON.parse(cachedLocations) : [];
+
+            liveUnitsData = {}; units.forEach(u => { liveUnitsData[u.unit_code.toUpperCase()] = u; });
+            projectsByName = {}; projects.forEach(p => { projectsByName[p.name.toLowerCase().trim()] = p; });
+            window.cloudLocations = {}; locations.forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
+
+            populateProjectDropdown(projects);
+            st.style.color = "#34d399"; st.innerText = `Ready (Loaded instantly)`;
+            return;
+          } catch (e) { console.warn("Cache parse failed, fetching from server..."); }
+        }
+      }
+
+      st.style.color = "#60a5fa"; st.innerText = "Syncing from cloud...";
       try {
         const [{ data: units }, { data: projects }, { data: locations }] = await Promise.all([
           supabaseClient.from('units').select('*'),
           supabaseClient.from('projects').select('*'),
           supabaseClient.from('unit_locations').select('*')
         ]);
+        
         liveUnitsData = {}; (units || []).forEach(u => { liveUnitsData[u.unit_code.toUpperCase()] = u; });
         projectsByName = {}; (projects || []).forEach(p => { projectsByName[p.name.toLowerCase().trim()] = p; });
         window.cloudLocations = {}; (locations || []).forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
 
-        const sel = document.getElementById('projectSelect');
-        sel.innerHTML = '';
-        (projects || []).forEach(p => {
-          const opt = document.createElement('option');
-          opt.value = p.name; opt.innerText = p.name; sel.appendChild(opt);
-        });
-        st.style.color = "#34d399"; st.innerText = `Ready (${(units || []).length} units)!`;
+        // Save to sessionStorage for speed
+        sessionStorage.setItem('m2_units', JSON.stringify(units || []));
+        sessionStorage.setItem('m2_projects', JSON.stringify(projects || []));
+        sessionStorage.setItem('m2_locations', JSON.stringify(locations || []));
+
+        populateProjectDropdown(projects || []);
+        st.style.color = "#34d399"; st.innerText = `Synced successfully (${(units || []).length} units)`;
       } catch (err) {
         st.style.color = "#f87171"; st.innerText = "Sync failed.";
       }
+    }
+
+    function populateProjectDropdown(projects) {
+      const sel = document.getElementById('projectSelect');
+      sel.innerHTML = '';
+      projects.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.name; opt.innerText = p.name; sel.appendChild(opt);
+      });
+      if (projects.length > 0) setupProjectVisuals(projects[0].name);
     }
 
     function extractBuildingKey(unitCode) {
@@ -708,6 +744,7 @@
       const x = parseFloat((((event.clientX - rect.left) / rect.width) * 100).toFixed(2));
       const y = parseFloat((((event.clientY - rect.top) / rect.height) * 100).toFixed(2));
       window.cloudLocations[currentLoadedBuildingKey] = { x, y };
+      sessionStorage.setItem('m2_locations', JSON.stringify(Object.entries(window.cloudLocations).map(([k, v]) => ({ building_key: k, x: v.x, y: v.y }))));
       const marker = document.getElementById('marker');
       marker.style.display = 'block'; marker.style.left = `${x}%`; marker.style.top = `${y}%`;
       await supabaseClient.from('unit_locations').upsert({ building_key: currentLoadedBuildingKey, x, y, updated_at: new Date().toISOString() });
@@ -729,7 +766,7 @@
       gallery.forEach(imgUrl => {
         const div = document.createElement('div');
         div.className = 'gallery-card-item';
-        div.innerHTML = `<img src="${imgUrl}" alt="View" crossorigin="anonymous">`;
+        div.innerHTML = `<img src="${imgUrl}" alt="View" crossorigin="anonymous" loading="lazy">`;
         picGrid.appendChild(div);
       });
 
@@ -763,6 +800,7 @@
 
         document.getElementById('uNameSummary').innerText = val;
         const projName = uData.project_name || 'M Squared';
+        document.getElementById('projectSelect').value = projName;
         document.getElementById('uProjectDisplay').innerText = projName;
 
         if (clientName) {
@@ -878,8 +916,9 @@
       const { error } = await supabaseClient.from('projects').upsert(row, { onConflict: 'name' });
       if (error) { msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message; return; }
 
+      sessionStorage.clear();
       msg.style.color = '#34d399'; msg.innerText = 'Saved successfully!';
-      loadCloudData();
+      loadCloudData(true);
     }
 
     function normHeader(h) { return String(h || '').toLowerCase().trim(); }
@@ -926,8 +965,9 @@
       msgEl.style.color = '#60a5fa'; msgEl.innerText = `Uploading ${unitsToImport.length} units...`;
       await supabaseClient.from('units').delete().not('unit_code', 'is', null);
       await supabaseClient.from('units').insert(unitsToImport);
+      sessionStorage.clear();
       msgEl.style.color = '#34d399'; msgEl.innerText = 'Inventory updated successfully!';
-      loadCloudData();
+      loadCloudData(true);
     }
 
     function adminImportFile() {
@@ -954,24 +994,26 @@
         const workbook = XLSX.read(csvText, { type: 'string' });
         const result = buildUnitsFromRows(parseWorkbookRows(workbook));
         if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
-        await performBulkImport(result.units, msg);
+        await importFromGoogleSheetInternal(result.units, msg);
       } catch (err) {
         msg.style.color = '#f87171'; msg.innerText = 'Import failed.';
       }
+    }
+
+    async function importFromGoogleSheetInternal(units, msg) {
+      await performBulkImport(units, msg);
     }
 
     // Robust PDF Preview & Download ensuring all images are loaded and exact height is captured
     async function prepareAndGeneratePDF(actionType) {
       const element = document.getElementById('full-offer-container');
       
-      // Wait for all images inside the container to fully load to prevent blank spaces or cutoffs
       const images = element.querySelectorAll('img');
       await Promise.all(Array.from(images).map(img => {
         if (img.complete) return Promise.resolve();
         return new Promise(resolve => { img.onload = img.onerror = resolve; });
       }));
 
-      // Small delay to ensure layout is fully rendered
       await new Promise(resolve => setTimeout(resolve, 300));
 
       const totalHeightMm = (element.scrollHeight * 0.264583) + 40;
