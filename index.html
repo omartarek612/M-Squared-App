@@ -216,7 +216,7 @@
     /* Multi-Page Presentation Container */
     #full-offer-container { display: flex; flex-direction: column; gap: 20px; background: transparent; }
 
-    /* Strict A4 page separation with controlled height to prevent spilling */
+    /* Strict A4 page separation */
     .offer-page-section {
       background: var(--card-bg);
       padding: 20px;
@@ -228,7 +228,10 @@
       page-break-before: always;
       break-inside: avoid;
       page-break-inside: avoid;
-      max-height: 94vh;
+      min-height: 94vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     #full-offer-container .offer-page-section:first-child {
       break-before: auto;
@@ -277,12 +280,11 @@
 
     .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     
-    /* Masterplan container scaled to fill the exact page bounds nicely without spilling */
+    /* Masterplan section filling the page cleanly without distortion */
     .masterplan-section {
       position: relative; 
       width: 100%; 
       height: 570px; 
-      max-height: 570px; 
       background: var(--input-bg); 
       border-radius: 10px; 
       overflow: hidden;
@@ -290,13 +292,21 @@
       display: flex; 
       justify-content: center; 
       align-items: center;
-      padding: 8px;
+      padding: 10px;
+      flex-grow: 1;
     }
+
+    #mapWrapper {
+      position: relative;
+      display: inline-block;
+      line-height: 0;
+    }
+
     .masterplan-img { 
-      width: 100%; 
-      height: 100%; 
-      max-height: 555px;
-      object-fit: contain; 
+      max-width: 100%; 
+      max-height: 545px;
+      width: auto;
+      height: auto;
       display: block; 
       cursor: crosshair; 
       margin: 0 auto;
@@ -423,19 +433,22 @@
       <div id="full-offer-container">
 
         <div class="offer-page-section" id="sec-summary">
-          <div class="header">
-            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
-            <div><img id="projectLogoImgSummary" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
-          </div>
-          <div class="greeting-box" id="greetingBox"></div>
-          <div class="summary-hero-card">
-            <h4>Selected Unit & Project</h4>
-            <div class="unit-big-text" id="uNameSummary">-</div>
-            <div class="project-small-text" id="uProjectDisplay">M Squared</div>
+          <div>
+            <div class="header">
+              <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
+              <div><img id="projectLogoImgSummary" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
+            </div>
+            <div class="greeting-box" id="greetingBox"></div>
+            <div class="summary-hero-card">
+              <h4>Selected Unit & Project</h4>
+              <div class="unit-big-text" id="uNameSummary">-</div>
+              <div class="project-small-text" id="uProjectDisplay">M Squared</div>
+            </div>
           </div>
           <div id="detailsGrid" class="details-grid">
             <div class="detail-card"><strong>Status</strong><span>Search unit code...</span></div>
           </div>
+          <div></div>
         </div>
 
         <div class="offer-page-section" id="sec-pictures">
@@ -445,47 +458,58 @@
           </div>
           <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Project Gallery</h3>
           <div class="pictures-grid" id="picturesGridContainer"></div>
+          <div></div>
         </div>
 
         <div class="offer-page-section" id="sec-masterplan">
-          <div class="header">
-            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
-            <div><img id="projectLogoImgMasterplan" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
-          </div>
-          <div class="masterplan-header">
-            <h3 style="margin: 0; font-size:14px;">Masterplan Location</h3>
-            <small id="currentProjectLabel" style="color: var(--muted-color); font-weight: bold; font-size: 11px;"></small>
+          <div>
+            <div class="header">
+              <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
+              <div><img id="projectLogoImgMasterplan" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
+            </div>
+            <div class="masterplan-header">
+              <h3 style="margin: 0; font-size:14px;">Masterplan Location</h3>
+              <small id="currentProjectLabel" style="color: var(--muted-color); font-weight: bold; font-size: 11px;"></small>
+            </div>
           </div>
           <div class="masterplan-section" id="masterplanContainer">
-            <div id="mapWrapper" style="position: relative; display: inline-block; width: 100%; height: 100%;">
+            <div id="mapWrapper" style="position: relative; display: inline-block; line-height: 0;">
               <img src="" alt="Masterplan" class="masterplan-img" id="mpImg" crossorigin="anonymous" loading="lazy" onclick="handleMapClick(event)">
               <div id="marker" class="unit-marker">📍</div>
             </div>
           </div>
+          <div></div>
         </div>
 
         <div class="offer-page-section" id="sec-layout">
-          <div class="header">
-            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
-            <div><img id="projectLogoImgLayout" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
-          </div>
-          <div class="masterplan-header">
-            <h3 style="margin: 0; font-size:14px;">Unit Floor Plan</h3>
-            <small style="color: var(--muted-color); font-weight: bold; font-size: 11px;" id="layoutSubLabel">Schematic</small>
+          <div>
+            <div class="header">
+              <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
+              <div><img id="projectLogoImgLayout" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
+            </div>
+            <div class="masterplan-header">
+              <h3 style="margin: 0; font-size:14px;">Unit Floor Plan</h3>
+              <small style="color: var(--muted-color); font-weight: bold; font-size: 11px;" id="layoutSubLabel">Schematic</small>
+            </div>
           </div>
           <div class="masterplan-section">
-            <img src="" alt="Unit Layout" class="masterplan-img" id="unitLayoutImg" crossorigin="anonymous" loading="lazy">
+            <div id="layoutMapWrapper" style="position: relative; display: inline-block; line-height: 0;">
+              <img src="" alt="Unit Layout" class="masterplan-img" id="unitLayoutImg" crossorigin="anonymous" loading="lazy">
+            </div>
           </div>
+          <div></div>
         </div>
 
         <div class="offer-page-section" id="sec-payment">
-          <div class="header">
-            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
-            <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
-          </div>
-          <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Payment Schedule</h3>
-          <div class="summary-hero-card" style="margin-bottom: 10px; text-align: left; padding: 10px 14px;">
-            <div style="font-size: 11px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 15px; font-weight: 700; color: #3b82f6;">-</span></div>
+          <div>
+            <div class="header">
+              <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
+              <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
+            </div>
+            <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Payment Schedule</h3>
+            <div class="summary-hero-card" style="margin-bottom: 10px; text-align: left; padding: 10px 14px;">
+              <div style="font-size: 11px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 15px; font-weight: 700; color: #3b82f6;">-</span></div>
+            </div>
           </div>
           <div class="payment-table-container">
             <table class="payment-table">
@@ -495,11 +519,12 @@
               </tbody>
             </table>
           </div>
+          <div></div>
         </div>
 
       </div>
 
-      <div class="offer-page-section" id="sec-inventory" style="margin-top: 15px; break-before: auto; page-break-before: auto;">
+      <div class="offer-page-section" id="sec-inventory" style="margin-top: 15px; break-before: auto; page-break-before: auto; min-height: auto; display: block;">
         <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
         <div class="admin-grid">
           <div class="admin-form-block">
@@ -519,7 +544,7 @@
         <div class="import-log-list" id="importLogList"><p style="font-size:11px; color:var(--muted-color);">No imports yet.</p></div>
       </div>
 
-      <div class="offer-page-section" id="sec-admin" style="display:none; margin-top: 15px; break-before: auto; page-break-before: auto;">
+      <div class="offer-page-section" id="sec-admin" style="display:none; margin-top: 15px; break-before: auto; page-break-before: auto; min-height: auto; display: block;">
         <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Admin Control Panel</h3>
         <h4 style="font-size:12px;">Pending Accounts</h4>
         <div class="approval-list" id="approvalList"><p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p></div>
