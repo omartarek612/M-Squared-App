@@ -764,6 +764,7 @@
       });
     }
 
+    // Optimized sync: Excludes layout base64 strings from bulk download to prevent Payload Too Large / Timeout
     async function loadCloudData(forceRefresh = false) {
       const st = document.getElementById('status');
       
@@ -792,7 +793,7 @@
       st.style.color = "#60a5fa"; st.innerText = "Syncing from cloud...";
       try {
         const [{ data: units }, { data: projects }, { data: locations }] = await Promise.all([
-          supabaseClient.from('units').select('*'),
+          supabaseClient.from('units').select('unit_code, project_name, price, delivery_year, area, bedrooms'),
           supabaseClient.from('projects').select('*'),
           supabaseClient.from('unit_locations').select('*')
         ]);
@@ -957,7 +958,7 @@
       }
     }
 
-    // --- THROTTLED & SAFE BATCH UPLOAD FOR LAYOUTS ---
+    // --- THROTTLED SAFE BATCH UPLOAD FOR LAYOUTS ---
     async function adminUploadBatchLayouts() {
       if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
       const msg = document.getElementById('adminBatchLayoutMsg');
@@ -980,7 +981,6 @@
         if (!unitCode) continue;
 
         try {
-          // Optimized compression for batch upload to keep request payload light
           const compressedDataUrl = await compressImage(file, 800, 0.8);
 
           const { error } = await supabaseClient
@@ -995,7 +995,6 @@
             }
           }
 
-          // 250ms throttle delay between each request to prevent Supabase Rate Limiting (Too Many Requests)
           await new Promise(resolve => setTimeout(resolve, 250));
         } catch (e) {
           console.warn(`Failed to upload layout for ${unitCode}:`, e);
@@ -1066,7 +1065,8 @@
     }
     // ---------------------------------------------------
 
-    function searchUnit() {
+    // On-demand fetch for specific unit including layout image
+    async function searchUnit() {
       const val = document.getElementById('unitInput').value.trim().toUpperCase();
       const clientName = document.getElementById('clientInput').value.trim();
       const st = document.getElementById('status');
@@ -1078,9 +1078,12 @@
 
       if (!val) return;
       marker.style.display = 'none';
+      st.style.color = "#60a5fa"; st.innerText = `Searching unit [${val}]...`;
 
-      const uData = liveUnitsData[val];
-      if (uData) {
+      // Fetch the specific unit with its layout from database
+      const { data: uData, error } = await supabaseClient.from('units').select('*').eq('unit_code', val).single();
+
+      if (uData && !error) {
         currentUnitCode = val;
         welcomeScreen.style.display = 'none';
         mainAppContent.style.display = 'block';
