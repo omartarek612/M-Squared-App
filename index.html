@@ -51,12 +51,27 @@
       box-sizing: border-box;
     }
 
-    .theme-toggle-container { position: absolute; top: 15px; right: 15px; z-index: 1001; display:flex; gap:6px; }
+    /* Topmost Global Action Bar (Theme Toggle & Logout) */
+    .top-global-bar {
+      position: -webkit-sticky !important;
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 100000 !important;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-color);
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-color);
+      backdrop-filter: blur(10px);
+    }
+
     .btn-theme, .btn-logout {
       background: var(--card-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 6px 12px;
+      padding: 6px 14px;
       border-radius: 20px;
       cursor: pointer;
       font-size: 12px;
@@ -66,14 +81,14 @@
     }
     .btn-theme:hover, .btn-logout:hover { transform: translateY(-1px); }
 
-    /* Freezed Sticky Header & Navigation Bar */
+    /* Freezed Sticky Header (Search & Inputs) */
     .sticky-header {
       position: -webkit-sticky !important;
       position: sticky !important;
-      top: 0 !important;
+      top: 50px !important; /* Right below the topmost global bar */
       z-index: 99999 !important;
       background: var(--bg-color) !important;
-      padding: 10px 0;
+      padding: 8px 0;
       border-bottom: 1px solid var(--border-color);
       box-shadow: 0 4px 20px rgba(0,0,0,0.3);
       backdrop-filter: blur(10px);
@@ -81,7 +96,7 @@
 
     .controls {
       background: var(--card-bg);
-      padding: 10px 15px;
+      padding: 8px 12px;
       border-radius: 12px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.15);
       margin: 0 auto;
@@ -166,12 +181,13 @@
     #welcome-screen h2 { color: var(--text-color); font-size: 1.5rem; margin-bottom: 10px; }
     #welcome-screen p { color: var(--muted-color); font-size: 0.95rem; }
 
-    #main-app-content { display: none; max-width: 800px; margin: 15px auto; text-align: left; }
+    #main-app-content { display: none; max-width: 800px; margin: 10px auto; text-align: left; }
 
+    /* Freezed Sticky Navigation & Action Bar */
     .global-actions {
       position: -webkit-sticky !important;
       position: sticky !important;
-      top: 75px !important; /* Positions right below the top sticky header */
+      top: 112px !important; /* Positions right below the sticky-header */
       z-index: 9998 !important;
       display: flex;
       justify-content: space-between;
@@ -311,7 +327,7 @@
 
     /* Hide inventory, admin panels, headers, and copyright tags completely during print/PDF generation */
     @media print {
-      .app-copyrights, .sticky-header, .global-actions, #sec-inventory, #sec-admin { display: none !important; visibility: hidden !important; }
+      .app-copyrights, .top-global-bar, .sticky-header, .global-actions, #sec-inventory, #sec-admin { display: none !important; visibility: hidden !important; }
     }
     .no-pdf { display: block; }
 
@@ -330,7 +346,8 @@
 </head>
 <body data-theme="dark">
 
-  <div class="theme-toggle-container">
+  <!-- TOPMOST GLOBAL BAR (Theme & Logout) -->
+  <div class="top-global-bar">
     <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
     <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">Light Mode</button>
   </div>
@@ -367,7 +384,7 @@
   <!-- MAIN APP CONTAINER -->
   <div id="app-root" style="display:none;">
 
-    <!-- Sticky Header: Search & Inventory Update Combined Top Bar -->
+    <!-- Sticky Header: Search & Inputs Top Bar -->
     <div class="sticky-header">
       <div class="controls">
         <input type="text" id="unitInput" placeholder="Unit Code" onkeypress="if(event.key==='Enter') searchUnit()">
@@ -632,7 +649,6 @@
       document.getElementById('welcome-screen').style.display = 'none';
       document.getElementById('main-app-content').style.display = 'block';
 
-      // Strict Admin Role Enforcement
       if (profile && profile.role === 'admin') {
         document.getElementById('adminTabBtn').style.display = 'inline-block';
         document.getElementById('sec-admin').style.display = 'block';
