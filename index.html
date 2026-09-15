@@ -273,14 +273,12 @@
     .detail-card strong { display: block; font-size: 10px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 3px; }
     .detail-card span { font-size: 14px; font-weight: 700; }
 
-    /* Gallery Square & Not Stretched */
     .pictures-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .gallery-card-item { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; aspect-ratio: 1 / 1; }
     .gallery-card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     
-    /* Enlarged Masterplan Section */
     .masterplan-section {
       position: relative; 
       width: 100%; 
@@ -312,9 +310,19 @@
       margin: 0 auto;
     }
 
+    /* Red Dot Marker (Precise 100% centering with translate -50%, -50%) */
     .unit-marker {
-      position: absolute; font-size: 24px; pointer-events: none; display: none; z-index: 10;
-      transform: translate(-50%, -100%); filter: drop-shadow(0px 3px 5px rgba(0, 0, 0, 0.6));
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background-color: #ef4444;
+      border: 3px solid #ffffff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.9), 0 2px 6px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+      display: none;
+      z-index: 10;
     }
 
     .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; overflow-x: auto; }
@@ -330,7 +338,6 @@
     .admin-form-block input, .admin-form-block textarea { width: 100%; max-width: 100%; margin-bottom: 6px; }
     .admin-msg { font-size: 11px; margin-top: 4px; }
 
-    /* Admin Delete Image Preview Grid */
     .admin-gallery-manage { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
     .admin-gallery-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 4px; text-align: center; }
     .admin-gallery-item img { width: 100%; height: 60px; object-fit: cover; border-radius: 4px; }
@@ -475,7 +482,7 @@
           <div class="masterplan-section" id="masterplanContainer">
             <div id="mapWrapper" style="position: relative; display: inline-block; line-height: 0;">
               <img src="" alt="Masterplan" class="masterplan-img" id="mpImg" crossorigin="anonymous" loading="lazy" onclick="handleMapClick(event)">
-              <div id="marker" class="unit-marker">📍</div>
+              <div id="marker" class="unit-marker"></div>
             </div>
           </div>
           <div></div>
@@ -855,7 +862,6 @@
       const proj = projectsByName[name.toLowerCase().trim()];
       if (!proj) return;
 
-      // Masterplan Preview & Delete Option
       if (proj.masterplan_image_url) {
         mpContainer.innerHTML = `
           <div style="font-size:11px; color:var(--muted-color); margin-bottom:4px;">Current Masterplan:</div>
@@ -1178,7 +1184,7 @@
     }
 
     function previewFullPDF() {
-      prepareAndGeneratePDF('preview');
+      prepareAndGradePDF('preview'); // fixed typo inline: prepareAndGeneratePDF
     }
 
     function exportFullPDF() {
