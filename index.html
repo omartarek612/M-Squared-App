@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>M Squared Interactive Offer System</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -39,31 +39,29 @@
       --pdf-gradient: linear-gradient(135deg, #059669 0%, #065f46 100%);
     }
 
+    * { box-sizing: border-box; }
+
     body {
       font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
       background: var(--bg-color);
       color: var(--text-color);
       margin: 0;
-      padding: 10px;
+      padding: 8px;
       text-align: center;
       transition: background 0.3s, color 0.3s;
       position: relative;
-      box-sizing: border-box;
     }
 
     .top-global-bar {
-      position: -webkit-sticky !important;
-      position: sticky !important;
-      top: 0 !important;
-      z-index: 100000 !important;
+      position: sticky;
+      top: 0;
+      z-index: 10000;
       display: flex;
       justify-content: flex-end;
       align-items: center;
       gap: 6px;
-      background: transparent !important;
-      padding: 4px 10px;
-      border-bottom: none;
-      backdrop-filter: none;
+      background: var(--bg-color);
+      padding: 6px 4px;
     }
 
     .btn-theme, .btn-logout {
@@ -71,76 +69,63 @@
       color: var(--text-color);
       border: 1px solid var(--border-color);
       padding: 4px 10px;
-      border-radius: 16px;
+      border-radius: 14px;
       cursor: pointer;
       font-size: 11px;
       font-weight: 600;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      transition: all 0.2s ease;
     }
-    .btn-theme:hover, .btn-logout:hover { transform: translateY(-1px); }
 
     .sticky-header {
-      position: -webkit-sticky !important;
-      position: sticky !important;
-      top: 25px !important;
-      z-index: 99999 !important;
-      background: transparent !important;
-      padding: 4px 0;
-      border-bottom: none;
-      box-shadow: none;
-      backdrop-filter: none;
+      position: sticky;
+      top: 35px;
+      z-index: 9999;
+      background: var(--bg-color);
+      padding: 6px 0;
     }
 
     .controls {
       background: var(--card-bg);
-      padding: 6px 10px;
-      border-radius: 10px;
+      padding: 8px;
+      border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       margin: 0 auto;
-      display: inline-flex;
+      display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       border: 1px solid var(--border-color);
-      max-width: 100%;
-      box-sizing: border-box;
+      max-width: 750px;
+      width: 100%;
     }
 
     input, select, textarea {
-      padding: 6px 10px;
+      padding: 8px 10px;
       font-family: 'Cairo', sans-serif;
-      font-size: 12px;
+      font-size: 13px;
       border: 1px solid var(--border-color);
       background: var(--input-bg);
       color: var(--text-color);
-      border-radius: 6px;
+      border-radius: 8px;
       outline: none;
-      transition: all 0.2s;
-      box-sizing: border-box;
+      width: 100%;
+      max-width: 160px;
     }
-    input:focus, select:focus, textarea:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
-    }
-    input[type="text"] { width: 120px; text-transform: uppercase; font-weight: 600; }
-    input#clientInput { text-transform: none; width: 130px; }
+    input#unitInput { text-transform: uppercase; font-weight: 600; max-width: 110px; }
+    input#clientInput { max-width: 140px; }
 
     button {
-      padding: 6px 12px;
+      padding: 8px 14px;
       font-family: 'Cairo', sans-serif;
       font-size: 12px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: 700;
-      transition: all 0.25s ease;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    button:hover { transform: translateY(-1px); filter: brightness(1.1); }
-    button:active { transform: translateY(0); }
-    button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    button:active { transform: scale(0.97); }
 
     .btn-search { background: var(--primary-gradient); color: white; }
     .btn-sync { background: var(--sync-gradient); color: white; }
@@ -151,226 +136,184 @@
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 40px 20px;
+      padding: 30px 20px;
       max-width: 360px;
-      margin: 40px auto;
+      margin: 30px auto;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      text-align: center;
     }
-    #login-screen h2, #signup-screen h2, #pending-screen h2 { margin-bottom: 15px; font-size: 1.4rem; }
-    #login-screen input, #signup-screen input { width: 100%; max-width: 280px; margin-bottom: 8px; }
-    #loginError, #signupError { color: #f87171; font-size: 12px; margin-top: 8px; min-height: 16px; }
-    #signupSuccess { color: #34d399; font-size: 12px; margin-top: 8px; min-height: 16px; }
-    #signup-screen { display: none; }
-    #pending-screen { display: none; }
-    #pending-screen p { color: var(--muted-color); margin-bottom: 15px; font-size: 13px; }
-    .toggle-link { display:block; margin-top:14px; font-size:12px; color:#3b82f6; cursor:pointer; text-decoration:underline; }
+    #login-screen input, #signup-screen input { max-width: 100%; margin-bottom: 10px; }
+    #loginError, #signupError { color: #f87171; font-size: 12px; margin-top: 6px; }
+    #signupSuccess { color: #34d399; font-size: 12px; margin-top: 6px; }
+    #signup-screen, #pending-screen { display: none; }
+    .toggle-link { display: block; margin-top: 12px; font-size: 12px; color: #3b82f6; cursor: pointer; text-decoration: underline; }
 
     #welcome-screen {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 40px 20px;
-      max-width: 600px;
+      padding: 30px 15px;
+      max-width: 500px;
       margin: 20px auto;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      text-align: center;
     }
-    #welcome-screen h2 { color: var(--text-color); font-size: 1.5rem; margin-bottom: 10px; }
-    #welcome-screen p { color: var(--muted-color); font-size: 0.95rem; }
 
-    #main-app-content { display: none; max-width: 800px; margin: 15px auto; text-align: left; position: relative; }
+    #main-app-content { display: none; max-width: 750px; margin: 10px auto; text-align: left; }
 
     .app-sidebar {
       position: fixed;
-      top: 100px;
-      left: 15px;
+      top: 90px;
+      left: 10px;
       z-index: 9998;
-      width: 210px;
+      width: 190px;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      padding: 12px;
-      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      padding: 10px;
       transition: transform 0.3s ease, opacity 0.3s ease;
     }
-    .app-sidebar.collapsed {
-      transform: translateX(-230px);
-      opacity: 0;
-      pointer-events: none;
-    }
+    .app-sidebar.collapsed { transform: translateX(-210px); opacity: 0; pointer-events: none; }
 
     .sidebar-toggle-btn {
       position: fixed;
-      top: 100px;
-      left: 15px;
+      top: 90px;
+      left: 10px;
       z-index: 9999;
       background: var(--primary-gradient);
       color: white;
       border: none;
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       cursor: pointer;
       font-size: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      transition: left 0.3s ease, transform 0.2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: left 0.3s ease;
     }
-    .sidebar-toggle-btn:hover { transform: scale(1.05); }
-    .sidebar-toggle-btn.shifted { left: 235px; }
+    .sidebar-toggle-btn.shifted { left: 205px; }
 
-    .sidebar-section-title {
-      font-size: 10px;
-      text-transform: uppercase;
-      color: var(--muted-color);
-      margin: 8px 0 4px 0;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .nav-tabs { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+    .sidebar-section-title { font-size: 10px; text-transform: uppercase; color: var(--muted-color); margin: 6px 0 4px 0; font-weight: 700; }
+    .nav-tabs { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
     .tab-btn {
       background: var(--input-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 7px 10px;
+      padding: 6px 8px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       text-align: left;
-      box-shadow: none;
-      margin: 0;
       width: 100%;
     }
-    .tab-btn:hover { background: rgba(59, 130, 246, 0.15); border-color: #3b82f6; }
     .tab-btn.active { background: var(--primary-gradient); color: white; border-color: transparent; }
+    .action-buttons { display: flex; flex-direction: column; gap: 5px; }
+    .action-buttons button { width: 100%; padding: 6px; }
 
-    .action-buttons { display: flex; flex-direction: column; gap: 6px; }
-    .action-buttons button { width: 100%; }
-
-    #full-offer-container { display: flex; flex-direction: column; gap: 15px; }
+    #full-offer-container { display: flex; flex-direction: column; gap: 12px; }
 
     .offer-page-section {
       background: var(--card-bg);
-      padding: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      border-radius: 16px;
+      padding: 15px;
+      border-radius: 14px;
       border: 1px solid var(--border-color);
-      box-sizing: border-box;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
       overflow: hidden;
     }
 
-    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding-bottom: 10px; margin-bottom: 15px; }
-    .company-logo { max-height: 35px; width: auto; object-fit: contain; }
-    .project-logo { max-height: 30px; max-width: 120px; width: auto; object-fit: contain; }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.2); padding-bottom: 8px; margin-bottom: 12px; }
+    .company-logo { max-height: 30px; width: auto; object-fit: contain; }
+    .project-logo { max-height: 26px; max-width: 110px; width: auto; object-fit: contain; }
 
     .greeting-box {
       display: none;
       background: var(--greeting-bg);
       border-left: 4px solid #3b82f6;
-      padding: 10px 14px;
-      margin-bottom: 15px;
-      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      border-radius: 6px;
       color: var(--greeting-text);
-      font-size: 12px;
-      line-height: 1.4;
+      font-size: 11px;
       border: 1px solid var(--border-color);
-      text-align: left;
     }
-    .greeting-box .client-highlight { font-size: 14px; font-weight: 700; color: #3b82f6; }
+    .greeting-box .client-highlight { font-size: 13px; font-weight: 700; color: #3b82f6; }
 
     .summary-hero-card {
       background: var(--input-bg);
       border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 12px;
-      margin-bottom: 12px;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
       text-align: center;
       border-top: 4px solid #3b82f6;
     }
-    .summary-hero-card h4 { margin: 0 0 4px 0; font-size: 11px; color: var(--muted-color); text-transform: uppercase; letter-spacing: 0.5px; }
-    .summary-hero-card .unit-big-text { font-size: 22px; font-weight: 700; color: #3b82f6; margin-bottom: 2px; }
-    .summary-hero-card .project-small-text { font-size: 13px; font-weight: 600; color: var(--text-color); }
+    .summary-hero-card h4 { margin: 0 0 3px 0; font-size: 10px; color: var(--muted-color); text-transform: uppercase; }
+    .summary-hero-card .unit-big-text { font-size: 20px; font-weight: 700; color: #3b82f6; }
+    .summary-hero-card .project-small-text { font-size: 12px; font-weight: 600; }
 
-    .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; text-align: left; }
-    .detail-card { background: var(--input-bg); padding: 10px 12px; border-radius: 8px; border-left: 3px solid #3b82f6; border: 1px solid var(--border-color); word-break: break-word; }
-    .detail-card strong { display: block; font-size: 10px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 3px; letter-spacing: 0.5px; }
-    .detail-card span { font-size: 12px; font-weight: 700; color: var(--text-color); }
+    .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .detail-card { background: var(--input-bg); padding: 8px 10px; border-radius: 6px; border-left: 3px solid #3b82f6; border: 1px solid var(--border-color); word-break: break-word; }
+    .detail-card strong { display: block; font-size: 9px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 2px; }
+    .detail-card span { font-size: 11px; font-weight: 700; }
 
-    .pictures-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .gallery-card-item { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
-    .gallery-card-item img { width: 100%; height: 150px; object-fit: cover; display: block; }
+    /* الصور المربعة والمضبوطة تماماً */
+    .pictures-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .gallery-card-item { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; aspect-ratio: 1 / 1; }
+    .gallery-card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .masterplan-section {
-      position: relative; width: 100%; background: var(--input-bg); border-radius: 10px; overflow: hidden;
+      position: relative; width: 100%; background: var(--input-bg); border-radius: 8px; overflow: hidden;
       border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;
-      min-height: 280px; max-height: 380px;
+      height: 250px;
     }
-    .masterplan-img { width: 100%; height: 100%; max-height: 360px; display: block; object-fit: contain; cursor: crosshair; }
+    .masterplan-img { width: 100%; height: 100%; object-fit: contain; display: block; cursor: crosshair; }
 
     .unit-marker {
-      position: absolute; font-size: 24px; pointer-events: none; display: none; z-index: 10;
-      transform: translate(-50%, -100%); filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.5));
+      position: absolute; font-size: 22px; pointer-events: none; display: none; z-index: 10;
+      transform: translate(-50%, -100%); filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));
     }
 
-    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; overflow-x: auto; }
-    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; white-space: nowrap; }
-    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 10px 12px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
-    .payment-table td { padding: 8px 12px; border-bottom: 1px solid var(--border-color); color: var(--text-color); }
-    .payment-table tr:last-child td { border-bottom: none; }
+    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; width: 100%; overflow-x: auto; }
+    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; white-space: nowrap; }
+    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 8px 10px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
+    .payment-table td { padding: 6px 10px; border-bottom: 1px solid var(--border-color); }
 
     .status { margin-top: 4px; font-size: 11px; font-weight: 600; text-align: center; }
 
-    .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    .admin-form-block { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; text-align: left; }
-    .admin-form-block h4 { margin-top: 0; font-size: 13px; }
-    .admin-form-block input, .admin-form-block textarea { width: 100%; display: block; margin-bottom: 8px; }
-    .admin-form-block textarea { min-height: 60px; font-family: monospace; font-size: 11px; }
-    .admin-msg { font-size: 11px; margin-top: 4px; min-height: 14px; }
+    .admin-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .admin-form-block { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: left; }
+    .admin-form-block h4 { margin-top: 0; font-size: 12px; }
+    .admin-form-block input, .admin-form-block textarea { width: 100%; max-width: 100%; margin-bottom: 6px; }
+    .admin-msg { font-size: 11px; margin-top: 4px; }
 
     .import-log-item, .approval-item {
-      background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px;
-      padding: 8px 12px; margin-bottom: 6px; font-size: 11px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap: wrap; text-align: left;
+      background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px;
+      padding: 6px 10px; margin-bottom: 5px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; text-align: left;
     }
-    .approval-item button { margin:0; padding:4px 10px; font-size:11px; }
 
     .app-copyrights {
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      margin: 25px 0 15px 0;
-      font-size: 13px;
+      margin: 20px 0 10px 0;
+      font-size: 12px;
       color: #3b82f6;
       font-weight: 700;
-      letter-spacing: 0.5px;
       text-align: center;
       background: var(--card-bg);
-      padding: 10px;
-      border-radius: 8px;
+      padding: 8px;
+      border-radius: 6px;
       border: 1px solid var(--border-color);
     }
 
-    @media print {
-      .app-copyrights, .top-global-bar, .sticky-header, .app-sidebar, .sidebar-toggle-btn, #sec-inventory, #sec-admin { display: none !important; visibility: hidden !important; }
+    @media (min-width: 600px) {
+      .pictures-grid { grid-template-columns: repeat(3, 1fr); }
+      .admin-grid { grid-template-columns: 1fr 1fr; }
+      body { padding: 15px; }
     }
-    
-    .no-pdf { display: block; }
 
-    @media (max-width: 768px) {
-      body { padding: 5px; }
-      .controls { width: 100%; padding: 6px; }
-      input[type="text"], input#clientInput, select { width: 100%; max-width: 100%; margin: 2px 0; }
-      .details-grid { grid-template-columns: 1fr; }
-      .pictures-grid { grid-template-columns: 1fr; }
-      .app-sidebar { width: 190px; }
-      .sidebar-toggle-btn.shifted { left: 215px; }
-      .admin-grid { grid-template-columns: 1fr; }
+    @media print {
+      .app-copyrights, .top-global-bar, .sticky-header, .app-sidebar, .sidebar-toggle-btn, #sec-inventory, #sec-admin { display: none !important; }
     }
   </style>
 </head>
@@ -378,16 +321,16 @@
 
   <div class="top-global-bar">
     <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
-    <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">Light Mode</button>
+    <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">Light</button>
   </div>
 
   <div id="login-screen">
     <h2>M Squared Login</h2>
     <input type="email" id="loginEmail" placeholder="Email" autocomplete="username"><br>
     <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"><br>
-    <button class="btn-search" style="width:100%; max-width:100%;" onclick="login()">Login</button>
+    <button class="btn-search" style="width:100%;" onclick="login()">Login</button>
     <div id="loginError"></div>
-    <span class="toggle-link" onclick="showSignup()">Don't have an account? Sign Up</span>
+    <span class="toggle-link" onclick="showSignup()">Create account</span>
   </div>
 
   <div id="signup-screen">
@@ -395,15 +338,15 @@
     <input type="text" id="signupName" placeholder="Full Name"><br>
     <input type="email" id="signupEmail" placeholder="Email" autocomplete="username"><br>
     <input type="password" id="signupPassword" placeholder="Password" autocomplete="new-password"><br>
-    <button class="btn-search" style="width:100%; max-width:100%;" onclick="signUp()">Create Account</button>
+    <button class="btn-search" style="width:100%;" onclick="signUp()">Sign Up</button>
     <div id="signupError"></div>
     <div id="signupSuccess"></div>
-    <span class="toggle-link" onclick="showLogin()">Already have an account? Login</span>
+    <span class="toggle-link" onclick="showLogin()">Back to Login</span>
   </div>
 
   <div id="pending-screen">
-    <h2>Account Pending Approval</h2>
-    <p>Your account has been created. An administrator needs to approve it before you can access the system.</p>
+    <h2>Pending Approval</h2>
+    <p style="font-size:12px; color:var(--muted-color);">Your account is waiting for admin approval.</p>
     <button class="btn-search" onclick="logout()">Logout</button>
   </div>
 
@@ -417,18 +360,18 @@
         <button class="btn-search" onclick="searchUnit()">Search</button>
         <button class="btn-sync" onclick="loadCloudData()">Sync</button>
       </div>
-      <div id="status" class="status">Loading data...</div>
+      <div id="status" class="status">Loading...</div>
     </div>
 
     <div id="welcome-screen">
-      <h2>Welcome to M Squared Offer System</h2>
-      <p>Please enter a unit code and click search to view your full interactive offer.</p>
+      <h2 style="font-size:1.3rem; margin-bottom:8px;">Welcome M Squared</h2>
+      <p style="font-size:12px; color:var(--muted-color);">Enter unit code above to view offer.</p>
     </div>
 
     <div id="main-app-content">
 
-      <button class="sidebar-toggle-btn no-pdf" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Toggle Navigation Menu">☰</button>
-      <div class="app-sidebar no-pdf" id="appSidebar">
+      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Menu">☰</button>
+      <div class="app-sidebar" id="appSidebar">
         <div class="sidebar-section-title">Navigation</div>
         <div class="nav-tabs">
           <button class="tab-btn active" onclick="scrollToSection('sec-summary', this)">Summary</button>
@@ -436,8 +379,8 @@
           <button class="tab-btn" onclick="scrollToSection('sec-masterplan', this)">Masterplan</button>
           <button class="tab-btn" onclick="scrollToSection('sec-layout', this)">Layout</button>
           <button class="tab-btn" onclick="scrollToSection('sec-payment', this)">Payment</button>
-          <button class="tab-btn" id="inventoryTabBtn" onclick="scrollToSection('sec-inventory', this)">Inventory Update</button>
-          <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="scrollToSection('sec-admin', this)">Admin Panel</button>
+          <button class="tab-btn" id="inventoryTabBtn" onclick="scrollToSection('sec-inventory', this)">Inventory</button>
+          <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="scrollToSection('sec-admin', this)">Admin</button>
         </div>
         
         <div class="sidebar-section-title">Actions</div>
@@ -461,7 +404,7 @@
             <div class="project-small-text" id="uProjectDisplay">M Squared</div>
           </div>
           <div id="detailsGrid" class="details-grid">
-            <div class="detail-card"><strong>Status</strong><span>Search for a unit code...</span></div>
+            <div class="detail-card"><strong>Status</strong><span>Search unit code...</span></div>
           </div>
         </div>
 
@@ -470,7 +413,7 @@
             <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
             <div><img id="projectLogoImgPictures" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
           </div>
-          <h3 style="margin: 0 0 12px 0; font-size: 14px; text-align: left;">Project Gallery & Views</h3>
+          <h3 style="margin: 0 0 10px 0; font-size: 13px; text-align: left;">Project Gallery</h3>
           <div class="pictures-grid" id="picturesGridContainer"></div>
         </div>
 
@@ -480,11 +423,11 @@
             <div><img id="projectLogoImgMasterplan" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
           </div>
           <div class="masterplan-header">
-            <h3 style="margin: 0; font-size:14px;">Project Masterplan Location</h3>
-            <small id="currentProjectLabel" style="color: var(--muted-color); font-weight: bold; font-size: 12px;"></small>
+            <h3 style="margin: 0; font-size:13px;">Masterplan Location</h3>
+            <small id="currentProjectLabel" style="color: var(--muted-color); font-weight: bold; font-size: 11px;"></small>
           </div>
           <div class="masterplan-section" id="masterplanContainer">
-            <div id="mapWrapper" style="position: relative; display: inline-block; line-height: 0;">
+            <div id="mapWrapper" style="position: relative; display: inline-block; line-height: 0; width: 100%; height: 100%;">
               <img src="" alt="Masterplan" class="masterplan-img" id="mpImg" crossorigin="anonymous" onclick="handleMapClick(event)">
               <div id="marker" class="unit-marker">📍</div>
             </div>
@@ -497,8 +440,8 @@
             <div><img id="projectLogoImgLayout" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
           </div>
           <div class="masterplan-header">
-            <h3 style="margin: 0; font-size:14px;">Unit Floor Plan & Architectural Layout</h3>
-            <small style="color: var(--muted-color); font-weight: bold; font-size: 12px;" id="layoutSubLabel">Detailed Schematic</small>
+            <h3 style="margin: 0; font-size:13px;">Unit Floor Plan</h3>
+            <small style="color: var(--muted-color); font-weight: bold; font-size: 11px;" id="layoutSubLabel">Schematic</small>
           </div>
           <div class="masterplan-section">
             <img src="" alt="Unit Layout" class="masterplan-img" id="unitLayoutImg" crossorigin="anonymous">
@@ -510,15 +453,15 @@
             <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
             <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
           </div>
-          <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Complete Payment Schedule & Installments</h3>
-          <div class="summary-hero-card" style="margin-bottom: 12px; text-align: left; padding: 10px 14px;">
-            <div style="font-size: 12px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 16px; font-weight: 700; color: #3b82f6;">-</span></div>
+          <h3 style="margin: 0 0 8px 0; font-size: 13px; text-align: left;">Payment Schedule</h3>
+          <div class="summary-hero-card" style="margin-bottom: 10px; text-align: left; padding: 8px 12px;">
+            <div style="font-size: 11px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 14px; font-weight: 700; color: #3b82f6;">-</span></div>
           </div>
           <div class="payment-table-container">
             <table class="payment-table">
-              <thead><tr><th>Milestone / Payment #</th><th>Timeline / Due</th><th>Amount (EGP)</th></tr></thead>
+              <thead><tr><th>Milestone</th><th>Timeline</th><th>Amount (EGP)</th></tr></thead>
               <tbody id="paymentTableBody">
-                <tr><td colspan="3" style="text-align: center; color: var(--muted-color);">Search a unit to generate complete payment schedule...</td></tr>
+                <tr><td colspan="3" style="text-align: center; color: var(--muted-color);">Search unit to load schedule...</td></tr>
               </tbody>
             </table>
           </div>
@@ -526,11 +469,8 @@
 
       </div>
 
-      <div class="offer-page-section no-pdf" id="sec-inventory" style="margin-top: 15px;">
-        <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
-        <p style="font-size:11px; color:var(--muted-color); margin: 0 0 12px 0;">
-          Once you import new inventory files, any previous inventory data is completely cleared and replaced with the fresh dataset.
-        </p>
+      <div class="offer-page-section" id="sec-inventory" style="margin-top: 12px;">
+        <h3 style="margin: 0 0 8px 0; font-size: 13px; text-align: left;">Inventory Update</h3>
         <div class="admin-grid">
           <div class="admin-form-block">
             <h4>Import File (.xlsx, .csv)</h4>
@@ -539,32 +479,33 @@
             <div class="admin-msg" id="adminImportMsg"></div>
           </div>
           <div class="admin-form-block">
-            <h4>Import from Google Sheet CSV Link</h4>
+            <h4>Google Sheet Link</h4>
             <input type="text" id="adm_gsheet_url" placeholder="https://docs.google.com/.../pub?output=csv">
             <button class="btn-sync" onclick="importFromGoogleSheet()">Import & Overwrite</button>
             <div class="admin-msg" id="adminGsheetMsg"></div>
           </div>
         </div>
-        <h4 style="margin-top:15px; font-size:13px;">Recent Imports Activity</h4>
+        <h4 style="margin-top:12px; font-size:12px;">Recent Imports</h4>
         <div class="import-log-list" id="importLogList"><p style="font-size:11px; color:var(--muted-color);">No imports yet.</p></div>
       </div>
 
-      <div class="offer-page-section no-pdf" id="sec-admin" style="display:none; margin-top: 15px;">
-        <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Admin Control Panel</h3>
-
-        <h4 style="font-size:13px;">Pending Account Approvals (Admin Only)</h4>
+      <div class="offer-page-section" id="sec-admin" style="display:none; margin-top: 12px;">
+        <h3 style="margin: 0 0 8px 0; font-size: 13px; text-align: left;">Admin Control Panel</h3>
+        <h4 style="font-size:12px;">Pending Accounts</h4>
         <div class="approval-list" id="approvalList"><p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p></div>
 
-        <div class="admin-form-block" style="margin-top:15px;">
-          <h4>Add / Update Project & Gallery Images</h4>
+        <div class="admin-form-block" style="margin-top:12px;">
+          <h4>Project & Visuals Manager</h4>
           <input type="text" id="adm_proj_name" placeholder="Project Name (e.g. 31 West)">
-          <input type="text" id="adm_proj_logo" placeholder="Logo Image URL (Optional)">
-          <input type="text" id="adm_proj_masterplan" placeholder="Masterplan Image URL (Optional)">
+          <input type="text" id="adm_proj_logo" placeholder="Logo Image URL">
           
-          <label style="font-size:11px; color:var(--muted-color); display:block; margin-bottom:4px;">Upload Gallery Images (Select 3, 4 or more photos):</label>
-          <input type="file" id="adm_gallery_files" accept="image/*" multiple style="font-size:11px; margin-bottom:8px;">
+          <label style="font-size:11px; color:var(--muted-color); display:block; margin-bottom:2px;">Upload Masterplan Image:</label>
+          <input type="file" id="adm_masterplan_file" accept="image/*" style="font-size:11px; margin-bottom:6px;">
+
+          <label style="font-size:11px; color:var(--muted-color); display:block; margin-bottom:2px;">Upload Gallery Images (Compressed & Squared):</label>
+          <input type="file" id="adm_gallery_files" accept="image/*" multiple style="font-size:11px; margin-bottom:6px;">
           
-          <button class="btn-search" onclick="adminSaveProject()">Save Project & Upload Gallery</button>
+          <button class="btn-search" onclick="adminSaveProject()">Save Project Visuals</button>
           <div class="admin-msg" id="adminProjMsg"></div>
         </div>
       </div>
@@ -582,9 +523,9 @@
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     function placeholderImg(label) {
-      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'>
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'>
         <rect width='100%' height='100%' fill='#1e293b'/>
-        <text x='50%' y='50%' font-family='sans-serif' font-size='26' fill='#64748b' text-anchor='middle' dominant-baseline='middle'>${label}</text>
+        <text x='50%' y='50%' font-family='sans-serif' font-size='22' fill='#64748b' text-anchor='middle' dominant-baseline='middle'>${label}</text>
       </svg>`;
       return 'data:image/svg+xml;base64,' + btoa(svg);
     }
@@ -617,7 +558,7 @@
       const password = document.getElementById('loginPassword').value;
       const errBox = document.getElementById('loginError');
       errBox.innerText = '';
-      if (!email || !password) { errBox.innerText = 'Please enter email and password.'; return; }
+      if (!email || !password) { errBox.innerText = 'Enter email & password.'; return; }
 
       const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
       if (error) { errBox.innerText = error.message; return; }
@@ -632,24 +573,11 @@
       const okBox = document.getElementById('signupSuccess');
       errBox.innerText = ''; okBox.innerText = '';
 
-      if (!full_name || !email || !password) { errBox.innerText = 'Please fill in all fields.'; return; }
-      if (password.length < 6) { errBox.innerText = 'Password must be at least 6 characters.'; return; }
-
-      const { data, error } = await supabaseClient.auth.signUp({
-        email, password, options: { data: { full_name } }
-      });
+      if (!full_name || !email || !password) { errBox.innerText = 'Fill all fields.'; return; }
+      const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { data: { full_name } } });
       if (error) { errBox.innerText = error.message; return; }
-
-      document.getElementById('signupName').value = '';
-      document.getElementById('signupEmail').value = '';
-      document.getElementById('signupPassword').value = '';
-
-      if (data.session && data.user) {
-        await onLoggedIn(data.user);
-      } else {
-        okBox.innerText = 'Account created! Please log in — an admin will need to approve your access.';
-        showLogin();
-      }
+      okBox.innerText = 'Account created! Please log in.';
+      showLogin();
     }
 
     async function logout() {
@@ -672,24 +600,19 @@
 
       if (!profile || profile.status !== 'approved') {
         document.getElementById('pending-screen').style.display = 'block';
-        document.getElementById('app-root').style.display = 'none';
         return;
       }
 
       document.getElementById('pending-screen').style.display = 'none';
       document.getElementById('app-root').style.display = 'block';
-      document.getElementById('welcome-screen').style.display = 'none';
+      document.getElementById('welcome-screen').style.display = 'block';
       document.getElementById('main-app-content').style.display = 'block';
 
       if (profile && profile.role === 'admin') {
         document.getElementById('adminTabBtn').style.display = 'block';
         document.getElementById('sec-admin').style.display = 'block';
         loadPendingApprovals();
-      } else {
-        document.getElementById('adminTabBtn').style.display = 'none';
-        document.getElementById('sec-admin').style.display = 'none';
       }
-
       loadCloudData();
       loadImportLogs();
     }
@@ -697,21 +620,19 @@
     window.addEventListener('DOMContentLoaded', async () => {
       const savedTheme = localStorage.getItem('m2_theme') || 'dark';
       document.body.setAttribute('data-theme', savedTheme);
-      document.getElementById('themeToggleBtn').innerHTML = savedTheme === 'light' ? 'Dark Mode' : 'Light Mode';
+      document.getElementById('themeToggleBtn').innerHTML = savedTheme === 'light' ? 'Dark' : 'Light';
 
       const { data: { session } } = await supabaseClient.auth.getSession();
-      if (session && session.user) {
-        await onLoggedIn(session.user);
-      }
+      if (session && session.user) { await onLoggedIn(session.user); }
     });
 
     function toggleTheme() {
       const body = document.body;
       const btn = document.getElementById('themeToggleBtn');
       if (body.getAttribute('data-theme') === 'dark') {
-        body.setAttribute('data-theme', 'light'); btn.innerHTML = 'Dark Mode'; localStorage.setItem('m2_theme', 'light');
+        body.setAttribute('data-theme', 'light'); btn.innerHTML = 'Dark'; localStorage.setItem('m2_theme', 'light');
       } else {
-        body.setAttribute('data-theme', 'dark'); btn.innerHTML = 'Light Mode'; localStorage.setItem('m2_theme', 'dark');
+        body.setAttribute('data-theme', 'dark'); btn.innerHTML = 'Light'; localStorage.setItem('m2_theme', 'dark');
       }
     }
 
@@ -725,90 +646,55 @@
     async function loadPendingApprovals() {
       if (!currentProfile || currentProfile.role !== 'admin') return;
       const listEl = document.getElementById('approvalList');
-      const { data, error } = await supabaseClient.from('profiles').select('*').eq('status', 'pending').order('created_at', { ascending: false });
-      if (error || !data || !data.length) {
-        listEl.innerHTML = '<p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p>';
-        return;
-      }
+      const { data } = await supabaseClient.from('profiles').select('*').eq('status', 'pending');
+      if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p>'; return; }
       listEl.innerHTML = '';
       data.forEach(p => {
         const div = document.createElement('div');
         div.className = 'approval-item';
-        div.innerHTML = `<span>${p.full_name || 'Unnamed'} (${p.id})</span>`;
+        div.innerHTML = `<span>${p.full_name || 'User'}</span>`;
         const btn = document.createElement('button');
-        btn.className = 'btn-search';
-        btn.innerText = 'Approve';
-        btn.onclick = () => approveUser(p.id);
-        div.appendChild(btn);
-        listEl.appendChild(div);
+        btn.className = 'btn-search'; btn.innerText = 'Approve';
+        btn.onclick = async () => { await supabaseClient.from('profiles').update({ status: 'approved' }).eq('id', p.id); loadPendingApprovals(); };
+        div.appendChild(btn); listEl.appendChild(div);
       });
-    }
-
-    async function approveUser(id) {
-      if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied: Admin privileges required.'); return; }
-      const { error } = await supabaseClient.from('profiles').update({ status: 'approved' }).eq('id', id);
-      if (error) { alert('Error: ' + error.message); return; }
-      loadPendingApprovals();
     }
 
     async function loadImportLogs() {
       const listEl = document.getElementById('importLogList');
-      const { data, error } = await supabaseClient.from('import_logs').select('*').order('created_at', { ascending: false }).limit(10);
-      if (error || !data || !data.length) {
-        listEl.innerHTML = '<p style="font-size:11px; color:var(--muted-color);">No imports yet.</p>';
-        return;
-      }
+      const { data } = await supabaseClient.from('import_logs').select('*').order('created_at', { ascending: false }).limit(5);
+      if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:11px; color:var(--muted-color);">No imports.</p>'; return; }
       listEl.innerHTML = '';
       data.forEach(log => {
         const div = document.createElement('div');
         div.className = 'import-log-item';
-        div.innerHTML = `<span>${log.agent_name || 'User'} imported ${log.unit_count} unit(s)</span><span>${new Date(log.created_at).toLocaleString()}</span>`;
+        div.innerHTML = `<span>${log.unit_count} units</span><span>${new Date(log.created_at).toLocaleDateString()}</span>`;
         listEl.appendChild(div);
       });
     }
 
-    async function logImport(count) {
-      const agentName = (currentProfile && currentProfile.full_name) || currentUser.email;
-      await supabaseClient.from('import_logs').insert({ owner_id: currentUser.id, agent_name: agentName, unit_count: count });
-      loadImportLogs();
-    }
-
     async function loadCloudData() {
       const st = document.getElementById('status');
-      st.style.color = "#60a5fa";
-      st.innerText = "Syncing data...";
-
+      st.style.color = "#60a5fa"; st.innerText = "Syncing...";
       try {
-        const [{ data: units, error: uErr }, { data: projects, error: pErr }, { data: locations, error: lErr }] = await Promise.all([
+        const [{ data: units }, { data: projects }, { data: locations }] = await Promise.all([
           supabaseClient.from('units').select('*'),
           supabaseClient.from('projects').select('*'),
           supabaseClient.from('unit_locations').select('*')
         ]);
-        if (uErr || pErr || lErr) throw (uErr || pErr || lErr);
-
-        liveUnitsData = {};
-        (units || []).forEach(u => { liveUnitsData[u.unit_code.toUpperCase()] = u; });
-
-        projectsByName = {};
-        (projects || []).forEach(p => { projectsByName[p.name.toLowerCase().trim()] = p; });
-
-        window.cloudLocations = {};
-        (locations || []).forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
+        liveUnitsData = {}; (units || []).forEach(u => { liveUnitsData[u.unit_code.toUpperCase()] = u; });
+        projectsByName = {}; (projects || []).forEach(p => { projectsByName[p.name.toLowerCase().trim()] = p; });
+        window.cloudLocations = {}; (locations || []).forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
 
         const sel = document.getElementById('projectSelect');
         sel.innerHTML = '';
         (projects || []).forEach(p => {
           const opt = document.createElement('option');
-          opt.value = p.name; opt.innerText = p.name;
-          sel.appendChild(opt);
+          opt.value = p.name; opt.innerText = p.name; sel.appendChild(opt);
         });
-
-        st.style.color = "#34d399";
-        st.innerText = `Ready (${(units || []).length} units synced)!`;
+        st.style.color = "#34d399"; st.innerText = `Ready (${(units || []).length} units)!`;
       } catch (err) {
-        console.error(err);
-        st.style.color = "#f87171";
-        st.innerText = "Connection failed.";
+        st.style.color = "#f87171"; st.innerText = "Sync failed.";
       }
     }
 
@@ -816,46 +702,25 @@
       const code = unitCode.trim().toUpperCase();
       const match31 = code.match(/^([A-Z]+\d+[A-Z]?)/);
       if (match31) return match31[1];
-      if (code.includes('-')) {
-        const parts = code.split('-');
-        if (parts.length >= 2) return parts[0] + '-' + parts[1];
-      }
-      const matchL = code.match(/(L\d+)/);
-      if (matchL) return matchL[1];
       return code.substring(0, 4);
     }
 
     async function handleMapClick(event) {
-      if (!currentLoadedBuildingKey) { alert("Please search for a unit first!"); return; }
-      if (!currentProfile || currentProfile.role !== 'admin') { alert("Only admins can set the masterplan pin."); return; }
-
+      if (!currentLoadedBuildingKey || !currentProfile || currentProfile.role !== 'admin') return;
       const img = document.getElementById('mpImg');
       const rect = img.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
-      const clickY = event.clientY - rect.top;
-      if (clickX < 0 || clickX > rect.width || clickY < 0 || clickY > rect.height) return;
-
-      const x = parseFloat(((clickX / rect.width) * 100).toFixed(2));
-      const y = parseFloat(((clickY / rect.height) * 100).toFixed(2));
-
+      const x = parseFloat((((event.clientX - rect.left) / rect.width) * 100).toFixed(2));
+      const y = parseFloat((((event.clientY - rect.top) / rect.height) * 100).toFixed(2));
       window.cloudLocations[currentLoadedBuildingKey] = { x, y };
       const marker = document.getElementById('marker');
       marker.style.display = 'block'; marker.style.left = `${x}%`; marker.style.top = `${y}%`;
-
-      const projName = liveUnitsData[currentUnitCode] ? liveUnitsData[currentUnitCode].project_name : null;
-      await supabaseClient.from('unit_locations').upsert({
-        building_key: currentLoadedBuildingKey, x, y, project_name: projName, updated_at: new Date().toISOString()
-      });
+      await supabaseClient.from('unit_locations').upsert({ building_key: currentLoadedBuildingKey, x, y, updated_at: new Date().toISOString() });
     }
 
     function setupProjectVisuals(projectName) {
       const pLower = (projectName || '').toLowerCase().trim();
       const label = document.getElementById('currentProjectLabel');
-      let proj = projectsByName[pLower];
-      if (!proj) {
-        const foundKey = Object.keys(projectsByName).find(k => pLower.includes(k) || k.includes(pLower));
-        proj = foundKey ? projectsByName[foundKey] : null;
-      }
+      let proj = projectsByName[pLower] || Object.values(projectsByName)[0];
 
       const logoUrl = proj && proj.logo_url ? proj.logo_url : placeholderImg('Logo');
       ['Summary','Pictures','Masterplan','Layout','Payment'].forEach(sec => {
@@ -868,12 +733,12 @@
       gallery.forEach(imgUrl => {
         const div = document.createElement('div');
         div.className = 'gallery-card-item';
-        div.innerHTML = `<img src="${imgUrl}" alt="View" crossorigin="anonymous" onerror="this.src='${placeholderImg('Image Unavailable')}'">`;
+        div.innerHTML = `<img src="${imgUrl}" alt="View" crossorigin="anonymous">`;
         picGrid.appendChild(div);
       });
 
       document.getElementById('mpImg').src = (proj && proj.masterplan_image_url) ? proj.masterplan_image_url : placeholderImg('Masterplan');
-      label.innerText = `Project: ${projectName || 'M Squared'}`;
+      if (label) label.innerText = proj ? proj.name : 'M Squared';
     }
 
     function changeMasterplanManual() {
@@ -906,27 +771,15 @@
 
         if (clientName) {
           greetingBox.style.display = 'block';
-          greetingBox.innerHTML = `Dear <span class="client-highlight">${clientName}</span>,<br><span style="margin-top: 4px; display:inline-block;">Kindly find your exclusive offer details below.</span>`;
+          greetingBox.innerHTML = `Dear <span class="client-highlight">${clientName}</span>,<br>Find your offer details below.`;
         } else {
           greetingBox.style.display = 'none';
         }
 
         setupProjectVisuals(projName);
-        const sel = document.getElementById('projectSelect');
-        if (sel) {
-          for (let opt of sel.options) {
-            if (opt.value.toLowerCase().trim() === projName.toLowerCase().trim()) {
-              sel.value = opt.value;
-              break;
-            }
-          }
-        }
 
         const layoutImgElement = document.getElementById('unitLayoutImg');
-        const layoutSubLabel = document.getElementById('layoutSubLabel');
-        layoutImgElement.src = uData.layout_image_url || placeholderImg('No Layout Image');
-        layoutImgElement.onerror = function () { this.src = placeholderImg('Layout Unavailable'); };
-        layoutSubLabel.innerText = `Layout Code: ${val}`;
+        layoutImgElement.src = uData.layout_image_url || placeholderImg('No Layout');
 
         currentLoadedBuildingKey = extractBuildingKey(val);
         if (window.cloudLocations && window.cloudLocations[currentLoadedBuildingKey]) {
@@ -937,7 +790,7 @@
         grid.innerHTML = '';
         const known = [
           ['Price', uData.price ? Number(uData.price).toLocaleString() + ' EGP' : '-'],
-          ['Delivery Year', uData.delivery_year || '-'],
+          ['Delivery', uData.delivery_year || '-'],
           ['Area', uData.area || '-'],
           ['Bedrooms', uData.bedrooms || '-']
         ];
@@ -947,111 +800,95 @@
           card.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
           grid.appendChild(card);
         });
-        const extra = uData.extra || {};
-        Object.entries(extra).forEach(([key, value]) => {
-          const card = document.createElement('div');
-          card.className = 'detail-card';
-          card.innerHTML = `<strong>${key}</strong><span>${value}</span>`;
-          grid.appendChild(card);
-        });
 
         const unitPriceVal = Number(uData.price) || 0;
-        document.getElementById('paymentUnitPrice').innerText = unitPriceVal > 0 ? unitPriceVal.toLocaleString() + ' EGP' : 'Refer to contract';
+        document.getElementById('paymentUnitPrice').innerText = unitPriceVal > 0 ? unitPriceVal.toLocaleString() + ' EGP' : '-';
         const paymentTbody = document.getElementById('paymentTableBody');
         paymentTbody.innerHTML = '';
         if (unitPriceVal > 0) {
-          const dpAmount = unitPriceVal * 0.05;
-          const remainingAmount = unitPriceVal - dpAmount;
-          const quarterlyAmount = remainingAmount / 40;
-          const rows = [
-            { milestone: "Down Payment (5%)", timeline: "Immediate", amount: dpAmount.toLocaleString('en-US', { maximumFractionDigits: 0 }) + " EGP" },
-            { milestone: "Quarterly Installment (x40)", timeline: "Over 10 Years", amount: quarterlyAmount.toLocaleString('en-US', { maximumFractionDigits: 0 }) + " EGP / Quarter" },
-            { milestone: "Maintenance Deposit", timeline: "Upon Delivery", amount: (unitPriceVal * 0.07).toLocaleString('en-US', { maximumFractionDigits: 0 }) + " EGP" }
-          ];
-          rows.forEach(r => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${r.milestone}</td><td>${r.timeline}</td><td>${r.amount}</td>`;
-            paymentTbody.appendChild(tr);
-          });
+          const dp = unitPriceVal * 0.05;
+          const q = (unitPriceVal - dp) / 40;
+          paymentTbody.innerHTML = `
+            <tr><td>Down Payment (5%)</td><td>Immediate</td><td>${dp.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>
+            <tr><td>Quarterly (x40)</td><td>10 Years</td><td>${q.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>
+            <tr><td>Maintenance</td><td>Delivery</td><td>${(unitPriceVal * 0.07).toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
         } else {
-          paymentTbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--muted-color);">No unit price found.</td></tr>`;
+          paymentTbody.innerHTML = `<tr><td colspan="3" style="text-align: center;">No price available.</td></tr>`;
         }
 
-        st.style.color = "#34d399";
-        st.innerText = `Unit [${val}] loaded!`;
+        st.style.color = "#34d399"; st.innerText = `Unit [${val}] loaded!`;
       } else {
-        st.style.color = "#f87171";
-        st.innerText = `Unit [${val}] not found.`;
+        st.style.color = "#f87171"; st.innerText = `Unit [${val}] not found.`;
       }
     }
 
-    async function fileToDataUrl(file) {
-      return new Promise((resolve, reject) => {
+    /* ضغط الصور وتقليل الحجم لتسريع التطبيق */
+    async function compressImage(file, maxWidth = 900, quality = 0.8) {
+      return new Promise((resolve) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
         reader.readAsDataURL(file);
+        reader.onload = event => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+        };
       });
     }
 
     async function adminSaveProject() {
       if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
       const msg = document.getElementById('adminProjMsg');
-      msg.style.color = '#60a5fa'; msg.innerText = 'Processing gallery images & saving...';
+      msg.style.color = '#60a5fa'; msg.innerText = 'Processing & compressing images...';
 
       const name = document.getElementById('adm_proj_name').value.trim();
       if (!name) { msg.style.color = '#f87171'; msg.innerText = 'Project name is required.'; return; }
 
-      let existingProj = projectsByName[name.toLowerCase().trim()] || {};
-      let gallery = existingProj.gallery || [];
+      let existing = projectsByName[name.toLowerCase().trim()] || {};
+      let gallery = existing.gallery || [];
+
+      const masterplanFile = document.getElementById('adm_masterplan_file').files[0];
+      let masterplan_image_url = existing.masterplan_image_url || '';
+      if (masterplanFile) {
+        masterplan_image_url = await compressImage(masterplanFile, 1000, 0.85);
+      }
 
       const fileInput = document.getElementById('adm_gallery_files');
       if (fileInput.files && fileInput.files.length > 0) {
         for (let i = 0; i < fileInput.files.length; i++) {
-          const dataUrl = await fileToDataUrl(fileInput.files[i]);
-          gallery.push(dataUrl);
+          const compressedDataUrl = await compressImage(fileInput.files[i], 800, 0.8);
+          gallery.push(compressedDataUrl);
         }
       }
 
       const row = {
         name,
-        logo_url: document.getElementById('adm_proj_logo').value.trim() || existingProj.logo_url || '',
-        masterplan_image_url: document.getElementById('adm_proj_masterplan').value.trim() || existingProj.masterplan_image_url || '',
+        logo_url: document.getElementById('adm_proj_logo').value.trim() || existing.logo_url || '',
+        masterplan_image_url,
         gallery
       };
 
       const { error } = await supabaseClient.from('projects').upsert(row, { onConflict: 'name' });
       if (error) { msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message; return; }
-      
-      msg.style.color = '#34d399'; 
-      msg.innerText = 'Project and gallery uploaded & saved successfully!';
-      fileInput.value = '';
+
+      msg.style.color = '#34d399'; msg.innerText = 'Saved & compressed successfully!';
       loadCloudData();
     }
 
     function normHeader(h) { return String(h || '').toLowerCase().trim(); }
     function findColumn(keys, patterns) { return keys.find(k => patterns.some(p => normHeader(k).includes(p))); }
-
-    function excelSerialToDateStr(serial) {
-      const utcDays = Math.floor(serial) - 25569;
-      const dateInfo = new Date(utcDays * 86400 * 1000);
-      const day = String(dateInfo.getUTCDate()).padStart(2, '0');
-      const month = String(dateInfo.getUTCMonth() + 1).padStart(2, '0');
-      const year = dateInfo.getUTCFullYear();
-      return `${day}/${month}/${year}`;
-    }
-
-    function toEnglishDigits(val) {
-      if (val === null || val === undefined) return val;
-      const str = String(val);
-      const arabicIndic = '٠١٢٣٤٥٦٧٨٩';
-      const extendedArabicIndic = '۰۱۲۳۴۵۶۷۸۹';
-      return str.replace(/[٠-٩۰-۹]/g, ch => {
-        let idx = arabicIndic.indexOf(ch);
-        if (idx === -1) idx = extendedArabicIndic.indexOf(ch);
-        return idx !== -1 ? String(idx) : ch;
-      });
-    }
 
     function parseWorkbookRows(workbook) {
       const sheetName = workbook.SheetNames[0];
@@ -1059,109 +896,55 @@
     }
 
     function buildUnitsFromRows(rows) {
-      if (!rows.length) return { error: 'File is empty.' };
-
+      if (!rows.length) return { error: 'Empty file.' };
       const keys = Object.keys(rows[0]);
       const codeKey = findColumn(keys, ['unit', 'code']);
       const projectKey = findColumn(keys, ['project', 'phase']);
       const priceKey = findColumn(keys, ['price', 'total']);
       const deliveryKey = findColumn(keys, ['delivery', 'date', 'year']);
-      const areaKey = findColumn(keys, ['area', 'space', 'sqm']);
-      const bedroomKey = findColumn(keys, ['bedroom', 'room']);
-      const layoutKey = findColumn(keys, ['layout', 'plan', 'image']);
+      const areaKey = findColumn(keys, ['area', 'space']);
+      const bedroomKey = findColumn(keys, ['bedroom']);
+      const layoutKey = findColumn(keys, ['layout', 'image']);
 
-      if (!codeKey) return { error: 'No unit code column found.' };
+      if (!codeKey) return { error: 'Unit code column missing.' };
 
-      const knownKeys = [codeKey, projectKey, priceKey, deliveryKey, areaKey, bedroomKey, layoutKey].filter(Boolean);
       const unitsToImport = [];
-
       rows.forEach(row => {
-        const unit_code = toEnglishDigits(String(row[codeKey] || '')).toUpperCase().trim();
+        const unit_code = String(row[codeKey] || '').toUpperCase().trim();
         if (!unit_code) return;
-
-        let delivery_year = deliveryKey ? toEnglishDigits(String(row[deliveryKey] || '')).trim() : '';
-        if (/^\d{5}$/.test(delivery_year)) {
-          delivery_year = excelSerialToDateStr(parseInt(delivery_year, 10));
-        }
-
-        const extra = {};
-        keys.forEach(k => {
-          if (!knownKeys.includes(k) && String(row[k]).trim() !== '') {
-            extra[k] = toEnglishDigits(row[k]);
-          }
-        });
-
         unitsToImport.push({
           owner_id: currentUser.id,
           unit_code,
           project_name: projectKey ? String(row[projectKey] || '').trim() : '',
-          price: priceKey ? (parseFloat(toEnglishDigits(String(row[priceKey])).replace(/[^0-9.]/g, '')) || null) : null,
-          delivery_year,
-          area: areaKey ? toEnglishDigits(String(row[areaKey] || '')).trim() : '',
-          bedrooms: bedroomKey ? toEnglishDigits(String(row[bedroomKey] || '')).trim() : '',
+          price: priceKey ? (parseFloat(String(row[priceKey]).replace(/[^0-9.]/g, '')) || null) : null,
+          delivery_year: deliveryKey ? String(row[deliveryKey] || '').trim() : '',
+          area: areaKey ? String(row[areaKey] || '').trim() : '',
+          bedrooms: bedroomKey ? String(row[bedroomKey] || '').trim() : '',
           layout_image_url: layoutKey ? String(row[layoutKey] || '').trim() : '',
-          extra,
           updated_at: new Date().toISOString()
         });
       });
-
-      if (!unitsToImport.length) return { error: 'No valid unit found.' };
       return { units: unitsToImport };
     }
 
     async function performBulkImport(unitsToImport, msgEl) {
-      msgEl.style.color = '#60a5fa'; msgEl.innerText = `Clearing old inventory & uploading ${unitsToImport.length} new unit(s)...`;
-
+      msgEl.style.color = '#60a5fa'; msgEl.innerText = `Uploading ${unitsToImport.length} units...`;
       await supabaseClient.from('units').delete().not('unit_code', 'is', null);
-
-      const batchSize = 500;
-      let importedCount = 0;
-      for (let i = 0; i < unitsToImport.length; i += batchSize) {
-        const batch = unitsToImport.slice(i, i + batchSize);
-        const { error } = await supabaseClient.from('units').insert(batch);
-        if (error) { 
-          msgEl.style.color = '#f87171'; 
-          msgEl.innerText = 'Error: ' + error.message; 
-          return; 
-        }
-        importedCount += batch.length;
-      }
-
-      msgEl.style.color = '#34d399';
-      msgEl.innerText = `Inventory successfully updated & replaced (${importedCount} units)!`;
+      await supabaseClient.from('units').insert(unitsToImport);
+      msgEl.style.color = '#34d399'; msgEl.innerText = 'Inventory updated successfully!';
       loadCloudData();
-      logImport(importedCount);
     }
 
     function adminImportFile() {
       const msg = document.getElementById('adminImportMsg');
-      const fileInput = document.getElementById('adm_import_file');
-      const file = fileInput.files[0];
-      if (!file) { msg.style.color = '#f87171'; msg.innerText = 'Please choose a file first.'; return; }
-
-      msg.style.color = '#60a5fa'; msg.innerText = 'Reading file...';
-
-      const isCsv = file.name.toLowerCase().endsWith('.csv');
+      const file = document.getElementById('adm_import_file').files[0];
+      if (!file) { msg.style.color = '#f87171'; msg.innerText = 'Choose file first.'; return; }
       const reader = new FileReader();
       reader.onload = async function (e) {
-        try {
-          let workbook;
-          if (isCsv) {
-            const csvText = new TextDecoder('utf-8').decode(new Uint8Array(e.target.result));
-            workbook = XLSX.read(csvText, { type: 'string' });
-          } else {
-            workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-          }
-          const rows = parseWorkbookRows(workbook);
-          const result = buildUnitsFromRows(rows);
-          if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
-          await performBulkImport(result.units, msg);
-          fileInput.value = '';
-        } catch (err) {
-          console.error(err);
-          msg.style.color = '#f87171';
-          msg.innerText = 'Error reading file.';
-        }
+        const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+        const result = buildUnitsFromRows(parseWorkbookRows(workbook));
+        if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
+        await performBulkImport(result.units, msg);
       };
       reader.readAsArrayBuffer(file);
     }
@@ -1169,55 +952,29 @@
     async function importFromGoogleSheet() {
       const msg = document.getElementById('adminGsheetMsg');
       const url = document.getElementById('adm_gsheet_url').value.trim();
-      if (!url) { msg.style.color = '#f87171'; msg.innerText = 'Please paste link first.'; return; }
-
-      msg.style.color = '#60a5fa'; msg.innerText = 'Fetching sheet...';
+      if (!url) { msg.style.color = '#f87171'; msg.innerText = 'Paste link first.'; return; }
       try {
         const res = await fetch(url);
-        if (!res.ok) throw new Error('HTTP ' + res.status);
         const csvText = await res.text();
         const workbook = XLSX.read(csvText, { type: 'string' });
-        const rows = parseWorkbookRows(workbook);
-        const result = buildUnitsFromRows(rows);
+        const result = buildUnitsFromRows(parseWorkbookRows(workbook));
         if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
         await performBulkImport(result.units, msg);
       } catch (err) {
-        console.error(err);
-        msg.style.color = '#f87171';
-        msg.innerText = 'Could not import from link.';
+        msg.style.color = '#f87171'; msg.innerText = 'Import failed.';
       }
-    }
-
-    function buildSinglePagePdfOptions(element, filename) {
-      const widthMM = 210;
-      const heightMM = (element.scrollHeight / element.offsetWidth) * widthMM;
-      return {
-        margin: 0,
-        filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: [widthMM, heightMM], orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all'] }
-      };
     }
 
     function previewFullPDF() {
       const element = document.getElementById('full-offer-container');
-      const opt = buildSinglePagePdfOptions(element, 'M_Squared_Complete_Offer.pdf');
-      document.getElementById('status').innerText = "Generating preview...";
-      html2pdf().from(element).set(opt).toPdf().get('pdf').then(function (pdf) {
+      html2pdf().from(element).set({ margin: 0, filename: 'Offer.pdf', html2canvas: { scale: 2, useCORS: true } }).toPdf().get('pdf').then(pdf => {
         window.open(pdf.output('bloburl'), '_blank');
-        document.getElementById('status').innerText = "Preview opened!";
       });
     }
 
     function exportFullPDF() {
       const element = document.getElementById('full-offer-container');
-      const opt = buildSinglePagePdfOptions(element, 'M_Squared_Complete_Offer.pdf');
-      document.getElementById('status').innerText = "Downloading PDF...";
-      html2pdf().from(element).set(opt).save().then(() => {
-        document.getElementById('status').innerText = "PDF downloaded!";
-      });
+      html2pdf().from(element).set({ margin: 0, filename: 'Offer.pdf', html2canvas: { scale: 2, useCORS: true } }).save();
     }
   </script>
 </body>
