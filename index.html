@@ -216,31 +216,35 @@
     /* Multi-Page Presentation Container */
     #full-offer-container { display: flex; flex-direction: column; gap: 20px; background: transparent; }
 
+    /* Strict A4 page separation with controlled height to prevent spilling */
     .offer-page-section {
       background: var(--card-bg);
-      padding: 22px;
+      padding: 20px;
       border-radius: 16px;
       border: 2px solid rgba(59, 130, 246, 0.35);
       box-shadow: 0 6px 22px rgba(0,0,0,0.18);
       overflow: hidden;
       break-before: page;
       page-break-before: always;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      max-height: 94vh;
     }
     #full-offer-container .offer-page-section:first-child {
       break-before: auto;
       page-break-before: auto;
     }
 
-    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.2); padding-bottom: 10px; margin-bottom: 15px; }
-    .company-logo { max-height: 32px; width: auto; object-fit: contain; }
-    .project-logo { max-height: 28px; max-width: 120px; width: auto; object-fit: contain; }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.2); padding-bottom: 10px; margin-bottom: 12px; }
+    .company-logo { max-height: 30px; width: auto; object-fit: contain; }
+    .project-logo { max-height: 26px; max-width: 120px; width: auto; object-fit: contain; }
 
     .greeting-box {
       display: none;
       background: var(--greeting-bg);
       border-left: 4px solid #3b82f6;
       padding: 10px 14px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       border-radius: 8px;
       color: var(--greeting-text);
       font-size: 12px;
@@ -252,8 +256,8 @@
       background: var(--input-bg);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 14px;
-      margin-bottom: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
       text-align: center;
       border-top: 4px solid #3b82f6;
     }
@@ -271,12 +275,13 @@
     .gallery-card-item { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; aspect-ratio: 1 / 1; }
     .gallery-card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     
+    /* Strict Masterplan Container to fit exactly within its single page */
     .masterplan-section {
       position: relative; 
       width: 100%; 
-      min-height: 620px;
+      max-height: 470px; 
       background: var(--input-bg); 
       border-radius: 10px; 
       overflow: hidden;
@@ -284,14 +289,16 @@
       display: flex; 
       justify-content: center; 
       align-items: center;
-      padding: 10px;
+      padding: 8px;
     }
     .masterplan-img { 
       width: 100%; 
       height: 100%; 
+      max-height: 450px;
       object-fit: contain; 
       display: block; 
       cursor: crosshair; 
+      margin: 0 auto;
     }
 
     .unit-marker {
