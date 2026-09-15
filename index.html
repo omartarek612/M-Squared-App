@@ -556,6 +556,8 @@
           
           <label style="font-size:11px; color:var(--muted-color); display:block; margin-bottom:3px;">Upload Masterplan Image (High Quality):</label>
           <input type="file" id="adm_masterplan_file" accept="image/*" style="font-size:11px; margin-bottom:6px;">
+          
+          <div id="adminMasterplanPreviewContainer" style="margin-bottom:8px;"></div>
 
           <label style="font-size:11px; color:var(--muted-color); display:block; margin-bottom:3px;">Upload New Gallery Images:</label>
           <input type="file" id="adm_gallery_files" accept="image/*" multiple style="font-size:11px; margin-bottom:6px;">
@@ -799,10 +801,9 @@
 
     async function handleMapClick(event) {
       if (!currentLoadedBuildingKey || !currentProfile || currentProfile.role !== 'admin') return;
-      const img = document.getElementById('mpImg');
-      const rect = img.getBoundingClientRect();
-      const x = parseFloat((((event.clientX - rect.left) / rect.width) * 100).toFixed(2));
-      const y = parseFloat((((event.clientY - rect.top) / rect.height) * 100).toFixed(2));
+      const img = event.target;
+      const x = parseFloat(((event.offsetX / img.clientWidth) * 100).toFixed(2));
+      const y = parseFloat(((event.offsetY / img.clientHeight) * 100).toFixed(2));
       window.cloudLocations[currentLoadedBuildingKey] = { x, y };
       sessionStorage.setItem('m2_locations', JSON.stringify(Object.entries(window.cloudLocations).map(([k, v]) => ({ building_key: k, x: v.x, y: v.y }))));
       const marker = document.getElementById('marker');
@@ -844,13 +845,29 @@
     function loadAdminProjectGallery() {
       const name = document.getElementById('adm_proj_name').value.trim();
       const container = document.getElementById('adminGalleryPreview');
-      if (!container) return;
+      const mpContainer = document.getElementById('adminMasterplanPreviewContainer');
+      if (!container || !mpContainer) return;
+      
       container.innerHTML = '';
+      mpContainer.innerHTML = '';
       if (!name) return;
 
       const proj = projectsByName[name.toLowerCase().trim()];
-      if (!proj || !proj.gallery || !proj.gallery.length) {
-        container.innerHTML = '<p style="font-size:10px; color:var(--muted-color); grid-column: 1/-1;">No uploaded images yet.</p>';
+      if (!proj) return;
+
+      // Masterplan Preview & Delete Option
+      if (proj.masterplan_image_url) {
+        mpContainer.innerHTML = `
+          <div style="font-size:11px; color:var(--muted-color); margin-bottom:4px;">Current Masterplan:</div>
+          <div style="display:flex; align-items:center; gap:8px; background:var(--card-bg); padding:6px; border-radius:6px; border:1px solid var(--border-color);">
+            <img src="${proj.masterplan_image_url}" style="width:60px; height:40px; object-fit:cover; border-radius:4px;">
+            <button class="btn-delete-img" onclick="deleteMasterplanImage('${name}')">Delete Masterplan ❌</button>
+          </div>
+        `;
+      }
+
+      if (!proj.gallery || !proj.gallery.length) {
+        container.innerHTML = '<p style="font-size:10px; color:var(--muted-color); grid-column: 1/-1;">No uploaded gallery images yet.</p>';
         return;
       }
 
@@ -865,12 +882,35 @@
       });
     }
 
+    async function deleteMasterplanImage(projectName) {
+      const projKey = projectName.toLowerCase().trim();
+      let proj = projectsByName[projKey];
+      if (!proj) return;
+
+      if (confirm('Are you sure you want to delete the masterplan image?')) {
+        proj.masterplan_image_url = '';
+        const { error } = await supabaseClient.from('projects').upsert({
+          name: proj.name,
+          logo_url: proj.logo_url,
+          masterplan_image_url: '',
+          gallery: proj.gallery
+        }, { onConflict: 'name' });
+
+        if (error) {
+          alert('Error deleting masterplan: ' + error.message);
+        } else {
+          sessionStorage.clear();
+          loadCloudData(true);
+        }
+      }
+    }
+
     async function deleteGalleryImage(projectName, index) {
       const projKey = projectName.toLowerCase().trim();
       let proj = projectsByName[projKey];
       if (!proj || !proj.gallery) return;
 
-      if (confirm('Are you sure you want to delete this image?')) {
+      if (confirm('Are you sure you want to delete this gallery image?')) {
         proj.gallery.splice(index, 1);
         const { error } = await supabaseClient.from('projects').upsert({
           name: proj.name,
