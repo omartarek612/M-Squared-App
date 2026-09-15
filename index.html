@@ -6,6 +6,7 @@
   <title>M Squared Interactive Offer System</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -121,8 +122,8 @@
     .btn-pdf { background: var(--pdf-gradient); color: white; }
     .btn-danger { background: var(--danger-gradient); color: white; }
 
-    /* ---------- LOGIN SCREEN ---------- */
-    #login-screen {
+    /* ---------- AUTH SCREENS ---------- */
+    #login-screen, #signup-screen, #pending-screen {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 16px;
@@ -132,9 +133,14 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       text-align: center;
     }
-    #login-screen h2 { margin-bottom: 20px; }
-    #login-screen input { width: 100%; max-width: 280px; }
-    #loginError { color: #f87171; font-size: 13px; margin-top: 10px; min-height: 18px; }
+    #login-screen h2, #signup-screen h2, #pending-screen h2 { margin-bottom: 20px; }
+    #login-screen input, #signup-screen input { width: 100%; max-width: 280px; }
+    #loginError, #signupError { color: #f87171; font-size: 13px; margin-top: 10px; min-height: 18px; }
+    #signupSuccess { color: #34d399; font-size: 13px; margin-top: 10px; min-height: 18px; }
+    #signup-screen { display: none; }
+    #pending-screen { display: none; }
+    #pending-screen p { color: var(--muted-color); margin-bottom: 20px; }
+    .toggle-link { display:block; margin-top:16px; font-size:12px; color:#3b82f6; cursor:pointer; text-decoration:underline; }
 
     #welcome-screen {
       background: var(--card-bg);
@@ -192,10 +198,7 @@
       border-radius: 16px;
       border: 1px solid var(--border-color);
       box-sizing: border-box;
-      page-break-after: always;
-      break-after: page;
     }
-    .offer-page-section:last-child { page-break-after: avoid; break-after: avoid; }
 
     .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding-bottom: 12px; margin-bottom: 20px; }
     .company-logo { max-height: 40px; width: auto; object-fit: contain; }
@@ -259,14 +262,19 @@
 
     .status { margin-top: 10px; font-size: 13px; font-weight: 600; text-align: center; }
 
-    /* ---------- ADMIN TAB ---------- */
-    #sec-admin { display: none; }
+    /* ---------- INVENTORY / ADMIN TABS ---------- */
     .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     .admin-form-block { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; }
     .admin-form-block h4 { margin-top: 0; font-size: 14px; }
     .admin-form-block input, .admin-form-block textarea { width: 100%; display: block; }
     .admin-form-block textarea { min-height: 70px; font-family: monospace; font-size: 12px; }
     .admin-msg { font-size: 12px; margin-top: 6px; min-height: 16px; }
+
+    .import-log-item, .approval-item {
+      background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px;
+      padding: 10px 14px; margin-bottom: 8px; font-size: 12px; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap: wrap;
+    }
+    .approval-item button { margin:0; padding:6px 12px; font-size:12px; }
 
     @media (max-width: 768px) {
       .details-grid { grid-template-columns: 1fr; }
@@ -281,20 +289,40 @@
 <body data-theme="dark">
 
   <div class="theme-toggle-container">
-    <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="logout()">🚪 Logout</button>
-    <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">☀️ Light Mode</button>
+    <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
+    <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">Light Mode</button>
   </div>
 
-  <!-- ============ LOGIN SCREEN ============ -->
+  <!-- ============ LOGIN ============ -->
   <div id="login-screen">
     <h2>M Squared Login</h2>
     <input type="email" id="loginEmail" placeholder="Email" autocomplete="username"><br>
     <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"><br>
     <button class="btn-search" style="width:100%; max-width:280px;" onclick="login()">Login</button>
     <div id="loginError"></div>
+    <span class="toggle-link" onclick="showSignup()">Don't have an account? Sign Up</span>
   </div>
 
-  <!-- ============ APP (hidden until logged in) ============ -->
+  <!-- ============ SIGN UP ============ -->
+  <div id="signup-screen">
+    <h2>Create Account</h2>
+    <input type="text" id="signupName" placeholder="Full Name"><br>
+    <input type="email" id="signupEmail" placeholder="Email" autocomplete="username"><br>
+    <input type="password" id="signupPassword" placeholder="Password" autocomplete="new-password"><br>
+    <button class="btn-search" style="width:100%; max-width:280px;" onclick="signUp()">Create Account</button>
+    <div id="signupError"></div>
+    <div id="signupSuccess"></div>
+    <span class="toggle-link" onclick="showLogin()">Already have an account? Login</span>
+  </div>
+
+  <!-- ============ PENDING APPROVAL ============ -->
+  <div id="pending-screen">
+    <h2>Account Pending Approval</h2>
+    <p>Your account has been created. An administrator needs to approve it before you can access the system.</p>
+    <button class="btn-search" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- ============ APP (hidden until logged in & approved) ============ -->
   <div id="app-root" style="display:none;">
 
     <div style="text-align: center;">
@@ -304,9 +332,9 @@
         <select id="projectSelect" onchange="changeMasterplanManual()">
           <option value="auto">Auto Project</option>
         </select>
-        <button class="btn-search" onclick="searchUnit()">🔍 Search</button>
-        <button class="btn-sync" onclick="loadCloudData()">🔄 Sync</button>
-        <div id="status" class="status">🔄 Loading data...</div>
+        <button class="btn-search" onclick="searchUnit()">Search</button>
+        <button class="btn-sync" onclick="loadCloudData()">Sync</button>
+        <div id="status" class="status">Loading data...</div>
       </div>
     </div>
 
@@ -324,11 +352,12 @@
           <button class="tab-btn" onclick="scrollToSection('sec-masterplan', this)">Masterplan</button>
           <button class="tab-btn" onclick="scrollToSection('sec-layout', this)">Layout</button>
           <button class="tab-btn" onclick="scrollToSection('sec-payment', this)">Payment</button>
-          <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="scrollToSection('sec-admin', this)">⚙️ Admin</button>
+          <button class="tab-btn" id="inventoryTabBtn" style="display:none;" onclick="scrollToSection('sec-inventory', this)">My Inventory</button>
+          <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="scrollToSection('sec-admin', this)">Admin</button>
         </div>
         <div class="action-buttons">
-          <button class="btn-preview" onclick="previewFullPDF()">👁️ Preview PDF</button>
-          <button class="btn-pdf" onclick="exportFullPDF()">📥 Download PDF</button>
+          <button class="btn-preview" onclick="previewFullPDF()">Preview</button>
+          <button class="btn-pdf" onclick="exportFullPDF()">Download PDF</button>
         </div>
       </div>
 
@@ -409,36 +438,55 @@
           </div>
         </div>
 
-        <!-- ADMIN TAB (only visible to role = admin) -->
-        <div class="offer-page-section" id="sec-admin">
-          <h3 style="margin: 0 0 12px 0; font-size: 16px; text-align: left;">⚙️ Admin Panel</h3>
+        <!-- MY INVENTORY TAB (visible to every approved agent) -->
+        <div class="offer-page-section" id="sec-inventory" style="display:none;">
+          <h3 style="margin: 0 0 12px 0; font-size: 16px; text-align: left;">My Inventory</h3>
+          <p style="font-size:12px; color:var(--muted-color); margin: 0 0 14px 0;">
+            Units you import here are private to you — your teammates won't see them, and you won't see theirs.
+          </p>
           <div class="admin-grid">
             <div class="admin-form-block">
-              <h4>➕ Add / Update Unit</h4>
-              <input type="text" id="adm_unit_code" placeholder="Unit Code (e.g. 31W-101)">
-              <input type="text" id="adm_project_name" placeholder="Project Name (e.g. 31 West)">
-              <input type="text" id="adm_price" placeholder="Price (numbers only)">
-              <input type="text" id="adm_delivery_year" placeholder="Delivery Year">
-              <input type="text" id="adm_area" placeholder="Area (e.g. 150 sqm)">
-              <input type="text" id="adm_bedrooms" placeholder="Bedrooms">
-              <input type="text" id="adm_layout_image_url" placeholder="Layout Image URL">
-              <textarea id="adm_extra" placeholder='Extra fields as JSON, e.g. {"View":"Sea View","Floor":"3rd"}'></textarea>
-              <button class="btn-search" onclick="adminSaveUnit()">💾 Save Unit</button>
-              <div class="admin-msg" id="adminUnitMsg"></div>
+              <h4>Import from File</h4>
+              <p style="font-size:12px; color:var(--muted-color); margin: 0 0 10px 0;">
+                Use any column headers you like in the first row (Unit Code, Project, Price, Delivery, Area, Bedrooms, Layout Image...) — the system detects them automatically. Any unrecognized column is saved as an extra detail automatically.
+              </p>
+              <input type="file" id="adm_import_file" accept=".xlsx,.xls,.csv">
+              <button class="btn-sync" onclick="adminImportFile()">Import File</button>
+              <div class="admin-msg" id="adminImportMsg"></div>
             </div>
             <div class="admin-form-block">
-              <h4>🏗️ Add / Update Project</h4>
-              <input type="text" id="adm_proj_name" placeholder="Project Name (e.g. 41 Business District)">
-              <input type="text" id="adm_proj_logo" placeholder="Logo Image URL">
-              <input type="text" id="adm_proj_masterplan" placeholder="Masterplan Image URL">
-              <textarea id="adm_proj_gallery" placeholder="Gallery image URLs, one per line"></textarea>
-              <button class="btn-search" onclick="adminSaveProject()">💾 Save Project</button>
-              <div class="admin-msg" id="adminProjMsg"></div>
+              <h4>Import from Google Sheet</h4>
+              <p style="font-size:12px; color:var(--muted-color); margin: 0 0 10px 0;">
+                Paste a published Google Sheet CSV link (File &gt; Share &gt; Publish to web &gt; CSV).
+              </p>
+              <input type="text" id="adm_gsheet_url" placeholder="https://docs.google.com/.../pub?output=csv" style="width:100%;">
+              <button class="btn-sync" onclick="importFromGoogleSheet()">Import from Link</button>
+              <div class="admin-msg" id="adminGsheetMsg"></div>
             </div>
           </div>
           <p style="font-size:12px; color:var(--muted-color); margin-top:14px;">
-            Note: masterplan pin locations are set directly from the Masterplan tab — just search a unit, go to the Masterplan tab, and click on the map.
+            Note: masterplan pin locations are set from the Masterplan tab — search a unit, go to the Masterplan tab, and click on the map.
           </p>
+          <h4 style="margin-top:20px; font-size:14px;">Recent Imports (Team Activity)</h4>
+          <div class="import-log-list" id="importLogList"><p style="font-size:12px; color:var(--muted-color);">No imports yet.</p></div>
+        </div>
+
+        <!-- ADMIN TAB (only visible to role = admin) -->
+        <div class="offer-page-section" id="sec-admin" style="display:none;">
+          <h3 style="margin: 0 0 12px 0; font-size: 16px; text-align: left;">Admin Panel</h3>
+
+          <h4 style="font-size:14px;">Pending Account Approvals</h4>
+          <div class="approval-list" id="approvalList"><p style="font-size:12px; color:var(--muted-color);">No pending accounts.</p></div>
+
+          <div class="admin-form-block" style="margin-top:20px;">
+            <h4>Add / Update Project</h4>
+            <input type="text" id="adm_proj_name" placeholder="Project Name (e.g. 41 Business District)">
+            <input type="text" id="adm_proj_logo" placeholder="Logo Image URL">
+            <input type="text" id="adm_proj_masterplan" placeholder="Masterplan Image URL">
+            <textarea id="adm_proj_gallery" placeholder="Gallery image URLs, one per line (3-4 recommended)"></textarea>
+            <button class="btn-search" onclick="adminSaveProject()">Save Project</button>
+            <div class="admin-msg" id="adminProjMsg"></div>
+          </div>
         </div>
 
       </div>
@@ -447,8 +495,7 @@
 
   <script>
     // ============================================================
-    // ⚠️ SETUP REQUIRED: paste your own Supabase project values here
-    // (Supabase Dashboard > Project Settings > API)
+    // Supabase project connection
     // ============================================================
     const SUPABASE_URL = 'https://qiflwudikwuavyljlhnx.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_CXh9qukpJYZbS6glxcPwlQ_X57JR4sC';
@@ -473,6 +520,15 @@
     let currentUnitCode = "";
 
     // ---------------- AUTH ----------------
+    function showSignup() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('signup-screen').style.display = 'block';
+    }
+    function showLogin() {
+      document.getElementById('signup-screen').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'block';
+    }
+
     async function login() {
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
@@ -485,10 +541,40 @@
       await onLoggedIn(data.user);
     }
 
+    async function signUp() {
+      const full_name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value;
+      const errBox = document.getElementById('signupError');
+      const okBox = document.getElementById('signupSuccess');
+      errBox.innerText = ''; okBox.innerText = '';
+
+      if (!full_name || !email || !password) { errBox.innerText = 'Please fill in all fields.'; return; }
+      if (password.length < 6) { errBox.innerText = 'Password must be at least 6 characters.'; return; }
+
+      const { data, error } = await supabaseClient.auth.signUp({
+        email, password, options: { data: { full_name } }
+      });
+      if (error) { errBox.innerText = error.message; return; }
+
+      document.getElementById('signupName').value = '';
+      document.getElementById('signupEmail').value = '';
+      document.getElementById('signupPassword').value = '';
+
+      if (data.session && data.user) {
+        // Account is immediately active (email confirmation disabled) -> route to pending/approved screen
+        await onLoggedIn(data.user);
+      } else {
+        okBox.innerText = 'Account created! Please check your email to confirm, then log in — an admin will still need to approve your access.';
+        showLogin();
+      }
+    }
+
     async function logout() {
       await supabaseClient.auth.signOut();
       currentUser = null; currentProfile = null;
       document.getElementById('app-root').style.display = 'none';
+      document.getElementById('pending-screen').style.display = 'none';
       document.getElementById('logoutBtn').style.display = 'none';
       document.getElementById('login-screen').style.display = 'block';
     }
@@ -496,21 +582,40 @@
     async function onLoggedIn(user) {
       currentUser = user;
       document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app-root').style.display = 'block';
+      document.getElementById('signup-screen').style.display = 'none';
       document.getElementById('logoutBtn').style.display = 'inline-block';
 
       const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
       currentProfile = profile;
-      if (profile && profile.role === 'admin') {
-        document.getElementById('adminTabBtn').style.display = 'inline-block';
+
+      if (!profile || profile.status !== 'approved') {
+        document.getElementById('pending-screen').style.display = 'block';
+        document.getElementById('app-root').style.display = 'none';
+        return;
       }
+
+      document.getElementById('pending-screen').style.display = 'none';
+      document.getElementById('app-root').style.display = 'block';
+      document.getElementById('welcome-screen').style.display = 'none';
+      document.getElementById('main-app-content').style.display = 'block';
+
+      document.getElementById('inventoryTabBtn').style.display = 'inline-block';
+      document.getElementById('sec-inventory').style.display = 'block';
+
+      if (profile.role === 'admin') {
+        document.getElementById('adminTabBtn').style.display = 'inline-block';
+        document.getElementById('sec-admin').style.display = 'block';
+        loadPendingApprovals();
+      }
+
       loadCloudData();
+      loadImportLogs();
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
       const savedTheme = localStorage.getItem('m2_theme') || 'dark';
       document.body.setAttribute('data-theme', savedTheme);
-      document.getElementById('themeToggleBtn').innerHTML = savedTheme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
+      document.getElementById('themeToggleBtn').innerHTML = savedTheme === 'light' ? 'Dark Mode' : 'Light Mode';
 
       const { data: { session } } = await supabaseClient.auth.getSession();
       if (session && session.user) {
@@ -523,9 +628,9 @@
       const body = document.body;
       const btn = document.getElementById('themeToggleBtn');
       if (body.getAttribute('data-theme') === 'dark') {
-        body.setAttribute('data-theme', 'light'); btn.innerHTML = '🌙 Dark Mode'; localStorage.setItem('m2_theme', 'light');
+        body.setAttribute('data-theme', 'light'); btn.innerHTML = 'Dark Mode'; localStorage.setItem('m2_theme', 'light');
       } else {
-        body.setAttribute('data-theme', 'dark'); btn.innerHTML = '☀️ Light Mode'; localStorage.setItem('m2_theme', 'dark');
+        body.setAttribute('data-theme', 'dark'); btn.innerHTML = 'Light Mode'; localStorage.setItem('m2_theme', 'dark');
       }
     }
 
@@ -536,11 +641,62 @@
       if (btnElement) btnElement.classList.add('active');
     }
 
+    // ---------------- PENDING APPROVALS (admin only) ----------------
+    async function loadPendingApprovals() {
+      const listEl = document.getElementById('approvalList');
+      const { data, error } = await supabaseClient.from('profiles').select('*').eq('status', 'pending').order('created_at', { ascending: false });
+      if (error || !data || !data.length) {
+        listEl.innerHTML = '<p style="font-size:12px; color:var(--muted-color);">No pending accounts.</p>';
+        return;
+      }
+      listEl.innerHTML = '';
+      data.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'approval-item';
+        div.innerHTML = `<span>${p.full_name || 'Unnamed'} — joined ${new Date(p.created_at).toLocaleDateString()}</span>`;
+        const btn = document.createElement('button');
+        btn.className = 'btn-search';
+        btn.innerText = 'Approve';
+        btn.onclick = () => approveUser(p.id);
+        div.appendChild(btn);
+        listEl.appendChild(div);
+      });
+    }
+
+    async function approveUser(id) {
+      const { error } = await supabaseClient.from('profiles').update({ status: 'approved' }).eq('id', id);
+      if (error) { alert('Error: ' + error.message); return; }
+      loadPendingApprovals();
+    }
+
+    // ---------------- IMPORT LOG (visible to everyone) ----------------
+    async function loadImportLogs() {
+      const listEl = document.getElementById('importLogList');
+      const { data, error } = await supabaseClient.from('import_logs').select('*').order('created_at', { ascending: false }).limit(20);
+      if (error || !data || !data.length) {
+        listEl.innerHTML = '<p style="font-size:12px; color:var(--muted-color);">No imports yet.</p>';
+        return;
+      }
+      listEl.innerHTML = '';
+      data.forEach(log => {
+        const div = document.createElement('div');
+        div.className = 'import-log-item';
+        div.innerHTML = `<span>${log.agent_name || 'Unknown'} imported ${log.unit_count} unit(s)</span><span>${new Date(log.created_at).toLocaleString()}</span>`;
+        listEl.appendChild(div);
+      });
+    }
+
+    async function logImport(count) {
+      const agentName = (currentProfile && currentProfile.full_name) || currentUser.email;
+      await supabaseClient.from('import_logs').insert({ owner_id: currentUser.id, agent_name: agentName, unit_count: count });
+      loadImportLogs();
+    }
+
     // ---------------- DATA LOADING ----------------
     async function loadCloudData() {
       const st = document.getElementById('status');
       st.style.color = "#60a5fa";
-      st.innerText = "🔄 Syncing data...";
+      st.innerText = "Syncing data...";
 
       try {
         const [{ data: units, error: uErr }, { data: projects, error: pErr }, { data: locations, error: lErr }] = await Promise.all([
@@ -569,11 +725,11 @@
         });
 
         st.style.color = "#34d399";
-        st.innerText = `✅ Ready (${(units || []).length} units, ${(projects || []).length} projects)!`;
+        st.innerText = `Ready (${(units || []).length} units, ${(projects || []).length} projects)!`;
       } catch (err) {
         console.error(err);
         st.style.color = "#f87171";
-        st.innerText = "❌ Could not load data. Check Supabase setup / connection.";
+        st.innerText = "Could not load data. Check Supabase setup / connection.";
       }
     }
 
@@ -684,7 +840,6 @@
         const manualSelect = document.getElementById('projectSelect').value;
         setupProjectVisuals(manualSelect === 'auto' ? projName : manualSelect);
 
-        // Layout image now comes directly from the unit's own data (fixed bug: no more guessing a Drive file ID from the unit code)
         const layoutImgElement = document.getElementById('unitLayoutImg');
         const layoutSubLabel = document.getElementById('layoutSubLabel');
         layoutImgElement.src = uData.layout_image_url || placeholderImg('No Layout Image for ' + val);
@@ -697,7 +852,6 @@
           marker.style.display = 'block'; marker.style.left = `${coords.x}%`; marker.style.top = `${coords.y}%`;
         }
 
-        // Detail cards: known columns + any extra JSON fields
         grid.innerHTML = '';
         const known = [
           ['Price', uData.price ? Number(uData.price).toLocaleString() + ' EGP' : '-'],
@@ -719,7 +873,6 @@
           grid.appendChild(card);
         });
 
-        // Payment schedule
         const unitPriceVal = Number(uData.price) || 0;
         document.getElementById('paymentUnitPrice').innerText = unitPriceVal > 0 ? unitPriceVal.toLocaleString() + ' EGP' : 'Refer to contract / sheet';
         const paymentTbody = document.getElementById('paymentTableBody');
@@ -743,46 +896,14 @@
         }
 
         st.style.color = "#34d399";
-        st.innerText = `✅ Unit [${val}] loaded!`;
+        st.innerText = `Unit [${val}] loaded!`;
       } else {
         st.style.color = "#f87171";
-        st.innerText = `❌ Unit [${val}] not found.`;
+        st.innerText = `Unit [${val}] not found.`;
       }
     }
 
-    // ---------------- ADMIN: SAVE UNIT / PROJECT ----------------
-    async function adminSaveUnit() {
-      const msg = document.getElementById('adminUnitMsg');
-      msg.style.color = '#60a5fa'; msg.innerText = 'Saving...';
-
-      const unit_code = document.getElementById('adm_unit_code').value.trim().toUpperCase();
-      if (!unit_code) { msg.style.color = '#f87171'; msg.innerText = 'Unit code is required.'; return; }
-
-      let extra = {};
-      const extraRaw = document.getElementById('adm_extra').value.trim();
-      if (extraRaw) {
-        try { extra = JSON.parse(extraRaw); }
-        catch (e) { msg.style.color = '#f87171'; msg.innerText = 'Extra fields must be valid JSON.'; return; }
-      }
-
-      const row = {
-        unit_code,
-        project_name: document.getElementById('adm_project_name').value.trim(),
-        price: parseFloat(document.getElementById('adm_price').value) || null,
-        delivery_year: document.getElementById('adm_delivery_year').value.trim(),
-        area: document.getElementById('adm_area').value.trim(),
-        bedrooms: document.getElementById('adm_bedrooms').value.trim(),
-        layout_image_url: document.getElementById('adm_layout_image_url').value.trim(),
-        extra,
-        updated_at: new Date().toISOString()
-      };
-
-      const { error } = await supabaseClient.from('units').upsert(row, { onConflict: 'unit_code' });
-      if (error) { msg.style.color = '#f87171'; msg.innerText = '❌ ' + error.message; return; }
-      msg.style.color = '#34d399'; msg.innerText = '✅ Unit saved!';
-      loadCloudData();
-    }
-
+    // ---------------- ADMIN: SAVE PROJECT ----------------
     async function adminSaveProject() {
       const msg = document.getElementById('adminProjMsg');
       msg.style.color = '#60a5fa'; msg.innerText = 'Saving...';
@@ -801,28 +922,234 @@
       };
 
       const { error } = await supabaseClient.from('projects').upsert(row, { onConflict: 'name' });
-      if (error) { msg.style.color = '#f87171'; msg.innerText = '❌ ' + error.message; return; }
-      msg.style.color = '#34d399'; msg.innerText = '✅ Project saved!';
+      if (error) { msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message; return; }
+      msg.style.color = '#34d399'; msg.innerText = 'Project saved!';
       loadCloudData();
     }
 
-    // ---------------- PDF EXPORT ----------------
+    // ---------------- IMPORT: SHARED HELPERS ----------------
+    function normHeader(h) { return String(h || '').toLowerCase().trim(); }
+    function findColumn(keys, patterns) { return keys.find(k => patterns.some(p => normHeader(k).includes(p))); }
+
+    function excelSerialToDateStr(serial) {
+      const utcDays = Math.floor(serial) - 25569; // days between 1899-12-30 and 1970-01-01
+      const dateInfo = new Date(utcDays * 86400 * 1000);
+      const day = String(dateInfo.getUTCDate()).padStart(2, '0');
+      const month = String(dateInfo.getUTCMonth() + 1).padStart(2, '0');
+      const year = dateInfo.getUTCFullYear();
+      return `${day}/${month}/${year}`;
+    }
+
+    // Converts Arabic-Indic (١٢٣) and Extended Arabic-Indic (۱۲۳) digits to standard English digits
+    function toEnglishDigits(val) {
+      if (val === null || val === undefined) return val;
+      const str = String(val);
+      const arabicIndic = '٠١٢٣٤٥٦٧٨٩';
+      const extendedArabicIndic = '۰۱۲۳۴۵۶۷۸۹';
+      return str.replace(/[٠-٩۰-۹]/g, ch => {
+        let idx = arabicIndic.indexOf(ch);
+        if (idx === -1) idx = extendedArabicIndic.indexOf(ch);
+        return idx !== -1 ? String(idx) : ch;
+      });
+    }
+
+    // Translates common Arabic floor-name words (e.g. "الدور الأول") into English ("First")
+    function stripHiddenMarks(s) {
+      return s.replace(/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, '');
+    }
+    function normalizeArabic(s) {
+      return stripHiddenMarks(s).replace(/[إأآا]/g, 'ا').replace(/ى/g, 'ي').trim();
+    }
+    const FLOOR_WORD_MAP_RAW = {
+      'ارضي': 'Ground',
+      'اول': 'First',
+      'تاني': 'Second', 'ثاني': 'Second',
+      'تالت': 'Third', 'ثالث': 'Third',
+      'رابع': 'Fourth',
+      'خامس': 'Fifth',
+      'سادس': 'Sixth',
+      'سابع': 'Seventh',
+      'تامن': 'Eighth', 'ثامن': 'Eighth',
+      'تاسع': 'Ninth',
+      'عاشر': 'Tenth',
+      'بدروم': 'Basement',
+      'روف': 'Roof',
+      'ميزانين': 'Mezzanine'
+    };
+    const FLOOR_WORD_MAP = {};
+    Object.keys(FLOOR_WORD_MAP_RAW).forEach(k => { FLOOR_WORD_MAP[normalizeArabic(k)] = FLOOR_WORD_MAP_RAW[k]; });
+
+    function translateFloorValue(val) {
+      let s = toEnglishDigits(String(val || '')).trim();
+      const tokens = s.split(/\s+/).map(tok => {
+        let core = normalizeArabic(tok).replace(/الدور|الطابق|دور|طابق/g, '');
+        if (core.startsWith('و') && core.length > 1) core = core.slice(1); // strip Arabic "and" prefix
+        if (core.startsWith('ال')) core = core.slice(2);
+        core = core.trim();
+        return FLOOR_WORD_MAP[core] || stripHiddenMarks(tok);
+      });
+      return tokens.filter(Boolean).join(' & ');
+    }
+
+    function parseWorkbookRows(workbook) {
+      const sheetName = workbook.SheetNames[0];
+      return XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '', raw: false });
+    }
+
+    function buildUnitsFromRows(rows) {
+      if (!rows.length) return { error: 'File is empty or the format is not supported.' };
+
+      const keys = Object.keys(rows[0]);
+      const codeKey = findColumn(keys, ['unit', 'code']);
+      const projectKey = findColumn(keys, ['project', 'phase']);
+      const priceKey = findColumn(keys, ['price', 'total']);
+      const deliveryKey = findColumn(keys, ['delivery', 'date', 'year']);
+      const areaKey = findColumn(keys, ['area', 'space', 'sqm']);
+      const bedroomKey = findColumn(keys, ['bedroom', 'room']);
+      const layoutKey = findColumn(keys, ['layout', 'plan', 'image']);
+
+      if (!codeKey) return { error: 'No clear unit code column found (header must contain "Unit" or "Code").' };
+
+      const knownKeys = [codeKey, projectKey, priceKey, deliveryKey, areaKey, bedroomKey, layoutKey].filter(Boolean);
+      const unitsToImport = [];
+
+      rows.forEach(row => {
+        const unit_code = toEnglishDigits(String(row[codeKey] || '')).toUpperCase().trim();
+        if (!unit_code) return;
+
+        let delivery_year = deliveryKey ? toEnglishDigits(String(row[deliveryKey] || '')).trim() : '';
+        if (/^\d{5}$/.test(delivery_year)) {
+          delivery_year = excelSerialToDateStr(parseInt(delivery_year, 10));
+        }
+
+        const extra = {};
+        keys.forEach(k => {
+          if (!knownKeys.includes(k) && String(row[k]).trim() !== '') {
+            extra[k] = normHeader(k).includes('floor') ? translateFloorValue(row[k]) : toEnglishDigits(row[k]);
+          }
+        });
+
+        unitsToImport.push({
+          owner_id: currentUser.id,
+          unit_code,
+          project_name: projectKey ? String(row[projectKey] || '').trim() : '',
+          price: priceKey ? (parseFloat(toEnglishDigits(String(row[priceKey])).replace(/[^0-9.]/g, '')) || null) : null,
+          delivery_year,
+          area: areaKey ? toEnglishDigits(String(row[areaKey] || '')).trim() : '',
+          bedrooms: bedroomKey ? toEnglishDigits(String(row[bedroomKey] || '')).trim() : '',
+          layout_image_url: layoutKey ? String(row[layoutKey] || '').trim() : '',
+          extra,
+          updated_at: new Date().toISOString()
+        });
+      });
+
+      if (!unitsToImport.length) return { error: 'No row has a valid unit code.' };
+      return { units: unitsToImport };
+    }
+
+    async function performBulkImport(unitsToImport, msgEl) {
+      msgEl.style.color = '#60a5fa'; msgEl.innerText = `Uploading ${unitsToImport.length} unit(s)...`;
+
+      const batchSize = 500;
+      let importedCount = 0;
+      for (let i = 0; i < unitsToImport.length; i += batchSize) {
+        const batch = unitsToImport.slice(i, i + batchSize);
+        const { error } = await supabaseClient.from('units').upsert(batch, { onConflict: 'owner_id,unit_code' });
+        if (error) { msgEl.style.color = '#f87171'; msgEl.innerText = 'Error: ' + error.message; return; }
+        importedCount += batch.length;
+      }
+
+      msgEl.style.color = '#34d399';
+      msgEl.innerText = `Successfully imported ${importedCount} unit(s)!`;
+      loadCloudData();
+      logImport(importedCount);
+    }
+
+    function adminImportFile() {
+      const msg = document.getElementById('adminImportMsg');
+      const fileInput = document.getElementById('adm_import_file');
+      const file = fileInput.files[0];
+      if (!file) { msg.style.color = '#f87171'; msg.innerText = 'Please choose a file first.'; return; }
+
+      msg.style.color = '#60a5fa'; msg.innerText = 'Reading file...';
+
+      const isCsv = file.name.toLowerCase().endsWith('.csv');
+      const reader = new FileReader();
+      reader.onload = async function (e) {
+        try {
+          let workbook;
+          if (isCsv) {
+            const csvText = new TextDecoder('utf-8').decode(new Uint8Array(e.target.result));
+            workbook = XLSX.read(csvText, { type: 'string' });
+          } else {
+            workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+          }
+          const rows = parseWorkbookRows(workbook);
+          const result = buildUnitsFromRows(rows);
+          if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
+          await performBulkImport(result.units, msg);
+          fileInput.value = '';
+        } catch (err) {
+          console.error(err);
+          msg.style.color = '#f87171';
+          msg.innerText = 'Error reading the file. Make sure it is a valid Excel or CSV file.';
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    async function importFromGoogleSheet() {
+      const msg = document.getElementById('adminGsheetMsg');
+      const url = document.getElementById('adm_gsheet_url').value.trim();
+      if (!url) { msg.style.color = '#f87171'; msg.innerText = 'Please paste a Google Sheet CSV link first.'; return; }
+
+      msg.style.color = '#60a5fa'; msg.innerText = 'Fetching sheet...';
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Could not fetch the sheet (HTTP ' + res.status + ').');
+        const csvText = await res.text();
+        const workbook = XLSX.read(csvText, { type: 'string' });
+        const rows = parseWorkbookRows(workbook);
+        const result = buildUnitsFromRows(rows);
+        if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
+        await performBulkImport(result.units, msg);
+      } catch (err) {
+        console.error(err);
+        msg.style.color = '#f87171';
+        msg.innerText = 'Could not import from this link. Make sure the sheet is published as CSV and publicly accessible.';
+      }
+    }
+
+    // ---------------- PDF EXPORT (single continuous page, no breaks) ----------------
+    function buildSinglePagePdfOptions(element, filename) {
+      const widthMM = 210;
+      const heightMM = (element.scrollHeight / element.offsetWidth) * widthMM;
+      return {
+        margin: 0,
+        filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: [widthMM, heightMM], orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all'] }
+      };
+    }
+
     function previewFullPDF() {
       const element = document.getElementById('full-offer-container');
-      const opt = { margin: [10, 10, 10, 10], filename: 'M_Squared_Complete_Offer.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true, logging: false }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-      document.getElementById('status').innerText = "📄 Generating Full Offer Preview...";
+      const opt = buildSinglePagePdfOptions(element, 'M_Squared_Complete_Offer.pdf');
+      document.getElementById('status').innerText = "Generating preview...";
       html2pdf().from(element).set(opt).toPdf().get('pdf').then(function (pdf) {
         window.open(pdf.output('bloburl'), '_blank');
-        document.getElementById('status').innerText = "✅ Preview opened!";
+        document.getElementById('status').innerText = "Preview opened!";
       });
     }
 
     function exportFullPDF() {
       const element = document.getElementById('full-offer-container');
-      const opt = { margin: [10, 10, 10, 10], filename: 'M_Squared_Complete_Offer.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true, logging: false }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-      document.getElementById('status').innerText = "📥 Downloading Full Offer PDF...";
+      const opt = buildSinglePagePdfOptions(element, 'M_Squared_Complete_Offer.pdf');
+      document.getElementById('status').innerText = "Downloading PDF...";
       html2pdf().from(element).set(opt).save().then(() => {
-        document.getElementById('status').innerText = "✅ PDF Downloaded!";
+        document.getElementById('status').innerText = "PDF downloaded!";
       });
     }
   </script>
