@@ -266,13 +266,27 @@
 
     .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     
-    /* Enlarged Masterplan Frame with Proper Spacious Scaling */
+    /* Fixed Aspect Ratio Masterplan & Layout Container to maintain exact size in browser and PDF export */
     .masterplan-section {
-      position: relative; width: 100%; background: var(--input-bg); border-radius: 10px; overflow: hidden;
-      border: 1px solid var(--border-color); text-align: center; padding: 12px; display: flex; justify-content: center; align-items: center;
-      min-height: 480px; max-height: 680px;
+      position: relative; 
+      width: 100%; 
+      aspect-ratio: 16 / 10; 
+      background: var(--input-bg); 
+      border-radius: 10px; 
+      overflow: hidden;
+      border: 1px solid var(--border-color); 
+      display: flex; 
+      justify-content: center; 
+      align-items: center;
+      padding: 10px;
     }
-    .masterplan-img { width: 100%; height: auto; max-height: 660px; object-fit: contain; display: block; cursor: crosshair; margin: 0 auto; }
+    .masterplan-img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: contain; 
+      display: block; 
+      cursor: crosshair; 
+    }
 
     .unit-marker {
       position: absolute; font-size: 24px; pointer-events: none; display: none; z-index: 10;
@@ -424,7 +438,7 @@
             <small id="currentProjectLabel" style="color: var(--muted-color); font-weight: bold; font-size: 11px;"></small>
           </div>
           <div class="masterplan-section" id="masterplanContainer">
-            <div id="mapWrapper" style="position: relative; display: inline-block; line-height: 0; width: 100%;">
+            <div id="mapWrapper" style="position: relative; display: inline-block; width: 100%; height: 100%;">
               <img src="" alt="Masterplan" class="masterplan-img" id="mpImg" crossorigin="anonymous" loading="lazy" onclick="handleMapClick(event)">
               <div id="marker" class="unit-marker">📍</div>
             </div>
