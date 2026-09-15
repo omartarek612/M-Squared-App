@@ -148,7 +148,6 @@
     .btn-sync { background: var(--sync-gradient); color: white; }
     .btn-preview { background: var(--preview-gradient); color: #0f172a; }
     .btn-pdf { background: var(--pdf-gradient); color: white; }
-    .btn-sidebar-toggle { background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); }
 
     #login-screen, #signup-screen, #pending-screen {
       background: var(--card-bg);
@@ -182,78 +181,9 @@
     #welcome-screen h2 { color: var(--text-color); font-size: 1.5rem; margin-bottom: 10px; }
     #welcome-screen p { color: var(--muted-color); font-size: 0.95rem; }
 
-    #main-app-content { display: none; max-width: 1200px; margin: 10px auto; text-align: left; }
+    #main-app-content { display: none; max-width: 800px; margin: 10px auto; text-align: left; }
 
-    /* Layout Wrapper with Collapsible Sidebar */
-    .app-layout-wrapper {
-      display: flex;
-      gap: 15px;
-      position: relative;
-      align-items: flex-start;
-    }
-
-    /* Collapsible Sidebar */
-    .app-sidebar {
-      width: 280px;
-      flex-shrink: 0;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      position: -webkit-sticky;
-      position: sticky;
-      top: 112px;
-      transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-sizing: border-box;
-      z-index: 9990;
-    }
-    .app-sidebar.collapsed {
-      margin-left: -295px;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .sidebar-section-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--muted-color);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-      text-align: left;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 4px;
-    }
-
-    .nav-tabs { display: flex; flex-direction: column; gap: 4px; }
-    .tab-btn {
-      background: var(--input-bg);
-      color: var(--text-color);
-      border: 1px solid var(--border-color);
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: left;
-      transition: all 0.2s;
-    }
-    .tab-btn:hover { background: rgba(59, 130, 246, 0.15); border-color: #3b82f6; }
-    .tab-btn.active { background: var(--primary-gradient); color: white; border-color: transparent; }
-
-    .sidebar-actions { display: flex; flex-direction: column; gap: 6px; margin-top: 5px; }
-
-    /* Main Offer Content Area */
-    .main-offer-area {
-      flex-grow: 1;
-      min-width: 0;
-    }
-
-    /* Freezed Sticky Action Bar for Mobile/Toggle */
+    /* Freezed Sticky Navigation & Action Bar */
     .global-actions {
       position: -webkit-sticky !important;
       position: sticky !important;
@@ -262,6 +192,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
       margin-bottom: 15px;
       background: var(--card-bg);
       padding: 10px 15px;
@@ -270,6 +202,24 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       backdrop-filter: blur(10px);
     }
+
+    .nav-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+    .tab-btn {
+      background: var(--input-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: none;
+      margin: 0;
+    }
+    .tab-btn:hover { background: rgba(59, 130, 246, 0.15); border-color: #3b82f6; }
+    .tab-btn.active { background: var(--primary-gradient); color: white; border-color: transparent; }
+
+    .action-buttons { display: flex; gap: 6px; }
 
     #full-offer-container { display: flex; flex-direction: column; gap: 15px; }
 
@@ -358,7 +308,7 @@
     }
     .approval-item button { margin:0; padding:4px 10px; font-size:11px; }
 
-    /* App Copyrights - Visible strictly in UI, completely hidden outside */
+    /* App Copyrights - Visible strictly in UI */
     .app-copyrights {
       display: block !important;
       visibility: visible !important;
@@ -375,15 +325,24 @@
       border: 1px solid var(--border-color);
     }
 
-    /* Completely hide inventory, admin panels, headers, sidebar, and copyright tags during print/PDF generation */
+    /* Completely hide UI-only elements during print/PDF generation */
     @media print {
-      .app-copyrights, .top-global-bar, .sticky-header, .global-actions, .app-sidebar, #sec-inventory, #sec-admin { display: none !important; visibility: hidden !important; }
+      .app-copyrights, .top-global-bar, .sticky-header, .global-actions, #sec-inventory, #sec-admin { display: none !important; visibility: hidden !important; }
     }
+    
+    /* Utility class for hiding elements in PDF/Preview wrapper */
+    .no-pdf { display: block; }
 
-    @media (max-width: 900px) {
-      .app-layout-wrapper { flex-direction: column; }
-      .app-sidebar { position: relative; width: 100%; top: 0; margin-left: 0 !important; }
-      .app-sidebar.collapsed { display: none; }
+    @media (max-width: 768px) {
+      body { padding: 5px; }
+      .controls { width: 100%; padding: 8px; }
+      input[type="text"], input#clientInput, select { width: 100%; max-width: 100%; margin: 2px 0; }
+      .details-grid { grid-template-columns: 1fr; }
+      .pictures-grid { grid-template-columns: 1fr; }
+      .global-actions { flex-direction: column; align-items: stretch; }
+      .nav-tabs { justify-content: center; }
+      .action-buttons { justify-content: center; }
+      .admin-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -430,7 +389,6 @@
     <!-- Sticky Header: Search & Inputs Top Bar -->
     <div class="sticky-header">
       <div class="controls">
-        <button class="btn-sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">☰ Menu</button>
         <input type="text" id="unitInput" placeholder="Unit Code" onkeypress="if(event.key==='Enter') searchUnit()">
         <input type="text" id="clientInput" placeholder="Client Name">
         <select id="projectSelect" onchange="changeMasterplanManual()">
@@ -449,157 +407,147 @@
 
     <div id="main-app-content">
 
-      <div class="app-layout-wrapper">
+      <!-- Sticky Floating Action & Navigation Bar -->
+      <div class="global-actions">
+        <div class="nav-tabs">
+          <button class="tab-btn active" onclick="scrollToSection('sec-summary', this)">Summary</button>
+          <button class="tab-btn" onclick="scrollToSection('sec-pictures', this)">Gallery</button>
+          <button class="tab-btn" onclick="scrollToSection('sec-masterplan', this)">Masterplan</button>
+          <button class="tab-btn" onclick="scrollToSection('sec-layout', this)">Layout</button>
+          <button class="tab-btn" onclick="scrollToSection('sec-payment', this)">Payment</button>
+          <button class="tab-btn no-pdf" id="inventoryTabBtn" onclick="scrollToSection('sec-inventory', this)">Inventory Update</button>
+          <button class="tab-btn no-pdf" id="adminTabBtn" style="display:none;" onclick="scrollToSection('sec-admin', this)">Admin Panel</button>
+        </div>
+        <div class="action-buttons">
+          <button class="btn-preview" onclick="previewFullPDF()">Preview</button>
+          <button class="btn-pdf" onclick="exportFullPDF()">Download PDF</button>
+        </div>
+      </div>
 
-        <!-- COLLAPSIBLE SIDEBAR -->
-        <div class="app-sidebar" id="appSidebar">
-          <div class="sidebar-section-title">Navigation Sections</div>
-          <div class="nav-tabs">
-            <button class="tab-btn active" onclick="scrollToSection('sec-summary', this)">Summary</button>
-            <button class="tab-btn" onclick="scrollToSection('sec-pictures', this)">Gallery</button>
-            <button class="tab-btn" onclick="scrollToSection('sec-masterplan', this)">Masterplan</button>
-            <button class="tab-btn" onclick="scrollToSection('sec-layout', this)">Layout</button>
-            <button class="tab-btn" onclick="scrollToSection('sec-payment', this)">Payment</button>
-            <button class="tab-btn" id="inventoryTabBtn" onclick="scrollToSection('sec-inventory', this)">Inventory Update</button>
-            <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="scrollToSection('sec-admin', this)">Admin Panel</button>
+      <!-- PDF / Preview Container (Only contains offer sections) -->
+      <div id="full-offer-container">
+
+        <div class="offer-page-section" id="sec-summary">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgSummary" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
           </div>
-
-          <div class="sidebar-section-title" style="margin-top: 10px;">Actions</div>
-          <div class="sidebar-actions">
-            <button class="btn-preview" onclick="previewFullPDF()">Preview Offer</button>
-            <button class="btn-pdf" onclick="exportFullPDF()">Download PDF</button>
+          <div class="greeting-box" id="greetingBox"></div>
+          <div class="summary-hero-card">
+            <h4>Selected Unit & Project</h4>
+            <div class="unit-big-text" id="uNameSummary">-</div>
+            <div class="project-small-text" id="uProjectDisplay">M Squared</div>
+          </div>
+          <div id="detailsGrid" class="details-grid">
+            <div class="detail-card"><strong>Status</strong><span>Search for a unit code...</span></div>
           </div>
         </div>
 
-        <!-- MAIN OFFER AREA -->
-        <div class="main-offer-area">
-          <div id="full-offer-container">
-
-            <div class="offer-page-section" id="sec-summary">
-              <div class="header">
-                <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
-                <div><img id="projectLogoImgSummary" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
-              </div>
-              <div class="greeting-box" id="greetingBox"></div>
-              <div class="summary-hero-card">
-                <h4>Selected Unit & Project</h4>
-                <div class="unit-big-text" id="uNameSummary">-</div>
-                <div class="project-small-text" id="uProjectDisplay">M Squared</div>
-              </div>
-              <div id="detailsGrid" class="details-grid">
-                <div class="detail-card"><strong>Status</strong><span>Search for a unit code...</span></div>
-              </div>
-            </div>
-
-            <div class="offer-page-section" id="sec-pictures">
-              <div class="header">
-                <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
-                <div><img id="projectLogoImgPictures" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
-              </div>
-              <h3 style="margin: 0 0 12px 0; font-size: 14px; text-align: left;">Project Gallery & Views</h3>
-              <div class="pictures-grid" id="picturesGridContainer"></div>
-            </div>
-
-            <div class="offer-page-section" id="sec-masterplan">
-              <div class="header">
-                <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
-                <div><img id="projectLogoImgMasterplan" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
-              </div>
-              <div class="masterplan-header">
-                <h3 style="margin: 0; font-size:14px;">Project Masterplan Location</h3>
-                <small id="currentProjectLabel" style="color: var(--muted-color); font-weight: bold; font-size: 12px;"></small>
-              </div>
-              <div class="masterplan-section" id="masterplanContainer">
-                <div id="mapWrapper" style="position: relative; display: inline-block; line-height: 0;">
-                  <img src="" alt="Masterplan" class="masterplan-img" id="mpImg" crossorigin="anonymous" onclick="handleMapClick(event)">
-                  <div id="marker" class="unit-marker">📍</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="offer-page-section" id="sec-layout">
-              <div class="header">
-                <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
-                <div><img id="projectLogoImgLayout" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
-              </div>
-              <div class="masterplan-header">
-                <h3 style="margin: 0; font-size:14px;">Unit Floor Plan & Architectural Layout</h3>
-                <small style="color: var(--muted-color); font-weight: bold; font-size: 12px;" id="layoutSubLabel">Detailed Schematic</small>
-              </div>
-              <div class="masterplan-section">
-                <img src="" alt="Unit Layout" class="masterplan-img" id="unitLayoutImg" crossorigin="anonymous">
-              </div>
-            </div>
-
-            <div class="offer-page-section" id="sec-payment">
-              <div class="header">
-                <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
-                <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
-              </div>
-              <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Complete Payment Schedule & Installments</h3>
-              <div class="summary-hero-card" style="margin-bottom: 12px; text-align: left; padding: 10px 14px;">
-                <div style="font-size: 12px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 16px; font-weight: 700; color: #3b82f6;">-</span></div>
-              </div>
-              <div class="payment-table-container">
-                <table class="payment-table">
-                  <thead><tr><th>Milestone / Payment #</th><th>Timeline / Due</th><th>Amount (EGP)</th></tr></thead>
-                  <tbody id="paymentTableBody">
-                    <tr><td colspan="3" style="text-align: center; color: var(--muted-color);">Search a unit to generate complete payment schedule...</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <!-- INVENTORY UPDATE TAB (Completely hidden in Preview/PDF) -->
-            <div class="offer-page-section" id="sec-inventory">
-              <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
-              <p style="font-size:11px; color:var(--muted-color); margin: 0 0 12px 0;">
-                Once you import new inventory files, any previous inventory data is completely cleared and replaced with the fresh dataset.
-              </p>
-              <div class="admin-grid">
-                <div class="admin-form-block">
-                  <h4>Import File (.xlsx, .csv)</h4>
-                  <input type="file" id="adm_import_file" accept=".xlsx,.xls,.csv" style="font-size:11px;">
-                  <button class="btn-sync" onclick="adminImportFile()">Import & Overwrite</button>
-                  <div class="admin-msg" id="adminImportMsg"></div>
-                </div>
-                <div class="admin-form-block">
-                  <h4>Import from Google Sheet CSV Link</h4>
-                  <input type="text" id="adm_gsheet_url" placeholder="https://docs.google.com/.../pub?output=csv">
-                  <button class="btn-sync" onclick="importFromGoogleSheet()">Import & Overwrite</button>
-                  <div class="admin-msg" id="adminGsheetMsg"></div>
-                </div>
-              </div>
-              <h4 style="margin-top:15px; font-size:13px;">Recent Imports Activity</h4>
-              <div class="import-log-list" id="importLogList"><p style="font-size:11px; color:var(--muted-color);">No imports yet.</p></div>
-            </div>
-
-            <!-- ADMIN PANEL TAB (Completely hidden in Preview/PDF) -->
-            <div class="offer-page-section" id="sec-admin" style="display:none;">
-              <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Admin Control Panel</h3>
-
-              <h4 style="font-size:13px;">Pending Account Approvals (Admin Only)</h4>
-              <div class="approval-list" id="approvalList"><p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p></div>
-
-              <div class="admin-form-block" style="margin-top:15px;">
-                <h4>Add / Update Project</h4>
-                <input type="text" id="adm_proj_name" placeholder="Project Name">
-                <input type="text" id="adm_proj_logo" placeholder="Logo Image URL">
-                <input type="text" id="adm_proj_masterplan" placeholder="Masterplan Image URL">
-                <textarea id="adm_proj_gallery" placeholder="Gallery image URLs, one per line"></textarea>
-                <button class="btn-search" onclick="adminSaveProject()">Save Project</button>
-                <div class="admin-msg" id="admProjMsg"></div>
-              </div>
-            </div>
-
+        <div class="offer-page-section" id="sec-pictures">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgPictures" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
           </div>
+          <h3 style="margin: 0 0 12px 0; font-size: 14px; text-align: left;">Project Gallery & Views</h3>
+          <div class="pictures-grid" id="picturesGridContainer"></div>
+        </div>
 
-          <!-- Copyrights visible only in App UI, completely hidden during print/PDF export -->
-          <div class="app-copyrights">
-            Developed by Omar Tarek - 01003666683
+        <div class="offer-page-section" id="sec-masterplan">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgMasterplan" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+          </div>
+          <div class="masterplan-header">
+            <h3 style="margin: 0; font-size:14px;">Project Masterplan Location</h3>
+            <small id="currentProjectLabel" style="color: var(--muted-color); font-weight: bold; font-size: 12px;"></small>
+          </div>
+          <div class="masterplan-section" id="masterplanContainer">
+            <div id="mapWrapper" style="position: relative; display: inline-block; line-height: 0;">
+              <img src="" alt="Masterplan" class="masterplan-img" id="mpImg" crossorigin="anonymous" onclick="handleMapClick(event)">
+              <div id="marker" class="unit-marker">📍</div>
+            </div>
           </div>
         </div>
 
+        <div class="offer-page-section" id="sec-layout">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgLayout" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+          </div>
+          <div class="masterplan-header">
+            <h3 style="margin: 0; font-size:14px;">Unit Floor Plan & Architectural Layout</h3>
+            <small style="color: var(--muted-color); font-weight: bold; font-size: 12px;" id="layoutSubLabel">Detailed Schematic</small>
+          </div>
+          <div class="masterplan-section">
+            <img src="" alt="Unit Layout" class="masterplan-img" id="unitLayoutImg" crossorigin="anonymous">
+          </div>
+        </div>
+
+        <div class="offer-page-section" id="sec-payment">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+          </div>
+          <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Complete Payment Schedule & Installments</h3>
+          <div class="summary-hero-card" style="margin-bottom: 12px; text-align: left; padding: 10px 14px;">
+            <div style="font-size: 12px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 16px; font-weight: 700; color: #3b82f6;">-</span></div>
+          </div>
+          <div class="payment-table-container">
+            <table class="payment-table">
+              <thead><tr><th>Milestone / Payment #</th><th>Timeline / Due</th><th>Amount (EGP)</th></tr></thead>
+              <tbody id="paymentTableBody">
+                <tr><td colspan="3" style="text-align: center; color: var(--muted-color);">Search a unit to generate complete payment schedule...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- INVENTORY UPDATE & ADMIN PANELS (Completely outside full-offer-container so they never show in Preview/PDF) -->
+      <div class="offer-page-section no-pdf" id="sec-inventory" style="margin-top: 15px;">
+        <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
+        <p style="font-size:11px; color:var(--muted-color); margin: 0 0 12px 0;">
+          Once you import new inventory files, any previous inventory data is completely cleared and replaced with the fresh dataset.
+        </p>
+        <div class="admin-grid">
+          <div class="admin-form-block">
+            <h4>Import File (.xlsx, .csv)</h4>
+            <input type="file" id="adm_import_file" accept=".xlsx,.xls,.csv" style="font-size:11px;">
+            <button class="btn-sync" onclick="adminImportFile()">Import & Overwrite</button>
+            <div class="admin-msg" id="adminImportMsg"></div>
+          </div>
+          <div class="admin-form-block">
+            <h4>Import from Google Sheet CSV Link</h4>
+            <input type="text" id="adm_gsheet_url" placeholder="https://docs.google.com/.../pub?output=csv">
+            <button class="btn-sync" onclick="importFromGoogleSheet()">Import & Overwrite</button>
+            <div class="admin-msg" id="adminGsheetMsg"></div>
+          </div>
+        </div>
+        <h4 style="margin-top:15px; font-size:13px;">Recent Imports Activity</h4>
+        <div class="import-log-list" id="importLogList"><p style="font-size:11px; color:var(--muted-color);">No imports yet.</p></div>
+      </div>
+
+      <div class="offer-page-section no-pdf" id="sec-admin" style="display:none; margin-top: 15px;">
+        <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Admin Control Panel</h3>
+
+        <h4 style="font-size:13px;">Pending Account Approvals (Admin Only)</h4>
+        <div class="approval-list" id="approvalList"><p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p></div>
+
+        <div class="admin-form-block" style="margin-top:15px;">
+          <h4>Add / Update Project</h4>
+          <input type="text" id="adm_proj_name" placeholder="Project Name">
+          <input type="text" id="adm_proj_logo" placeholder="Logo Image URL">
+          <input type="text" id="adm_proj_masterplan" placeholder="Masterplan Image URL">
+          <textarea id="adm_proj_gallery" placeholder="Gallery image URLs, one per line"></textarea>
+          <button class="btn-search" onclick="adminSaveProject()">Save Project</button>
+          <div class="admin-msg" id="adminProjMsg"></div>
+        </div>
+      </div>
+
+      <!-- Copyrights visible only in App UI -->
+      <div class="app-copyrights">
+        Developed by Omar Tarek - 01003666683
       </div>
 
     </div>
@@ -624,11 +572,6 @@
     let projectsByName = {};
     let currentLoadedBuildingKey = "";
     let currentUnitCode = "";
-
-    function toggleSidebar() {
-      const sidebar = document.getElementById('appSidebar');
-      sidebar.classList.toggle('collapsed');
-    }
 
     function showSignup() {
       document.getElementById('login-screen').style.display = 'none';
@@ -709,7 +652,7 @@
       document.getElementById('main-app-content').style.display = 'block';
 
       if (profile && profile.role === 'admin') {
-        document.getElementById('adminTabBtn').style.display = 'block';
+        document.getElementById('adminTabBtn').style.display = 'inline-block';
         document.getElementById('sec-admin').style.display = 'block';
         loadPendingApprovals();
       } else {
@@ -1006,7 +949,7 @@
 
     async function adminSaveProject() {
       if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
-      const msg = document.getElementById('admProjMsg');
+      const msg = document.getElementById('adminProjMsg');
       msg.style.color = '#60a5fa'; msg.innerText = 'Saving...';
 
       const name = document.getElementById('adm_proj_name').value.trim();
