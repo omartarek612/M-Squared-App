@@ -2,386 +2,972 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>M Squared - Digital Offer & Inventory System</title>
-  <!-- Core Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>M Squared Interactive Offer System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary: #0f172a;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-      --bg: #f8fafc;
+      --bg-color: #0b1329;
+      --card-bg: #131b31;
+      --text-color: #f1f5f9;
+      --border-color: #1e293b;
+      --input-bg: #090d16;
+      --muted-color: #64748b;
+      --greeting-bg: #090d16;
+      --greeting-text: #93c5fd;
+      --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      --sync-gradient: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+      --preview-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      --pdf-gradient: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f8fafc;
       --card-bg: #ffffff;
-      --text: #1e293b;
-      --border: #e2e8f0;
-      --success: #10b981;
+      --text-color: #0f172a;
+      --border-color: #e2e8f0;
+      --input-bg: #f1f5f9;
+      --muted-color: #64748b;
+      --greeting-bg: #f8fafc;
+      --greeting-text: #1e40af;
+      --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      --sync-gradient: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+      --preview-gradient: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+      --pdf-gradient: linear-gradient(135deg, #059669 0%, #065f46 100%);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); line-height: 1.5; padding: 15px; }
 
-    /* Auth Overlay */
-    #auth-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(15, 23, 42, 0.85); display: flex; justify-content: center; align-items: center; z-index: 9999;
-    }
-    .auth-card {
-      background: white; padding: 30px; border-radius: 16px; width: 100%; max-width: 400px;
-      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); text-align: center;
-    }
-    .auth-card h2 { margin-bottom: 20px; color: var(--primary); }
-    .auth-card input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; }
-    .auth-card button { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-    .auth-card button:hover { background: var(--accent-hover); }
+    * { box-sizing: border-box; }
 
-    /* Top Global Bar */
+    body {
+      font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 10px;
+      text-align: center;
+      transition: background 0.3s, color 0.3s;
+      position: relative;
+    }
+
     .top-global-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      background: white; padding: 12px 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-      margin-bottom: 20px; border: 1px solid var(--border); flex-wrap: wrap; gap: 10px;
-    }
-    .search-box-area { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-    .search-box-area input, .search-box-area select {
-      padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none;
-    }
-    .btn-action {
-      background: var(--accent); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;
-    }
-    .btn-action:hover { background: var(--accent-hover); }
-    .btn-secondary { background: #475569; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-
-    /* Main Long Continuous Offer Container */
-    .full-offer-container {
-      max-width: 900px; margin: 0 auto; background: var(--card-bg);
-      border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-      border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column;
+      position: sticky;
+      top: 0;
+      z-index: 10000;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-color);
+      padding: 6px;
     }
 
-    /* Offer Sections */
-    .offer-section { padding: 30px; border-bottom: 1px solid var(--border); }
-    .offer-section:last-child { border-bottom: none; }
-    .section-title { font-size: 18px; color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-    .section-title::before { content: ''; width: 4px; height: 18px; background: var(--accent); border-radius: 2px; }
-
-    /* Offer Header */
-    .offer-header { background: var(--primary); color: white; padding: 25px; text-align: left; display: flex; justify-content: space-between; align-items: center; }
-    .offer-header img { height: 40px; background: white; padding: 4px; border-radius: 6px; }
-
-    /* Details Grid */
-    .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-    .detail-card { background: #f8fafc; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .detail-card strong { color: #64748b; font-size: 13px; }
-    .detail-card span { color: var(--primary); font-weight: 600; }
-
-    /* Masterplan Interactive Container */
-    .masterplan-container { position: relative; width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
-    .masterplan-container img { width: 100%; height: auto; display: block; }
-    .map-marker {
-      position: absolute; width: 22px; height: 22px; background: #ef4444; border: 3px solid white;
-      border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 10px rgba(0,0,0,0.5); display: none;
+    .btn-theme, .btn-logout {
+      background: var(--card-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      padding: 4px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
     }
 
-    /* Gallery Grid */
-    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .gallery-item img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+    .sticky-header {
+      position: sticky;
+      top: 35px;
+      z-index: 9999;
+      background: var(--bg-color);
+      padding: 6px 0;
+    }
 
-    /* Data Table */
-    .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    .data-table th, .data-table td { padding: 12px; text-align: left; border: 1px solid var(--border); font-size: 14px; }
-    .data-table th { background: #f1f5f9; color: var(--primary); }
+    .controls {
+      background: var(--card-bg);
+      padding: 8px 12px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border-color);
+      max-width: 800px;
+      width: 100%;
+    }
 
-    /* Admin Panel */
-    .admin-panel { background: #1e293b; color: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; display: none; max-width: 900px; margin-left: auto; margin-right: auto; }
-    .admin-panel h3 { margin-bottom: 15px; color: #38bdf8; }
-    .admin-row { display: flex; gap: 15px; margin-bottom: 10px; flex-wrap: wrap; }
-    .admin-row input { padding: 8px; border-radius: 6px; border: none; }
+    input, select, textarea {
+      padding: 8px 10px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 13px;
+      border: 1px solid var(--border-color);
+      background: var(--input-bg);
+      color: var(--text-color);
+      border-radius: 8px;
+      outline: none;
+      width: 100%;
+      max-width: 160px;
+    }
+    input#unitInput { text-transform: uppercase; font-weight: 600; max-width: 110px; }
+    input#clientInput { max-width: 140px; }
 
-    #status { font-size: 13px; font-weight: bold; margin-right: 10px; }
+    button {
+      padding: 8px 14px;
+      font-family: 'Cairo', sans-serif;
+      font-size: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    button:active { transform: scale(0.97); }
+
+    .btn-search { background: var(--primary-gradient); color: white; }
+    .btn-sync { background: var(--sync-gradient); color: white; }
+    .btn-preview { background: var(--preview-gradient); color: #0f172a; }
+    .btn-pdf { background: var(--pdf-gradient); color: white; }
+
+    #login-screen, #signup-screen, #pending-screen {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 30px 20px;
+      max-width: 360px;
+      margin: 30px auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    #login-screen input, #signup-screen input { max-width: 100%; margin-bottom: 10px; }
+    #loginError, #signupError { color: #f87171; font-size: 12px; margin-top: 6px; }
+    #signupSuccess { color: #34d399; font-size: 12px; margin-top: 6px; }
+    #signup-screen, #pending-screen { display: none; }
+    .toggle-link { display: block; margin-top: 12px; font-size: 12px; color: #3b82f6; cursor: pointer; text-decoration: underline; }
+
+    #welcome-screen {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 35px 20px;
+      max-width: 550px;
+      margin: 20px auto;
+    }
+
+    #main-app-content { display: none; max-width: 800px; margin: 10px auto; text-align: left; }
+
+    .app-sidebar {
+      position: fixed;
+      top: 90px;
+      left: 10px;
+      z-index: 9998;
+      width: 190px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      padding: 10px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .app-sidebar.collapsed { transform: translateX(-220px); opacity: 0; pointer-events: none; }
+
+    .sidebar-toggle-btn {
+      position: fixed;
+      top: 90px;
+      left: 10px;
+      z-index: 9999;
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: left 0.3s ease;
+    }
+    .sidebar-toggle-btn.shifted { left: 205px; }
+
+    .sidebar-section-title { font-size: 10px; text-transform: uppercase; color: var(--muted-color); margin: 6px 0 3px 0; font-weight: 700; }
+    .nav-tabs { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
+    .tab-btn {
+      background: var(--input-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+    }
+    .tab-btn.active { background: var(--primary-gradient); color: white; border-color: transparent; }
+    .action-buttons { display: flex; flex-direction: column; gap: 6px; }
+    .action-buttons button { width: 100%; padding: 7px; }
+
+    /* Long Single Page Container */
+    #full-offer-container { display: flex; flex-direction: column; gap: 15px; background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); }
+
+    .offer-page-section {
+      background: var(--card-bg);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.2); padding-bottom: 10px; margin-bottom: 12px; }
+    .company-logo { max-height: 32px; width: auto; object-fit: contain; }
+    .project-logo { max-height: 28px; max-width: 120px; width: auto; object-fit: contain; }
+
+    .greeting-box {
+      display: none;
+      background: var(--greeting-bg);
+      border-left: 4px solid #3b82f6;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      color: var(--greeting-text);
+      font-size: 12px;
+      border: 1px solid var(--border-color);
+    }
+    .greeting-box .client-highlight { font-size: 14px; font-weight: 700; color: #3b82f6; }
+
+    .summary-hero-card {
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+      text-align: center;
+      border-top: 4px solid #3b82f6;
+    }
+    .summary-hero-card h4 { margin: 0 0 4px 0; font-size: 11px; color: var(--muted-color); text-transform: uppercase; }
+    .summary-hero-card .unit-big-text { font-size: 24px; font-weight: 700; color: #3b82f6; }
+    .summary-hero-card .project-small-text { font-size: 14px; font-weight: 600; }
+
+    .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .detail-card { background: var(--input-bg); padding: 12px 14px; border-radius: 8px; border-left: 3px solid #3b82f6; border: 1px solid var(--border-color); word-break: break-word; }
+    .detail-card strong { display: block; font-size: 10px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 3px; }
+    .detail-card span { font-size: 14px; font-weight: 700; }
+
+    .pictures-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .gallery-card-item { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; aspect-ratio: 4 / 3; }
+    .gallery-card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    
+    .masterplan-section {
+      position: relative; width: 100%; background: var(--input-bg); border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;
+      min-height: 350px; max-height: 500px;
+    }
+    .masterplan-img { width: 100%; height: auto; object-fit: contain; display: block; cursor: crosshair; max-height: 480px; }
+
+    .unit-marker {
+      position: absolute; font-size: 24px; pointer-events: none; display: none; z-index: 10;
+      transform: translate(-50%, -100%); filter: drop-shadow(0px 3px 5px rgba(0, 0, 0, 0.6));
+    }
+
+    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; overflow-x: auto; }
+    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; white-space: nowrap; }
+    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 10px 12px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
+    .payment-table td { padding: 9px 12px; border-bottom: 1px solid var(--border-color); }
+
+    .status { margin-top: 5px; font-size: 11px; font-weight: 600; text-align: center; }
+
+    .admin-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .admin-form-block { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: left; }
+    .admin-form-block h4 { margin-top: 0; font-size: 12px; }
+    .admin-form-block input, .admin-form-block textarea { width: 100%; max-width: 100%; margin-bottom: 6px; }
+    .admin-msg { font-size: 11px; margin-top: 4px; }
+
+    .import-log-item, .approval-item {
+      background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px;
+      padding: 8px 12px; margin-bottom: 6px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; text-align: left;
+    }
+
+    .app-copyrights {
+      margin: 20px 0 10px 0;
+      font-size: 12px;
+      color: #3b82f6;
+      font-weight: 700;
+      text-align: center;
+      background: var(--card-bg);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    @media (min-width: 600px) {
+      body { padding: 15px; }
+    }
   </style>
 </head>
-<body>
+<body data-theme="dark">
 
-  <!-- Auth Overlay -->
-  <div id="auth-overlay">
-    <div class="auth-card">
-      <h2>M Squared Login</h2>
-      <input type="email" id="authEmail" placeholder="Email Address">
-      <input type="password" id="authPassword" placeholder="Password">
-      <button onclick="handleLogin()">Login to System</button>
-      <p id="authMsg" style="margin-top: 15px; font-size: 13px; color: #ef4444;"></p>
-    </div>
-  </div>
-
-  <!-- Admin Panel -->
-  <div id="adminPanel" class="admin-panel">
-    <h3>Admin Control Panel</h3>
-    <div class="admin-row">
-      <input type="file" id="adm_import_file" accept=".xlsx, .xls">
-      <button class="btn-action" onclick="adminImportFile()">Import Units from Excel</button>
-    </div>
-    <p id="adminImportMsg" style="font-size: 13px; color: #34d399;"></p>
-  </div>
-
-  <!-- Top Global Bar -->
   <div class="top-global-bar">
-    <div class="search-box-area">
-      <select id="projectSelect" onchange="changeMasterplanManual()">
-        <option value="31 West">31 West Project</option>
-      </select>
-      <input type="text" id="unitInput" placeholder="Unit Code (e.g. 31-A1)" onkeypress="if(event.key==='Enter') searchUnit()">
-      <button class="btn-action" onclick="searchUnit()">Search</button>
-      <input type="text" id="clientInput" placeholder="Client Name (Optional)">
-    </div>
-    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-      <span id="status" style="color: #64748b;">Connecting...</span>
-      <button class="btn-secondary" onclick="previewFullPDF()">Preview (One Page)</button>
-      <button class="btn-action" onclick="exportFullPDF()">Download PDF</button>
-    </div>
+    <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
+    <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">Light</button>
   </div>
 
-  <!-- Full Continuous Offer Container -->
-  <div id="full-offer-container" class="full-offer-container">
-    
-    <!-- 1. Header -->
-    <div class="offer-header">
-      <div>
-        <h1 id="uProjectDisplay" style="font-size: 24px; margin-bottom: 5px;">31 West Project</h1>
-        <p style="font-size: 13px; color: #94a3b8;">Exclusive Property Proposal</p>
+  <div id="login-screen">
+    <h2>M Squared Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email" autocomplete="username"><br>
+    <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"><br>
+    <button class="btn-search" style="width:100%;" onclick="login()">Login</button>
+    <div id="loginError"></div>
+    <span class="toggle-link" onclick="showSignup()">Create account</span>
+  </div>
+
+  <div id="signup-screen">
+    <h2>Create Account</h2>
+    <input type="text" id="signupName" placeholder="Full Name"><br>
+    <input type="email" id="signupEmail" placeholder="Email" autocomplete="username"><br>
+    <input type="password" id="signupPassword" placeholder="Password" autocomplete="new-password"><br>
+    <button class="btn-search" style="width:100%;" onclick="signUp()">Sign Up</button>
+    <div id="signupError"></div>
+    <div id="signupSuccess"></div>
+    <span class="toggle-link" onclick="showLogin()">Back to Login</span>
+  </div>
+
+  <div id="pending-screen">
+    <h2>Pending Approval</h2>
+    <p style="font-size:12px; color:var(--muted-color);">Your account is waiting for admin approval.</p>
+    <button class="btn-search" onclick="logout()">Logout</button>
+  </div>
+
+  <div id="app-root" style="display:none;">
+
+    <div class="sticky-header">
+      <div class="controls">
+        <input type="text" id="unitInput" placeholder="Unit Code" onkeypress="if(event.key==='Enter') searchUnit()">
+        <input type="text" id="clientInput" placeholder="Client Name">
+        <select id="projectSelect" onchange="changeMasterplanManual()"></select>
+        <button class="btn-search" onclick="searchUnit()">Search</button>
+        <button class="btn-sync" onclick="loadCloudData()">Sync</button>
       </div>
-      <img id="projectLogoImgSummary" src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="Logo">
+      <div id="status" class="status">Loading...</div>
     </div>
 
-    <!-- Client Greeting Box -->
-    <div id="greetingBox" class="offer-section" style="display: none; background: #f0fdf4; border-bottom: 1px solid #bbf7d0;"></div>
+    <div id="welcome-screen">
+      <h2 style="font-size:1.4rem; margin-bottom:8px;">Welcome M Squared</h2>
+      <p style="font-size:12px; color:var(--muted-color);">Enter unit code above to view offer.</p>
+    </div>
 
-    <!-- 2. Unit Summary -->
-    <div class="offer-section">
-      <h2 class="section-title" id="uNameSummary">Unit Specifications</h2>
-      <div class="details-grid" id="detailsGrid">
-        <div class="detail-card"><strong>Building / Phase</strong><span>-</span></div>
-        <div class="detail-card"><strong>Unit Type</strong><span>-</span></div>
-        <div class="detail-card"><strong>Area (BUA)</strong><span>-</span></div>
-        <div class="detail-card"><strong>Garden / Land</strong><span>-</span></div>
-        <div class="detail-card"><strong>Total Price</strong><span style="color: var(--accent);">-</span></div>
-        <div class="detail-card"><strong>Status</strong><span style="color: var(--success);">Available</span></div>
+    <div id="main-app-content">
+
+      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Menu">☰</button>
+      <div class="app-sidebar" id="appSidebar">
+        <div class="sidebar-section-title">Navigation</div>
+        <div class="nav-tabs">
+          <button class="tab-btn active" onclick="scrollToSection('sec-summary', this)">Summary</button>
+          <button class="tab-btn" onclick="scrollToSection('sec-pictures', this)">Gallery</button>
+          <button class="tab-btn" onclick="scrollToSection('sec-masterplan', this)">Masterplan</button>
+          <button class="tab-btn" onclick="scrollToSection('sec-layout', this)">Layout</button>
+          <button class="tab-btn" onclick="scrollToSection('sec-payment', this)">Payment</button>
+          <button class="tab-btn" id="inventoryTabBtn" onclick="scrollToSection('sec-inventory', this)">Inventory</button>
+          <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="scrollToSection('sec-admin', this)">Admin</button>
+        </div>
+        
+        <div class="sidebar-section-title">Actions</div>
+        <div class="action-buttons">
+          <button class="btn-preview" onclick="previewFullPDF()">Preview (One Page)</button>
+          <button class="btn-pdf" onclick="exportFullPDF()">Download PDF</button>
+        </div>
       </div>
-    </div>
 
-    <!-- 3. Masterplan Location -->
-    <div class="offer-section">
-      <h2 class="section-title">Masterplan Location</h2>
-      <div class="masterplan-container" onclick="handleMapClick(event)">
-        <img id="mpImg" src="https://via.placeholder.com/900x450?text=Masterplan+Loading" alt="Masterplan">
-        <div id="marker" class="map-marker"></div>
+      <div id="full-offer-container">
+
+        <div class="offer-page-section" id="sec-summary">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgSummary" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+          </div>
+          <div class="greeting-box" id="greetingBox"></div>
+          <div class="summary-hero-card">
+            <h4>Selected Unit & Project</h4>
+            <div class="unit-big-text" id="uNameSummary">-</div>
+            <div class="project-small-text" id="uProjectDisplay">M Squared</div>
+          </div>
+          <div id="detailsGrid" class="details-grid">
+            <div class="detail-card"><strong>Status</strong><span>Search unit code...</span></div>
+          </div>
+        </div>
+
+        <div class="offer-page-section" id="sec-pictures">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgPictures" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+          </div>
+          <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Project Gallery</h3>
+          <div class="pictures-grid" id="picturesGridContainer"></div>
+        </div>
+
+        <div class="offer-page-section" id="sec-masterplan">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgMasterplan" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+          </div>
+          <div class="masterplan-header">
+            <h3 style="margin: 0; font-size:14px;">Masterplan Location</h3>
+            <small id="currentProjectLabel" style="color: var(--muted-color); font-weight: bold; font-size: 11px;"></small>
+          </div>
+          <div class="masterplan-section" id="masterplanContainer">
+            <div id="mapWrapper" style="position: relative; display: inline-block; line-height: 0; width: 100%; height: 100%;">
+              <img src="" alt="Masterplan" class="masterplan-img" id="mpImg" crossorigin="anonymous" onclick="handleMapClick(event)">
+              <div id="marker" class="unit-marker">📍</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="offer-page-section" id="sec-layout">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgLayout" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+          </div>
+          <div class="masterplan-header">
+            <h3 style="margin: 0; font-size:14px;">Unit Floor Plan</h3>
+            <small style="color: var(--muted-color); font-weight: bold; font-size: 11px;" id="layoutSubLabel">Schematic</small>
+          </div>
+          <div class="masterplan-section">
+            <img src="" alt="Unit Layout" class="masterplan-img" id="unitLayoutImg" crossorigin="anonymous">
+          </div>
+        </div>
+
+        <div class="offer-page-section" id="sec-payment">
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous"></div>
+            <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous"></div>
+          </div>
+          <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Payment Schedule</h3>
+          <div class="summary-hero-card" style="margin-bottom: 10px; text-align: left; padding: 10px 14px;">
+            <div style="font-size: 11px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 15px; font-weight: 700; color: #3b82f6;">-</span></div>
+          </div>
+          <div class="payment-table-container">
+            <table class="payment-table">
+              <thead><tr><th>Milestone</th><th>Timeline</th><th>Amount (EGP)</th></tr></thead>
+              <tbody id="paymentTableBody">
+                <tr><td colspan="3" style="text-align: center; color: var(--muted-color);">Search unit to load schedule...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
-      <p style="font-size: 11px; color: #94a3b8; margin-top: 5px; text-align: center;">Click on the map to update unit marker (Admin only)</p>
-    </div>
 
-    <!-- 4. Project Gallery -->
-    <div class="offer-section">
-      <h2 class="section-title">Project Gallery</h2>
-      <div class="gallery-grid" id="picturesGridContainer">
-        <div class="gallery-item"><img src="https://via.placeholder.com/300x150" alt="Gallery"></div>
-        <div class="gallery-item"><img src="https://via.placeholder.com/300x150" alt="Gallery"></div>
-        <div class="gallery-item"><img src="https://via.placeholder.com/300x150" alt="Gallery"></div>
+      <div class="offer-page-section" id="sec-inventory" style="margin-top: 15px;">
+        <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
+        <div class="admin-grid">
+          <div class="admin-form-block">
+            <h4>Import File (.xlsx, .csv)</h4>
+            <input type="file" id="adm_import_file" accept=".xlsx,.xls,.csv" style="font-size:11px;">
+            <button class="btn-sync" onclick="adminImportFile()">Import & Overwrite</button>
+            <div class="admin-msg" id="adminImportMsg"></div>
+          </div>
+          <div class="admin-form-block">
+            <h4>Google Sheet Link</h4>
+            <input type="text" id="adm_gsheet_url" placeholder="https://docs.google.com/.../pub?output=csv">
+            <button class="btn-sync" onclick="importFromGoogleSheet()">Import & Overwrite</button>
+            <div class="admin-msg" id="adminGsheetMsg"></div>
+          </div>
+        </div>
+        <h4 style="margin-top:12px; font-size:12px;">Recent Imports</h4>
+        <div class="import-log-list" id="importLogList"><p style="font-size:11px; color:var(--muted-color);">No imports yet.</p></div>
       </div>
-    </div>
 
-    <!-- 5. Unit Floor Plan Layout -->
-    <div class="offer-section">
-      <h2 class="section-title">Unit Floor Plan (Layout)</h2>
-      <div style="text-align: center; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
-        <img id="unitLayoutImg" src="https://via.placeholder.com/600x300?text=Unit+Layout" alt="Unit Layout" style="max-width: 100%; height: auto; border-radius: 6px;">
+      <div class="offer-page-section" id="sec-admin" style="display:none; margin-top: 15px;">
+        <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Admin Control Panel</h3>
+        <h4 style="font-size:12px;">Pending Accounts</h4>
+        <div class="approval-list" id="approvalList"><p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p></div>
+
+        <div class="admin-form-block" style="margin-top:12px;">
+          <h4>Project & Visuals Manager</h4>
+          <input type="text" id="adm_proj_name" placeholder="Project Name (e.g. 31 West)">
+          <input type="text" id="adm_proj_logo" placeholder="Logo Image URL">
+          
+          <label style="font-size:11px; color:var(--muted-color); display:block; margin-bottom:3px;">Upload Masterplan Image (High Quality):</label>
+          <input type="file" id="adm_masterplan_file" accept="image/*" style="font-size:11px; margin-bottom:6px;">
+
+          <label style="font-size:11px; color:var(--muted-color); display:block; margin-bottom:3px;">Upload Gallery Images:</label>
+          <input type="file" id="adm_gallery_files" accept="image/*" multiple style="font-size:11px; margin-bottom:6px;">
+          
+          <button class="btn-search" onclick="adminSaveProject()">Save Project Visuals</button>
+          <div class="admin-msg" id="adminProjMsg"></div>
+        </div>
       </div>
-    </div>
 
-    <!-- 6. Payment Schedule -->
-    <div class="offer-section">
-      <h2 class="section-title">Payment Schedule</h2>
-      <p style="margin-bottom: 10px; font-size: 14px;">Total Unit Price: <strong id="paymentUnitPrice" style="color: var(--accent);">0 EGP</strong></p>
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Milestone</th>
-            <th>Timeline</th>
-            <th>Amount (EGP)</th>
-          </tr>
-        </thead>
-        <tbody id="paymentTableBody">
-          <tr><td>Down Payment (10%)</td><td>Immediate</td><td>-</td></tr>
-          <tr><td>First Installment (5%)</td><td>After 3 Months</td><td>-</td></tr>
-          <tr><td>Remaining Balance</td><td>Equal Installments over 7 Years</td><td>-</td></tr>
-        </tbody>
-      </table>
-    </div>
+      <div class="app-copyrights">
+        Developed by Omar Tarek - 01003666683
+      </div>
 
+    </div>
   </div>
 
   <script>
-    // Real Supabase Credentials
     const SUPABASE_URL = 'https://qiflwudikwuavyljlhnx.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_CXh9qukpJYZbS6glxcPwlQ_X57JR4sC';
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    let liveUnitsData = {};
-    let currentUnitCode = "";
+    function placeholderImg(label) {
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'>
+        <rect width='100%' height='100%' fill='#1e293b'/>
+        <text x='50%' y='50%' font-family='sans-serif' font-size='22' fill='#64748b' text-anchor='middle' dominant-baseline='middle'>${label}</text>
+      </svg>`;
+      return 'data:image/svg+xml;base64,' + btoa(svg);
+    }
+
+    let currentUser = null;
     let currentProfile = null;
+    let liveUnitsData = {};
+    let projectsByName = {};
+    let currentLoadedBuildingKey = "";
+    let currentUnitCode = "";
 
-    async function handleLogin() {
-      const email = document.getElementById('authEmail').value.trim();
-      const password = document.getElementById('authPassword').value.trim();
-      const msg = document.getElementById('authMsg');
-      msg.innerText = "Checking...";
+    function toggleSidebar() {
+      const sidebar = document.getElementById('appSidebar');
+      const toggleBtn = document.getElementById('sidebarToggleBtn');
+      sidebar.classList.toggle('collapsed');
+      toggleBtn.classList.toggle('shifted');
+    }
+
+    function showSignup() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('signup-screen').style.display = 'block';
+    }
+    function showLogin() {
+      document.getElementById('signup-screen').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'block';
+    }
+
+    async function login() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const errBox = document.getElementById('loginError');
+      errBox.innerText = '';
+      if (!email || !password) { errBox.innerText = 'Enter email & password.'; return; }
 
       const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if (error) {
-        msg.innerText = "Login Error: " + error.message;
-        return;
-      }
-      checkUserSession();
+      if (error) { errBox.innerText = error.message; return; }
+      await onLoggedIn(data.user);
     }
 
-    async function checkUserSession() {
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      if (!session) {
-        document.getElementById('auth-overlay').style.display = 'flex';
+    async function signUp() {
+      const full_name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value;
+      const errBox = document.getElementById('signupError');
+      const okBox = document.getElementById('signupSuccess');
+      errBox.innerText = ''; okBox.innerText = '';
+
+      if (!full_name || !email || !password) { errBox.innerText = 'Fill all fields.'; return; }
+      const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { data: { full_name } } });
+      if (error) { errBox.innerText = error.message; return; }
+      okBox.innerText = 'Account created! Please log in.';
+      showLogin();
+    }
+
+    async function logout() {
+      await supabaseClient.auth.signOut();
+      currentUser = null; currentProfile = null;
+      document.getElementById('app-root').style.display = 'none';
+      document.getElementById('pending-screen').style.display = 'none';
+      document.getElementById('logoutBtn').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'block';
+    }
+
+    async function onLoggedIn(user) {
+      currentUser = user;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('signup-screen').style.display = 'none';
+      document.getElementById('logoutBtn').style.display = 'inline-block';
+
+      const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+      currentProfile = profile;
+
+      if (!profile || profile.status !== 'approved') {
+        document.getElementById('pending-screen').style.display = 'block';
         return;
       }
-      document.getElementById('auth-overlay').style.display = 'none';
-      
-      const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
-      currentProfile = profile;
+
+      document.getElementById('pending-screen').style.display = 'none';
+      document.getElementById('app-root').style.display = 'block';
+      document.getElementById('welcome-screen').style.display = 'block';
+      document.getElementById('main-app-content').style.display = 'block';
+
       if (profile && profile.role === 'admin') {
-        document.getElementById('adminPanel').style.display = 'block';
+        document.getElementById('adminTabBtn').style.display = 'block';
+        document.getElementById('sec-admin').style.display = 'block';
+        loadPendingApprovals();
       }
       loadCloudData();
+      loadImportLogs();
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      checkUserSession();
+    window.addEventListener('DOMContentLoaded', async () => {
+      const savedTheme = localStorage.getItem('m2_theme') || 'dark';
+      document.body.setAttribute('data-theme', savedTheme);
+      document.getElementById('themeToggleBtn').innerHTML = savedTheme === 'light' ? 'Dark' : 'Light';
+
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session && session.user) { await onLoggedIn(session.user); }
     });
+
+    function toggleTheme() {
+      const body = document.body;
+      const btn = document.getElementById('themeToggleBtn');
+      if (body.getAttribute('data-theme') === 'dark') {
+        body.setAttribute('data-theme', 'light'); btn.innerHTML = 'Dark'; localStorage.setItem('m2_theme', 'light');
+      } else {
+        body.setAttribute('data-theme', 'dark'); btn.innerHTML = 'Light'; localStorage.setItem('m2_theme', 'dark');
+      }
+    }
+
+    function scrollToSection(sectionId, btnElement) {
+      const target = document.getElementById(sectionId);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      if (btnElement) btnElement.classList.add('active');
+    }
+
+    async function loadPendingApprovals() {
+      if (!currentProfile || currentProfile.role !== 'admin') return;
+      const listEl = document.getElementById('approvalList');
+      const { data } = await supabaseClient.from('profiles').select('*').eq('status', 'pending');
+      if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p>'; return; }
+      listEl.innerHTML = '';
+      data.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'approval-item';
+        div.innerHTML = `<span>${p.full_name || 'User'}</span>`;
+        const btn = document.createElement('button');
+        btn.className = 'btn-search'; btn.innerText = 'Approve';
+        btn.onclick = async () => { await supabaseClient.from('profiles').update({ status: 'approved' }).eq('id', p.id); loadPendingApprovals(); };
+        div.appendChild(btn); listEl.appendChild(div);
+      });
+    }
+
+    async function loadImportLogs() {
+      const listEl = document.getElementById('importLogList');
+      const { data } = await supabaseClient.from('import_logs').select('*').order('created_at', { ascending: false }).limit(5);
+      if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:11px; color:var(--muted-color);">No imports.</p>'; return; }
+      listEl.innerHTML = '';
+      data.forEach(log => {
+        const div = document.createElement('div');
+        div.className = 'import-log-item';
+        div.innerHTML = `<span>${log.unit_count} units</span><span>${new Date(log.created_at).toLocaleDateString()}</span>`;
+        listEl.appendChild(div);
+      });
+    }
 
     async function loadCloudData() {
       const st = document.getElementById('status');
-      st.style.color = "#d97706";
-      st.innerText = "Syncing units...";
+      st.style.color = "#60a5fa"; st.innerText = "Syncing...";
+      try {
+        const [{ data: units }, { data: projects }, { data: locations }] = await Promise.all([
+          supabaseClient.from('units').select('*'),
+          supabaseClient.from('projects').select('*'),
+          supabaseClient.from('unit_locations').select('*')
+        ]);
+        liveUnitsData = {}; (units || []).forEach(u => { liveUnitsData[u.unit_code.toUpperCase()] = u; });
+        projectsByName = {}; (projects || []).forEach(p => { projectsByName[p.name.toLowerCase().trim()] = p; });
+        window.cloudLocations = {}; (locations || []).forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
 
-      const { data: units, error } = await supabaseClient.from('units').select('*');
-      if (error) {
-        st.style.color = "#ef4444";
-        st.innerText = "Sync failed";
-        return;
+        const sel = document.getElementById('projectSelect');
+        sel.innerHTML = '';
+        (projects || []).forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.name; opt.innerText = p.name; sel.appendChild(opt);
+        });
+        st.style.color = "#34d399"; st.innerText = `Ready (${(units || []).length} units)!`;
+      } catch (err) {
+        st.style.color = "#f87171"; st.innerText = "Sync failed.";
       }
+    }
 
-      liveUnitsData = {};
-      units.forEach(u => {
-        liveUnitsData[u.unit_code.toUpperCase()] = u;
+    function extractBuildingKey(unitCode) {
+      const code = unitCode.trim().toUpperCase();
+      const match31 = code.match(/^([A-Z]+\d+[A-Z]?)/);
+      if (match31) return match31[1];
+      return code.substring(0, 4);
+    }
+
+    async function handleMapClick(event) {
+      if (!currentLoadedBuildingKey || !currentProfile || currentProfile.role !== 'admin') return;
+      const img = document.getElementById('mpImg');
+      const rect = img.getBoundingClientRect();
+      const x = parseFloat((((event.clientX - rect.left) / rect.width) * 100).toFixed(2));
+      const y = parseFloat((((event.clientY - rect.top) / rect.height) * 100).toFixed(2));
+      window.cloudLocations[currentLoadedBuildingKey] = { x, y };
+      const marker = document.getElementById('marker');
+      marker.style.display = 'block'; marker.style.left = `${x}%`; marker.style.top = `${y}%`;
+      await supabaseClient.from('unit_locations').upsert({ building_key: currentLoadedBuildingKey, x, y, updated_at: new Date().toISOString() });
+    }
+
+    function setupProjectVisuals(projectName) {
+      const pLower = (projectName || '').toLowerCase().trim();
+      const label = document.getElementById('currentProjectLabel');
+      let proj = projectsByName[pLower] || Object.values(projectsByName)[0];
+
+      const logoUrl = proj && proj.logo_url ? proj.logo_url : placeholderImg('Logo');
+      ['Summary','Pictures','Masterplan','Layout','Payment'].forEach(sec => {
+        document.getElementById('projectLogoImg' + sec).src = logoUrl;
       });
 
-      st.style.color = "var(--success)";
-      st.innerText = `Ready (${units.length} units synced)`;
+      const picGrid = document.getElementById('picturesGridContainer');
+      picGrid.innerHTML = '';
+      const gallery = (proj && Array.isArray(proj.gallery) && proj.gallery.length) ? proj.gallery : [placeholderImg('Gallery')];
+      gallery.forEach(imgUrl => {
+        const div = document.createElement('div');
+        div.className = 'gallery-card-item';
+        div.innerHTML = `<img src="${imgUrl}" alt="View" crossorigin="anonymous">`;
+        picGrid.appendChild(div);
+      });
+
+      document.getElementById('mpImg').src = (proj && proj.masterplan_image_url) ? proj.masterplan_image_url : placeholderImg('Masterplan');
+      if (label) label.innerText = proj ? proj.name : 'M Squared';
     }
 
-    function changeMasterplanManual() {}
+    function changeMasterplanManual() {
+      const selected = document.getElementById('projectSelect').value;
+      if (selected) setupProjectVisuals(selected);
+    }
 
     function searchUnit() {
-      const code = document.getElementById('unitInput').value.trim().toUpperCase();
-      if (!code) return;
-      if (!liveUnitsData[code]) {
-        alert(`Unit ${code} not found in inventory!`);
-        return;
-      }
-      currentUnitCode = code;
-      renderUnitDetails(code);
-    }
-
-    function renderUnitDetails(code) {
-      const unit = liveUnitsData[code];
-      if (!unit) return;
-
-      document.getElementById('uNameSummary').innerText = `Unit Details: ${unit.unit_code}`;
-      
+      const val = document.getElementById('unitInput').value.trim().toUpperCase();
       const clientName = document.getElementById('clientInput').value.trim();
+      const st = document.getElementById('status');
+      const grid = document.getElementById('detailsGrid');
+      const marker = document.getElementById('marker');
       const greetingBox = document.getElementById('greetingBox');
-      if (clientName) {
-        greetingBox.style.display = 'block';
-        greetingBox.innerHTML = `Dear <strong>${clientName}</strong>, we are pleased to present this exclusive property offer for you.`;
+      const welcomeScreen = document.getElementById('welcome-screen');
+      const mainAppContent = document.getElementById('main-app-content');
+
+      if (!val) return;
+      marker.style.display = 'none';
+
+      const uData = liveUnitsData[val];
+      if (uData) {
+        currentUnitCode = val;
+        welcomeScreen.style.display = 'none';
+        mainAppContent.style.display = 'block';
+
+        document.getElementById('uNameSummary').innerText = val;
+        const projName = uData.project_name || 'M Squared';
+        document.getElementById('uProjectDisplay').innerText = projName;
+
+        if (clientName) {
+          greetingBox.style.display = 'block';
+          greetingBox.innerHTML = `Dear <span class="client-highlight">${clientName}</span>,<br>Find your offer details below.`;
+        } else {
+          greetingBox.style.display = 'none';
+        }
+
+        setupProjectVisuals(projName);
+
+        const layoutImgElement = document.getElementById('unitLayoutImg');
+        layoutImgElement.src = uData.layout_image_url || placeholderImg('No Layout');
+
+        currentLoadedBuildingKey = extractBuildingKey(val);
+        if (window.cloudLocations && window.cloudLocations[currentLoadedBuildingKey]) {
+          const coords = window.cloudLocations[currentLoadedBuildingKey];
+          marker.style.display = 'block'; marker.style.left = `${coords.x}%`; marker.style.top = `${coords.y}%`;
+        }
+
+        grid.innerHTML = '';
+        const known = [
+          ['Price', uData.price ? Number(uData.price).toLocaleString() + ' EGP' : '-'],
+          ['Delivery', uData.delivery_year || '-'],
+          ['Area', uData.area || '-'],
+          ['Bedrooms', uData.bedrooms || '-']
+        ];
+        known.forEach(([label, value]) => {
+          const card = document.createElement('div');
+          card.className = 'detail-card';
+          card.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+          grid.appendChild(card);
+        });
+
+        const unitPriceVal = Number(uData.price) || 0;
+        document.getElementById('paymentUnitPrice').innerText = unitPriceVal > 0 ? unitPriceVal.toLocaleString() + ' EGP' : '-';
+        const paymentTbody = document.getElementById('paymentTableBody');
+        paymentTbody.innerHTML = '';
+        if (unitPriceVal > 0) {
+          const dp = unitPriceVal * 0.05;
+          const q = (unitPriceVal - dp) / 40;
+          paymentTbody.innerHTML = `
+            <tr><td>Down Payment (5%)</td><td>Immediate</td><td>${dp.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>
+            <tr><td>Quarterly (x40)</td><td>10 Years</td><td>${q.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>
+            <tr><td>Maintenance</td><td>Delivery</td><td>${(unitPriceVal * 0.07).toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+        } else {
+          paymentTbody.innerHTML = `<tr><td colspan="3" style="text-align: center;">No price available.</td></tr>`;
+        }
+
+        st.style.color = "#34d399"; st.innerText = `Unit [${val}] loaded!`;
       } else {
-        greetingBox.style.display = 'none';
+        st.style.color = "#f87171"; st.innerText = `Unit [${val}] not found.`;
+      }
+    }
+
+    async function compressImage(file, maxWidth = 1400, quality = 0.92) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = event => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+        };
+      });
+    }
+
+    async function adminSaveProject() {
+      if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
+      const msg = document.getElementById('adminProjMsg');
+      msg.style.color = '#60a5fa'; msg.innerText = 'Processing images...';
+
+      const name = document.getElementById('adm_proj_name').value.trim();
+      if (!name) { msg.style.color = '#f87171'; msg.innerText = 'Project name is required.'; return; }
+
+      let existing = projectsByName[name.toLowerCase().trim()] || {};
+      let gallery = existing.gallery || [];
+
+      const masterplanFile = document.getElementById('adm_masterplan_file').files[0];
+      let masterplan_image_url = existing.masterplan_image_url || '';
+      if (masterplanFile) {
+        masterplan_image_url = await compressImage(masterplanFile, 1600, 0.95);
       }
 
-      const grid = document.getElementById('detailsGrid');
-      grid.innerHTML = `
-        <div class="detail-card"><strong>Building / Phase</strong><span>${unit.building || '-'}</span></div>
-        <div class="detail-card"><strong>Unit Type</strong><span>${unit.unit_type || '-'}</span></div>
-        <div class="detail-card"><strong>Area (BUA)</strong><span>${unit.bua ? unit.bua + ' m²' : '-'}</span></div>
-        <div class="detail-card"><strong>Garden / Land</strong><span>${unit.garden ? unit.garden + ' m²' : 'N/A'}</span></div>
-        <div class="detail-card"><strong>Total Price</strong><span style="color: var(--accent);">${unit.total_price ? Number(unit.total_price).toLocaleString() + ' EGP' : '-'}</span></div>
-        <div class="detail-card"><strong>Status</strong><span style="color: var(--success);">Available</span></div>
-      `;
-
-      document.getElementById('paymentUnitPrice').innerText = unit.total_price ? Number(unit.total_price).toLocaleString() + ' EGP' : '-';
-      
-      const tbody = document.getElementById('paymentTableBody');
-      tbody.innerHTML = `
-        <tr><td>Down Payment (10%)</td><td>Immediate</td><td>${unit.total_price ? (unit.total_price * 0.1).toLocaleString() + ' EGP' : '-'}</td></tr>
-        <tr><td>First Installment (5%)</td><td>After 3 Months</td><td>${unit.total_price ? (unit.total_price * 0.05).toLocaleString() + ' EGP' : '-'}</td></tr>
-        <tr><td>Remaining Balance</td><td>Equal Installments over 7 Years</td><td>${unit.total_price ? (unit.total_price * 0.85).toLocaleString() + ' EGP' : '-'}</td></tr>
-      `;
-
-      document.getElementById('unitLayoutImg').src = unit.layout_url || 'https://via.placeholder.com/600x300?text=Layout+Not+Available';
-      document.getElementById('status').innerText = `Loaded Unit ${code}`;
-    }
-
-    function handleMapClick(event) {
-      if (!currentProfile || currentProfile.role !== 'admin') return;
-    }
-
-    async function adminImportFile() {
-      const fileInput = document.getElementById('adm_import_file');
-      const msg = document.getElementById('adminImportMsg');
-      if (!fileInput.files.length) { msg.innerText = 'Select a file first'; return; }
-
-      const file = fileInput.files[0];
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-        
-        let count = 0;
-        for (let r of rows) {
-          const unitCode = String(r['Unit Code'] || r['unit_code'] || '').trim().toUpperCase();
-          if (!unitCode) continue;
-          
-          await supabaseClient.from('units').upsert({
-            unit_code: unitCode,
-            project_name: String(r['Project'] || r['project_name'] || '31 West'),
-            building: String(r['Building'] || r['building'] || ''),
-            unit_type: String(r['Type'] || r['unit_type'] || ''),
-            bua: parseFloat(r['BUA'] || r['bua'] || 0),
-            garden: parseFloat(r['Garden'] || r['garden'] || 0),
-            total_price: parseFloat(r['Price'] || r['total_price'] || 0)
-          }, { onConflict: 'unit_code' });
-          count++;
+      const fileInput = document.getElementById('adm_gallery_files');
+      if (fileInput.files && fileInput.files.length > 0) {
+        for (let i = 0; i < fileInput.files.length; i++) {
+          const compressedDataUrl = await compressImage(fileInput.files[i], 1200, 0.9);
+          gallery.push(compressedDataUrl);
         }
-        msg.innerText = `Successfully imported ${count} units!`;
-        loadCloudData();
+      }
+
+      const row = {
+        name,
+        logo_url: document.getElementById('adm_proj_logo').value.trim() || existing.logo_url || '',
+        masterplan_image_url,
+        gallery
+      };
+
+      const { error } = await supabaseClient.from('projects').upsert(row, { onConflict: 'name' });
+      if (error) { msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message; return; }
+
+      msg.style.color = '#34d399'; msg.innerText = 'Saved successfully!';
+      loadCloudData();
+    }
+
+    function normHeader(h) { return String(h || '').toLowerCase().trim(); }
+    function findColumn(keys, patterns) { return keys.find(k => patterns.some(p => normHeader(k).includes(p))); }
+
+    function parseWorkbookRows(workbook) {
+      const sheetName = workbook.SheetNames[0];
+      return XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '', raw: false });
+    }
+
+    function buildUnitsFromRows(rows) {
+      if (!rows.length) return { error: 'Empty file.' };
+      const keys = Object.keys(rows[0]);
+      const codeKey = findColumn(keys, ['unit', 'code']);
+      const projectKey = findColumn(keys, ['project', 'phase']);
+      const priceKey = findColumn(keys, ['price', 'total']);
+      const deliveryKey = findColumn(keys, ['delivery', 'date', 'year']);
+      const areaKey = findColumn(keys, ['area', 'space']);
+      const bedroomKey = findColumn(keys, ['bedroom']);
+      const layoutKey = findColumn(keys, ['layout', 'image']);
+
+      if (!codeKey) return { error: 'Unit code column missing.' };
+
+      const unitsToImport = [];
+      rows.forEach(row => {
+        const unit_code = String(row[codeKey] || '').toUpperCase().trim();
+        if (!unit_code) return;
+        unitsToImport.push({
+          owner_id: currentUser.id,
+          unit_code,
+          project_name: projectKey ? String(row[projectKey] || '').trim() : '',
+          price: priceKey ? (parseFloat(String(row[priceKey]).replace(/[^0-9.]/g, '')) || null) : null,
+          delivery_year: deliveryKey ? String(row[deliveryKey] || '').trim() : '',
+          area: areaKey ? String(row[areaKey] || '').trim() : '',
+          bedrooms: bedroomKey ? String(row[bedroomKey] || '').trim() : '',
+          layout_image_url: layoutKey ? String(row[layoutKey] || '').trim() : '',
+          updated_at: new Date().toISOString()
+        });
+      });
+      return { units: unitsToImport };
+    }
+
+    async function performBulkImport(unitsToImport, msgEl) {
+      msgEl.style.color = '#60a5fa'; msgEl.innerText = `Uploading ${unitsToImport.length} units...`;
+      await supabaseClient.from('units').delete().not('unit_code', 'is', null);
+      await supabaseClient.from('units').insert(unitsToImport);
+      msgEl.style.color = '#34d399'; msgEl.innerText = 'Inventory updated successfully!';
+      loadCloudData();
+    }
+
+    function adminImportFile() {
+      const msg = document.getElementById('adminImportMsg');
+      const file = document.getElementById('adm_import_file').files[0];
+      if (!file) { msg.style.color = '#f87171'; msg.innerText = 'Choose file first.'; return; }
+      const reader = new FileReader();
+      reader.onload = async function (e) {
+        const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+        const result = buildUnitsFromRows(parseWorkbookRows(workbook));
+        if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
+        await performBulkImport(result.units, msg);
       };
       reader.readAsArrayBuffer(file);
     }
 
-    // PDF Preview & Download as One Single Continuous Roll Page
+    async function importFromGoogleSheet() {
+      const msg = document.getElementById('adminGsheetMsg');
+      const url = document.getElementById('adm_gsheet_url').value.trim();
+      if (!url) { msg.style.color = '#f87171'; msg.innerText = 'Paste link first.'; return; }
+      try {
+        const res = await fetch(url);
+        const csvText = await res.text();
+        const workbook = XLSX.read(csvText, { type: 'string' });
+        const result = buildUnitsFromRows(parseWorkbookRows(workbook));
+        if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
+        await performBulkImport(result.units, msg);
+      } catch (err) {
+        msg.style.color = '#f87171'; msg.innerText = 'Import failed.';
+      }
+    }
+
+    // PDF Preview & Download as One Continuous Page (Long Roll)
     function previewFullPDF() {
       const element = document.getElementById('full-offer-container');
       const opt = {
-        margin:       5,
+        margin:       10,
         filename:     `M-Squared-Offer-${currentUnitCode || 'Unit'}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true, logging: false },
-        jsPDF:        { unit: 'px', format: [element.scrollWidth, element.scrollHeight + 50], orientation: 'portrait' }
+        jsPDF:        { unit: 'px', format: [element.scrollWidth, element.scrollHeight + 60], orientation: 'portrait' }
       };
       html2pdf().from(element).set(opt).toPdf().get('pdf').then((pdf) => {
         window.open(pdf.output('bloburl'), '_blank');
@@ -391,11 +977,11 @@
     function exportFullPDF() {
       const element = document.getElementById('full-offer-container');
       const opt = {
-        margin:       5,
+        margin:       10,
         filename:     `M-Squared-Offer-${currentUnitCode || 'Unit'}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true, logging: false },
-        jsPDF:        { unit: 'px', format: [element.scrollWidth, element.scrollHeight + 50], orientation: 'portrait' }
+        jsPDF:        { unit: 'px', format: [element.scrollWidth, element.scrollHeight + 60], orientation: 'portrait' }
       };
       html2pdf().from(element).set(opt).save();
     }
