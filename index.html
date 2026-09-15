@@ -51,7 +51,7 @@
       box-sizing: border-box;
     }
 
-    /* Topmost Global Action Bar (Theme Toggle & Logout) */
+    /* Topmost Global Action Bar (Theme & Logout) - Translucent & Compact */
     .top-global-bar {
       position: -webkit-sticky !important;
       position: sticky !important;
@@ -60,85 +60,91 @@
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      gap: 8px;
-      background: var(--bg-color);
-      padding: 8px 10px;
+      gap: 6px;
+      background: rgba(11, 19, 41, 0.75);
+      padding: 4px 10px;
       border-bottom: 1px solid var(--border-color);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(8px);
+    }
+    [data-theme="light"] .top-global-bar {
+      background: rgba(248, 250, 252, 0.75);
     }
 
     .btn-theme, .btn-logout {
       background: var(--card-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 6px 14px;
-      border-radius: 20px;
+      padding: 4px 10px;
+      border-radius: 16px;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
       transition: all 0.2s ease;
     }
     .btn-theme:hover, .btn-logout:hover { transform: translateY(-1px); }
 
-    /* Freezed Sticky Header (Search & Inputs) */
+    /* Freezed Sticky Header - Compact & Transparent */
     .sticky-header {
       position: -webkit-sticky !important;
       position: sticky !important;
-      top: 50px !important;
+      top: 35px !important;
       z-index: 99999 !important;
-      background: var(--bg-color) !important;
-      padding: 8px 0;
+      background: rgba(11, 19, 41, 0.75) !important;
+      padding: 4px 0;
       border-bottom: 1px solid var(--border-color);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      backdrop-filter: blur(8px);
+    }
+    [data-theme="light"] .sticky-header {
+      background: rgba(248, 250, 252, 0.75) !important;
     }
 
     .controls {
       background: var(--card-bg);
-      padding: 8px 12px;
-      border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      padding: 6px 10px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       margin: 0 auto;
       display: inline-flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       border: 1px solid var(--border-color);
       max-width: 100%;
       box-sizing: border-box;
     }
 
     input, select, textarea {
-      padding: 8px 12px;
+      padding: 6px 10px;
       font-family: 'Cairo', sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       border: 1px solid var(--border-color);
       background: var(--input-bg);
       color: var(--text-color);
-      border-radius: 8px;
+      border-radius: 6px;
       outline: none;
       transition: all 0.2s;
       box-sizing: border-box;
     }
     input:focus, select:focus, textarea:focus {
       border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
     }
-    input[type="text"] { width: 130px; text-transform: uppercase; font-weight: 600; }
-    input#clientInput { text-transform: none; width: 140px; }
+    input[type="text"] { width: 120px; text-transform: uppercase; font-weight: 600; }
+    input#clientInput { text-transform: none; width: 130px; }
 
     button {
-      padding: 8px 14px;
+      padding: 6px 12px;
       font-family: 'Cairo', sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: 700;
       transition: all 0.25s ease;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     button:hover { transform: translateY(-1px); filter: brightness(1.1); }
     button:active { transform: translateY(0); }
@@ -186,7 +192,7 @@
     /* Collapsible Floating Side Bar */
     .app-sidebar {
       position: fixed;
-      top: 130px;
+      top: 100px;
       left: 15px;
       z-index: 9998;
       width: 210px;
@@ -207,7 +213,7 @@
     /* Toggle Tab on the edge of the sidebar */
     .sidebar-toggle-btn {
       position: fixed;
-      top: 130px;
+      top: 100px;
       left: 15px;
       z-index: 9999;
       background: var(--primary-gradient);
@@ -370,7 +376,7 @@
 
     @media (max-width: 768px) {
       body { padding: 5px; }
-      .controls { width: 100%; padding: 8px; }
+      .controls { width: 100%; padding: 6px; }
       input[type="text"], input#clientInput, select { width: 100%; max-width: 100%; margin: 2px 0; }
       .details-grid { grid-template-columns: 1fr; }
       .pictures-grid { grid-template-columns: 1fr; }
@@ -426,7 +432,7 @@
         <input type="text" id="unitInput" placeholder="Unit Code" onkeypress="if(event.key==='Enter') searchUnit()">
         <input type="text" id="clientInput" placeholder="Client Name">
         <select id="projectSelect" onchange="changeMasterplanManual()">
-          <option value="auto">Auto Project</option>
+          <!-- تم إزالة زرار أو خيار Auto Project بناءً على الطلب -->
         </select>
         <button class="btn-search" onclick="searchUnit()">Search</button>
         <button class="btn-sync" onclick="loadCloudData()">Sync</button>
@@ -542,7 +548,7 @@
 
       </div>
 
-      <!-- INVENTORY UPDATE & ADMIN PANELS (Completely outside full-offer-container so they never show in Preview/PDF) -->
+      <!-- INVENTORY UPDATE & ADMIN PANELS -->
       <div class="offer-page-section no-pdf" id="sec-inventory" style="margin-top: 15px;">
         <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
         <p style="font-size:11px; color:var(--muted-color); margin: 0 0 12px 0;">
@@ -811,7 +817,7 @@
         (locations || []).forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
 
         const sel = document.getElementById('projectSelect');
-        sel.innerHTML = '<option value="auto">Auto Project</option>';
+        sel.innerHTML = ''; // تم إزالة خيار Auto Project والبدء بقائمة المشاريع مباشرة
         (projects || []).forEach(p => {
           const opt = document.createElement('option');
           opt.value = p.name; opt.innerText = p.name;
@@ -893,7 +899,7 @@
 
     function changeMasterplanManual() {
       const selected = document.getElementById('projectSelect').value;
-      if (selected !== 'auto') setupProjectVisuals(selected);
+      if (selected) setupProjectVisuals(selected);
     }
 
     function searchUnit() {
@@ -926,8 +932,17 @@
           greetingBox.style.display = 'none';
         }
 
-        const manualSelect = document.getElementById('projectSelect').value;
-        setupProjectVisuals(manualSelect === 'auto' ? projName : manualSelect);
+        setupProjectVisuals(projName);
+        // تحديث الاختيار في السلكت تلقائياً للمشروع الخاص بالوحدة
+        const sel = document.getElementById('projectSelect');
+        if (sel) {
+          for (let opt of sel.options) {
+            if (opt.value.toLowerCase().trim() === projName.toLowerCase().trim()) {
+              sel.value = opt.value;
+              break;
+            }
+          }
+        }
 
         const layoutImgElement = document.getElementById('unitLayoutImg');
         const layoutSubLabel = document.getElementById('layoutSubLabel');
