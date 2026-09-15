@@ -215,7 +215,7 @@
     /* Multi-Page Presentation Container */
     #full-offer-container { display: flex; flex-direction: column; gap: 20px; background: transparent; }
 
-    /* Elegant framed pages with clean professional border */
+    /* Each page has its own independent border and contents start naturally from top */
     .offer-page-section {
       background: var(--card-bg);
       padding: 22px;
@@ -225,10 +225,6 @@
       overflow: hidden;
       break-before: page;
       page-break-before: always;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 850px;
     }
     #full-offer-container .offer-page-section:first-child {
       break-before: auto;
@@ -277,11 +273,10 @@
 
     .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     
-    /* Expanded Masterplan Section filling the page completely */
+    /* Masterplan Section layout that you loved */
     .masterplan-section {
       position: relative; 
       width: 100%; 
-      flex-grow: 1;
       min-height: 620px;
       background: var(--input-bg); 
       border-radius: 10px; 
