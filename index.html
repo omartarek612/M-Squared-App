@@ -259,18 +259,20 @@
     .detail-card strong { display: block; font-size: 10px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 3px; }
     .detail-card span { font-size: 14px; font-weight: 700; }
 
+    /* Gallery Square & Not Stretched */
     .pictures-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .gallery-card-item { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; aspect-ratio: 4 / 3; }
+    .gallery-card-item { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; aspect-ratio: 1 / 1; }
     .gallery-card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     
+    /* Masterplan & Layout Frame Adjusted to prevent stretching & give more spacious proportions */
     .masterplan-section {
       position: relative; width: 100%; background: var(--input-bg); border-radius: 10px; overflow: hidden;
       border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;
-      min-height: 350px; max-height: 500px;
+      min-height: 450px; max-height: 600px; padding: 10px;
     }
-    .masterplan-img { width: 100%; height: auto; object-fit: contain; display: block; cursor: crosshair; max-height: 480px; }
+    .masterplan-img { width: 100%; height: 100%; object-fit: contain; display: block; cursor: crosshair; max-height: 580px; }
 
     .unit-marker {
       position: absolute; font-size: 24px; pointer-events: none; display: none; z-index: 10;
