@@ -266,12 +266,13 @@
 
     .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     
-    /* Masterplan & Layout Frame Perfectly Scaled & Clear without distortion */
+    /* Enlarged Masterplan Frame with Proper Spacious Scaling */
     .masterplan-section {
       position: relative; width: 100%; background: var(--input-bg); border-radius: 10px; overflow: hidden;
-      border: 1px solid var(--border-color); text-align: center; padding: 10px; display: flex; justify-content: center; align-items: center;
+      border: 1px solid var(--border-color); text-align: center; padding: 12px; display: flex; justify-content: center; align-items: center;
+      min-height: 480px; max-height: 680px;
     }
-    .masterplan-img { width: 100%; height: auto; max-height: 520px; object-fit: contain; display: block; cursor: crosshair; margin: 0 auto; }
+    .masterplan-img { width: 100%; height: auto; max-height: 660px; object-fit: contain; display: block; cursor: crosshair; margin: 0 auto; }
 
     .unit-marker {
       position: absolute; font-size: 24px; pointer-events: none; display: none; z-index: 10;
@@ -670,7 +671,6 @@
       });
     }
 
-    // High Performance Caching for Instant Loading Speed
     async function loadCloudData(forceRefresh = false) {
       const st = document.getElementById('status');
       
@@ -708,7 +708,6 @@
         projectsByName = {}; (projects || []).forEach(p => { projectsByName[p.name.toLowerCase().trim()] = p; });
         window.cloudLocations = {}; (locations || []).forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
 
-        // Save to sessionStorage for speed
         sessionStorage.setItem('m2_units', JSON.stringify(units || []));
         sessionStorage.setItem('m2_projects', JSON.stringify(projects || []));
         sessionStorage.setItem('m2_locations', JSON.stringify(locations || []));
@@ -994,17 +993,12 @@
         const workbook = XLSX.read(csvText, { type: 'string' });
         const result = buildUnitsFromRows(parseWorkbookRows(workbook));
         if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
-        await importFromGoogleSheetInternal(result.units, msg);
+        await performBulkImport(result.units, msg);
       } catch (err) {
         msg.style.color = '#f87171'; msg.innerText = 'Import failed.';
       }
     }
 
-    async function importFromGoogleSheetInternal(units, msg) {
-      await performBulkImport(units, msg);
-    }
-
-    // Robust PDF Preview & Download ensuring all images are loaded and exact height is captured
     async function prepareAndGeneratePDF(actionType) {
       const element = document.getElementById('full-offer-container');
       
