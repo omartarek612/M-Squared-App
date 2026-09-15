@@ -66,7 +66,7 @@
     }
     .btn-theme:hover, .btn-logout:hover { transform: translateY(-1px); }
 
-    /* Freezed Sticky Header - Forced Fix */
+    /* Freezed Sticky Header & Navigation Bar */
     .sticky-header {
       position: -webkit-sticky !important;
       position: sticky !important;
@@ -169,6 +169,10 @@
     #main-app-content { display: none; max-width: 800px; margin: 15px auto; text-align: left; }
 
     .global-actions {
+      position: -webkit-sticky !important;
+      position: sticky !important;
+      top: 75px !important; /* Positions right below the top sticky header */
+      z-index: 9998 !important;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -180,6 +184,7 @@
       border-radius: 12px;
       border: 1px solid var(--border-color);
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
     }
 
     .nav-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
@@ -304,10 +309,11 @@
       border: 1px solid var(--border-color);
     }
 
+    /* Hide inventory, admin panels, headers, and copyright tags completely during print/PDF generation */
     @media print {
-      .app-copyrights { display: none !important; visibility: hidden !important; }
-      .sticky-header { display: none !important; }
+      .app-copyrights, .sticky-header, .global-actions, #sec-inventory, #sec-admin { display: none !important; visibility: hidden !important; }
     }
+    .no-pdf { display: block; }
 
     @media (max-width: 768px) {
       body { padding: 5px; }
@@ -382,6 +388,7 @@
 
     <div id="main-app-content">
 
+      <!-- Sticky Floating Action & Navigation Bar -->
       <div class="global-actions">
         <div class="nav-tabs">
           <button class="tab-btn active" onclick="scrollToSection('sec-summary', this)">Summary</button>
@@ -389,8 +396,8 @@
           <button class="tab-btn" onclick="scrollToSection('sec-masterplan', this)">Masterplan</button>
           <button class="tab-btn" onclick="scrollToSection('sec-layout', this)">Layout</button>
           <button class="tab-btn" onclick="scrollToSection('sec-payment', this)">Payment</button>
-          <button class="tab-btn" id="inventoryTabBtn" onclick="scrollToSection('sec-inventory', this)">Inventory Update</button>
-          <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="scrollToSection('sec-admin', this)">Admin Panel</button>
+          <button class="tab-btn no-pdf" id="inventoryTabBtn" onclick="scrollToSection('sec-inventory', this)">Inventory Update</button>
+          <button class="tab-btn no-pdf" id="adminTabBtn" style="display:none;" onclick="scrollToSection('sec-admin', this)">Admin Panel</button>
         </div>
         <div class="action-buttons">
           <button class="btn-preview" onclick="previewFullPDF()">Preview</button>
@@ -475,8 +482,8 @@
           </div>
         </div>
 
-        <!-- INVENTORY UPDATE TAB (Clears all old data when importing new list) -->
-        <div class="offer-page-section" id="sec-inventory">
+        <!-- INVENTORY UPDATE TAB (Completely hidden in Preview/PDF) -->
+        <div class="offer-page-section no-pdf" id="sec-inventory">
           <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
           <p style="font-size:11px; color:var(--muted-color); margin: 0 0 12px 0;">
             Once you import new inventory files, any previous inventory data is completely cleared and replaced with the fresh dataset.
@@ -499,8 +506,8 @@
           <div class="import-log-list" id="importLogList"><p style="font-size:11px; color:var(--muted-color);">No imports yet.</p></div>
         </div>
 
-        <!-- ADMIN PANEL TAB (Restricted exclusively to Admin accounts) -->
-        <div class="offer-page-section" id="sec-admin" style="display:none;">
+        <!-- ADMIN PANEL TAB (Completely hidden in Preview/PDF) -->
+        <div class="offer-page-section no-pdf" id="sec-admin" style="display:none;">
           <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Admin Control Panel</h3>
 
           <h4 style="font-size:13px;">Pending Account Approvals (Admin Only)</h4>
