@@ -51,7 +51,6 @@
       box-sizing: border-box;
     }
 
-    /* Topmost Global Action Bar - Transparent Completely */
     .top-global-bar {
       position: -webkit-sticky !important;
       position: sticky !important;
@@ -81,7 +80,6 @@
     }
     .btn-theme:hover, .btn-logout:hover { transform: translateY(-1px); }
 
-    /* Freezed Sticky Header - Fully Transparent */
     .sticky-header {
       position: -webkit-sticky !important;
       position: sticky !important;
@@ -183,7 +181,6 @@
 
     #main-app-content { display: none; max-width: 800px; margin: 15px auto; text-align: left; position: relative; }
 
-    /* Collapsible Floating Side Bar */
     .app-sidebar {
       position: fixed;
       top: 100px;
@@ -379,13 +376,11 @@
 </head>
 <body data-theme="dark">
 
-  <!-- TOPMOST GLOBAL BAR (Theme & Logout) - Fully Transparent -->
   <div class="top-global-bar">
     <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
     <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">Light Mode</button>
   </div>
 
-  <!-- LOGIN SCREEN -->
   <div id="login-screen">
     <h2>M Squared Login</h2>
     <input type="email" id="loginEmail" placeholder="Email" autocomplete="username"><br>
@@ -395,7 +390,6 @@
     <span class="toggle-link" onclick="showSignup()">Don't have an account? Sign Up</span>
   </div>
 
-  <!-- SIGN UP SCREEN -->
   <div id="signup-screen">
     <h2>Create Account</h2>
     <input type="text" id="signupName" placeholder="Full Name"><br>
@@ -407,24 +401,19 @@
     <span class="toggle-link" onclick="showLogin()">Already have an account? Login</span>
   </div>
 
-  <!-- PENDING SCREEN -->
   <div id="pending-screen">
     <h2>Account Pending Approval</h2>
     <p>Your account has been created. An administrator needs to approve it before you can access the system.</p>
     <button class="btn-search" onclick="logout()">Logout</button>
   </div>
 
-  <!-- MAIN APP CONTAINER -->
   <div id="app-root" style="display:none;">
 
-    <!-- Sticky Header: Search & Inputs Top Bar - Fully Transparent -->
     <div class="sticky-header">
       <div class="controls">
         <input type="text" id="unitInput" placeholder="Unit Code" onkeypress="if(event.key==='Enter') searchUnit()">
         <input type="text" id="clientInput" placeholder="Client Name">
-        <select id="projectSelect" onchange="changeMasterplanManual()">
-          <!-- تم إزالة خيار Auto Project نهائياً -->
-        </select>
+        <select id="projectSelect" onchange="changeMasterplanManual()"></select>
         <button class="btn-search" onclick="searchUnit()">Search</button>
         <button class="btn-sync" onclick="loadCloudData()">Sync</button>
       </div>
@@ -438,7 +427,6 @@
 
     <div id="main-app-content">
 
-      <!-- Collapsible Floating Sidebar & Toggle Button -->
       <button class="sidebar-toggle-btn no-pdf" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Toggle Navigation Menu">☰</button>
       <div class="app-sidebar no-pdf" id="appSidebar">
         <div class="sidebar-section-title">Navigation</div>
@@ -459,7 +447,6 @@
         </div>
       </div>
 
-      <!-- PDF / Preview Container -->
       <div id="full-offer-container">
 
         <div class="offer-page-section" id="sec-summary">
@@ -539,7 +526,6 @@
 
       </div>
 
-      <!-- INVENTORY UPDATE & ADMIN PANELS -->
       <div class="offer-page-section no-pdf" id="sec-inventory" style="margin-top: 15px;">
         <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
         <p style="font-size:11px; color:var(--muted-color); margin: 0 0 12px 0;">
@@ -570,12 +556,15 @@
         <div class="approval-list" id="approvalList"><p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p></div>
 
         <div class="admin-form-block" style="margin-top:15px;">
-          <h4>Add / Update Project</h4>
-          <input type="text" id="adm_proj_name" placeholder="Project Name">
-          <input type="text" id="adm_proj_logo" placeholder="Logo Image URL">
-          <input type="text" id="adm_proj_masterplan" placeholder="Masterplan Image URL">
-          <textarea id="adm_proj_gallery" placeholder="Gallery image URLs, one per line"></textarea>
-          <button class="btn-search" onclick="adminSaveProject()">Save Project</button>
+          <h4>Add / Update Project & Gallery Images</h4>
+          <input type="text" id="adm_proj_name" placeholder="Project Name (e.g. 31 West)">
+          <input type="text" id="adm_proj_logo" placeholder="Logo Image URL (Optional)">
+          <input type="text" id="adm_proj_masterplan" placeholder="Masterplan Image URL (Optional)">
+          
+          <label style="font-size:11px; color:var(--muted-color); display:block; margin-bottom:4px;">Upload Gallery Images (Select 3, 4 or more photos):</label>
+          <input type="file" id="adm_gallery_files" accept="image/*" multiple style="font-size:11px; margin-bottom:8px;">
+          
+          <button class="btn-search" onclick="adminSaveProject()">Save Project & Upload Gallery</button>
           <div class="admin-msg" id="adminProjMsg"></div>
         </div>
       </div>
@@ -996,27 +985,47 @@
       }
     }
 
+    async function fileToDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
     async function adminSaveProject() {
       if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
       const msg = document.getElementById('adminProjMsg');
-      msg.style.color = '#60a5fa'; msg.innerText = 'Saving...';
+      msg.style.color = '#60a5fa'; msg.innerText = 'Processing gallery images & saving...';
 
       const name = document.getElementById('adm_proj_name').value.trim();
       if (!name) { msg.style.color = '#f87171'; msg.innerText = 'Project name is required.'; return; }
 
-      const galleryRaw = document.getElementById('adm_proj_gallery').value.trim();
-      const gallery = galleryRaw ? galleryRaw.split('\n').map(s => s.trim()).filter(Boolean) : [];
+      let existingProj = projectsByName[name.toLowerCase().trim()] || {};
+      let gallery = existingProj.gallery || [];
+
+      const fileInput = document.getElementById('adm_gallery_files');
+      if (fileInput.files && fileInput.files.length > 0) {
+        for (let i = 0; i < fileInput.files.length; i++) {
+          const dataUrl = await fileToDataUrl(fileInput.files[i]);
+          gallery.push(dataUrl);
+        }
+      }
 
       const row = {
         name,
-        logo_url: document.getElementById('adm_proj_logo').value.trim(),
-        masterplan_image_url: document.getElementById('adm_proj_masterplan').value.trim(),
+        logo_url: document.getElementById('adm_proj_logo').value.trim() || existingProj.logo_url || '',
+        masterplan_image_url: document.getElementById('adm_proj_masterplan').value.trim() || existingProj.masterplan_image_url || '',
         gallery
       };
 
       const { error } = await supabaseClient.from('projects').upsert(row, { onConflict: 'name' });
       if (error) { msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message; return; }
-      msg.style.color = '#34d399'; msg.innerText = 'Project saved!';
+      
+      msg.style.color = '#34d399'; 
+      msg.innerText = 'Project and gallery uploaded & saved successfully!';
+      fileInput.value = '';
       loadCloudData();
     }
 
