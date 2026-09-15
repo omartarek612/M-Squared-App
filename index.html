@@ -573,11 +573,11 @@
           <div class="admin-gallery-manage" id="adminGalleryPreview"></div>
         </div>
 
-        <!-- NEW INDEPENDENT UNIT LAYOUTS MANAGER -->
+        <!-- INDEPENDENT UNIT LAYOUTS MANAGER -->
         <div class="admin-form-block" style="margin-top:15px; border: 1px solid rgba(59, 130, 246, 0.4);">
           <h4 style="color: #3b82f6;">Unit Layouts Manager (Independent)</h4>
           
-          <!-- Batch Upload By Filename (Matches Unit Code) -->
+          <!-- Sequential Batch Upload By Filename -->
           <div style="margin-bottom:12px; background:var(--card-bg); padding:10px; border-radius:6px;">
             <div style="font-size:11px; font-weight:700; margin-bottom:4px;">1. Batch Upload Layouts (Files named by Unit Code, e.g., A101.jpg):</div>
             <input type="file" id="adm_batch_layout_files" accept="image/*" multiple style="font-size:11px; margin-bottom:6px;">
@@ -957,7 +957,7 @@
       }
     }
 
-    // --- INDEPENDENT UNIT LAYOUT MANAGEMENT FUNCTIONS ---
+    // --- SEQUENTIAL SAFE BATCH UPLOAD FOR LAYOUTS ---
     async function adminUploadBatchLayouts() {
       if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
       const msg = document.getElementById('adminBatchLayoutMsg');
@@ -966,32 +966,38 @@
         msg.style.color = '#f87171'; msg.innerText = 'Please select layout images first.'; return;
       }
 
-      msg.style.color = '#60a5fa'; msg.innerText = `Processing ${fileInput.files.length} layout files...`;
+      const totalFiles = fileInput.files.length;
+      msg.style.color = '#60a5fa'; 
+      msg.innerText = `Processing batch upload (0 / ${totalFiles})...`;
 
       let updatedCount = 0;
-      for (let i = 0; i < fileInput.files.length; i++) {
+      for (let i = 0; i < totalFiles; i++) {
         const file = fileInput.files[i];
         const fileName = file.name;
-        // Extract unit code from filename (e.g. "A101.jpg" -> "A101")
         const dotIndex = fileName.lastIndexOf('.');
         const unitCode = (dotIndex !== -1 ? fileName.substring(0, dotIndex) : fileName).toUpperCase().trim();
 
         if (!unitCode) continue;
 
-        const compressedDataUrl = await compressImage(file, 1400, 0.92);
+        try {
+          const compressedDataUrl = await compressImage(file, 1200, 0.9);
 
-        // Update in Supabase for this unit code
-        const { error } = await supabaseClient
-          .from('units')
-          .update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() })
-          .eq('unit_code', unitCode);
+          const { error } = await supabaseClient
+            .from('units')
+            .update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() })
+            .eq('unit_code', unitCode);
 
-        if (!error) {
-          updatedCount++;
-          if (liveUnitsData[unitCode]) {
-            liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
+          if (!error) {
+            updatedCount++;
+            if (liveUnitsData[unitCode]) {
+              liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
+            }
           }
+        } catch (e) {
+          console.warn(`Failed to upload layout for ${unitCode}:`, e);
         }
+
+        msg.innerText = `Processing batch upload (${i + 1} / ${totalFiles})...`;
       }
 
       sessionStorage.clear();
@@ -1011,7 +1017,7 @@
       }
 
       msg.style.color = '#60a5fa'; msg.innerText = 'Saving layout...';
-      const compressedDataUrl = await compressImage(fileInput, 1400, 0.92);
+      const compressedDataUrl = await compressImage(fileInput, 1200, 0.9);
 
       const { error } = await supabaseClient
         .from('units')
@@ -1133,7 +1139,7 @@
       }
     }
 
-    async function compressImage(file, maxWidth = 1400, quality = 0.92) {
+    async function compressImage(file, maxWidth = 1200, quality = 0.9) {
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
