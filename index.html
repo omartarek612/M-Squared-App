@@ -308,7 +308,6 @@
       margin: 0 auto;
     }
 
-    /* Transparent Semi-Opaque Red Dot Marker */
     .unit-marker {
       position: absolute;
       width: 20px;
@@ -573,6 +572,32 @@
           <h4 style="font-size:11px; margin-top:15px; color:var(--muted-color);">Currently Uploaded Gallery Images (Click to delete):</h4>
           <div class="admin-gallery-manage" id="adminGalleryPreview"></div>
         </div>
+
+        <!-- NEW INDEPENDENT UNIT LAYOUTS MANAGER -->
+        <div class="admin-form-block" style="margin-top:15px; border: 1px solid rgba(59, 130, 246, 0.4);">
+          <h4 style="color: #3b82f6;">Unit Layouts Manager (Independent)</h4>
+          
+          <!-- Batch Upload By Filename (Matches Unit Code) -->
+          <div style="margin-bottom:12px; background:var(--card-bg); padding:10px; border-radius:6px;">
+            <div style="font-size:11px; font-weight:700; margin-bottom:4px;">1. Batch Upload Layouts (Files named by Unit Code, e.g., A101.jpg):</div>
+            <input type="file" id="adm_batch_layout_files" accept="image/*" multiple style="font-size:11px; margin-bottom:6px;">
+            <button class="btn-sync" onclick="adminUploadBatchLayouts()">Upload & Match by Filename</button>
+            <div class="admin-msg" id="adminBatchLayoutMsg"></div>
+          </div>
+
+          <!-- Single Unit Layout Add/Delete -->
+          <div style="background:var(--card-bg); padding:10px; border-radius:6px;">
+            <div style="font-size:11px; font-weight:700; margin-bottom:4px;">2. Single Unit Layout Control:</div>
+            <input type="text" id="adm_single_layout_code" placeholder="Unit Code (e.g. A101)" style="margin-bottom:6px; max-width:100%;">
+            <input type="file" id="adm_single_layout_file" accept="image/*" style="font-size:11px; margin-bottom:6px;">
+            <div style="display:flex; gap:6px;">
+              <button class="btn-search" onclick="adminSaveSingleLayout()" style="flex:1;">Save/Update Layout</button>
+              <button class="btn-delete-img" onclick="adminDeleteSingleLayout()" style="margin-top:0; flex:1; font-size:11px; padding:8px;">Delete Layout ❌</button>
+            </div>
+            <div class="admin-msg" id="adminSingleLayoutMsg"></div>
+          </div>
+        </div>
+
       </div>
 
       <div class="app-copyrights">
@@ -931,6 +956,105 @@
         }
       }
     }
+
+    // --- INDEPENDENT UNIT LAYOUT MANAGEMENT FUNCTIONS ---
+    async function adminUploadBatchLayouts() {
+      if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
+      const msg = document.getElementById('adminBatchLayoutMsg');
+      const fileInput = document.getElementById('adm_batch_layout_files');
+      if (!fileInput.files || fileInput.files.length === 0) {
+        msg.style.color = '#f87171'; msg.innerText = 'Please select layout images first.'; return;
+      }
+
+      msg.style.color = '#60a5fa'; msg.innerText = `Processing ${fileInput.files.length} layout files...`;
+
+      let updatedCount = 0;
+      for (let i = 0; i < fileInput.files.length; i++) {
+        const file = fileInput.files[i];
+        const fileName = file.name;
+        // Extract unit code from filename (e.g. "A101.jpg" -> "A101")
+        const dotIndex = fileName.lastIndexOf('.');
+        const unitCode = (dotIndex !== -1 ? fileName.substring(0, dotIndex) : fileName).toUpperCase().trim();
+
+        if (!unitCode) continue;
+
+        const compressedDataUrl = await compressImage(file, 1400, 0.92);
+
+        // Update in Supabase for this unit code
+        const { error } = await supabaseClient
+          .from('units')
+          .update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() })
+          .eq('unit_code', unitCode);
+
+        if (!error) {
+          updatedCount++;
+          if (liveUnitsData[unitCode]) {
+            liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
+          }
+        }
+      }
+
+      sessionStorage.clear();
+      msg.style.color = '#34d399';
+      msg.innerText = `Successfully matched and updated layouts for ${updatedCount} units!`;
+      loadCloudData(true);
+    }
+
+    async function adminSaveSingleLayout() {
+      if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
+      const msg = document.getElementById('adminSingleLayoutMsg');
+      const unitCode = document.getElementById('adm_single_layout_code').value.trim().toUpperCase();
+      const fileInput = document.getElementById('adm_single_layout_file').files[0];
+
+      if (!unitCode || !fileInput) {
+        msg.style.color = '#f87171'; msg.innerText = 'Enter unit code and select an image.'; return;
+      }
+
+      msg.style.color = '#60a5fa'; msg.innerText = 'Saving layout...';
+      const compressedDataUrl = await compressImage(fileInput, 1400, 0.92);
+
+      const { error } = await supabaseClient
+        .from('units')
+        .update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() })
+        .eq('unit_code', unitCode);
+
+      if (error) {
+        msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message;
+      } else {
+        if (liveUnitsData[unitCode]) liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
+        sessionStorage.clear();
+        msg.style.color = '#34d399'; msg.innerText = `Layout for unit [${unitCode}] updated successfully!`;
+        loadCloudData(true);
+      }
+    }
+
+    async function adminDeleteSingleLayout() {
+      if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
+      const msg = document.getElementById('adminSingleLayoutMsg');
+      const unitCode = document.getElementById('adm_single_layout_code').value.trim().toUpperCase();
+
+      if (!unitCode) {
+        msg.style.color = '#f87171'; msg.innerText = 'Enter unit code first.'; return;
+      }
+
+      if (confirm(`Are you sure you want to delete the layout for unit [${unitCode}]?`)) {
+        msg.style.color = '#60a5fa'; msg.innerText = 'Deleting...';
+        const { error } = await supabaseClient
+          .from('units')
+          .update({ layout_image_url: '', updated_at: new Date().toISOString() })
+          .eq('unit_code', unitCode);
+
+        if (error) {
+          msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message;
+        } else {
+          if (liveUnitsData[unitCode]) liveUnitsData[unitCode].layout_image_url = '';
+          sessionStorage.clear();
+          msg.style.color = '#34d399'; msg.innerText = `Layout for unit [${unitCode}] deleted!`;
+          loadCloudData(true);
+        }
+      }
+    }
+    // ---------------------------------------------------
 
     function searchUnit() {
       const val = document.getElementById('unitInput').value.trim().toUpperCase();
