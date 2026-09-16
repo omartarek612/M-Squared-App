@@ -1222,9 +1222,30 @@
       }); 
     }
 
+    // Automatically detects header row by scanning first 10 rows for unit column name
     function parseWorkbookRows(workbook) {
       const sheetName = workbook.SheetNames[0];
-      return XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '', raw: false });
+      const sheet = workbook.Sheets[sheetName];
+      const rowsArray = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+      
+      if (!rowsArray.length) return [];
+
+      let headerRowIndex = 0;
+      const patterns = ['unit: unit name', 'unit name', 'unit code', 'unit', 'code'];
+      
+      for (let i = 0; i < Math.min(rowsArray.length, 10); i++) {
+        const row = rowsArray[i];
+        const found = row.some(cell => {
+          const norm = String(cell || '').toLowerCase().trim();
+          return patterns.some(p => norm === p || norm.includes(p));
+        });
+        if (found) {
+          headerRowIndex = i;
+          break;
+        }
+      }
+
+      return XLSX.utils.sheet_to_json(sheet, { range: headerRowIndex, defval: '', raw: false });
     }
 
     function buildUnitsFromRows(rows) {
