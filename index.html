@@ -46,7 +46,7 @@
       background: var(--bg-color);
       color: var(--text-color);
       margin: 0;
-      padding: 5px;
+      padding: 10px;
       text-align: center;
       transition: background 0.3s, color 0.3s;
       position: relative;
@@ -61,69 +61,69 @@
       align-items: center;
       gap: 6px;
       background: var(--bg-color);
-      padding: 4px 10px;
-      border-bottom: none;
+      padding: 6px;
     }
 
     .btn-theme, .btn-logout {
       background: var(--card-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 3px 8px;
-      border-radius: 10px;
+      padding: 4px 10px;
+      border-radius: 12px;
       cursor: pointer;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
     }
 
     .sticky-header {
       position: sticky;
-      top: 28px;
+      top: 35px;
       z-index: 9999;
       background: var(--bg-color);
-      padding: 4px 0;
-      border-bottom: none;
+      padding: 6px 0;
     }
 
     .controls {
-      background: transparent;
-      padding: 0;
-      border-radius: 0;
-      box-shadow: none;
+      background: var(--card-bg);
+      padding: 8px 12px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       margin: 0 auto;
       display: flex;
-      flex-wrap: nowrap;
+      flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      gap: 6px;
-      border: none;
-      max-width: 650px;
+      gap: 8px;
+      border: 1px solid var(--border-color);
+      max-width: 800px;
       width: 100%;
     }
 
-    input {
-      padding: 6px 8px;
+    input, select, textarea {
+      padding: 8px 10px;
       font-family: 'Cairo', sans-serif;
-      font-size: 12px;
+      font-size: 13px;
       border: 1px solid var(--border-color);
       background: var(--input-bg);
       color: var(--text-color);
-      border-radius: 6px;
+      border-radius: 8px;
       outline: none;
+      width: 100%;
+      max-width: 160px;
     }
-    input#unitInput { text-transform: uppercase; font-weight: 600; width: 110px; }
-    input#clientInput { width: 150px; }
+    input#unitInput { text-transform: uppercase; font-weight: 600; max-width: 110px; }
+    input#clientInput { max-width: 140px; }
 
     button {
-      padding: 6px 12px;
+      padding: 8px 14px;
       font-family: 'Cairo', sans-serif;
-      font-size: 11px;
+      font-size: 12px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: 700;
       transition: all 0.2s ease;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     button:active { transform: scale(0.97); }
 
@@ -131,7 +131,7 @@
     .btn-sync { background: var(--sync-gradient); color: white; }
     .btn-preview { background: var(--preview-gradient); color: #0f172a; }
     .btn-pdf { background: var(--pdf-gradient); color: white; }
-    .btn-delete-img { background: #ef4444; color: white; padding: 3px 6px; font-size: 10px; border-radius: 4px; margin-top: 4px; }
+    .btn-delete-img { background: #ef4444; color: white; padding: 3px 8px; font-size: 10px; border-radius: 4px; margin-top: 4px; }
 
     #login-screen, #signup-screen, #pending-screen {
       background: var(--card-bg);
@@ -142,7 +142,7 @@
       margin: 30px auto;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-    #login-screen input, #signup-screen input { max-width: 100%; margin-bottom: 10px; width: 100%; }
+    #login-screen input, #signup-screen input { max-width: 100%; margin-bottom: 10px; }
     #loginError, #signupError { color: #f87171; font-size: 12px; margin-top: 6px; }
     #signupSuccess { color: #34d399; font-size: 12px; margin-top: 6px; }
     #signup-screen, #pending-screen { display: none; }
@@ -152,54 +152,56 @@
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 25px 20px;
-      max-width: 500px;
-      margin: 15px auto;
+      padding: 35px 20px;
+      max-width: 550px;
+      margin: 20px auto;
     }
 
     #main-app-content { display: none; max-width: 800px; margin: 10px auto; text-align: left; }
 
     .app-sidebar {
       position: fixed;
-      top: 75px;
+      top: 90px;
       left: 10px;
       z-index: 9998;
-      width: 180px;
+      width: 190px;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 12px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      padding: 8px;
+      padding: 10px;
       transition: transform 0.3s ease, opacity 0.3s ease;
     }
-    .app-sidebar.collapsed { transform: translateX(-210px); opacity: 0; pointer-events: none; }
+    .app-sidebar.collapsed { transform: translateX(-220px); opacity: 0; pointer-events: none; }
 
     .sidebar-toggle-btn {
       position: fixed;
-      top: 75px;
+      top: 90px;
       left: 10px;
       z-index: 9999;
       background: var(--primary-gradient);
       color: white;
       border: none;
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: left 0.3s ease;
     }
+    .sidebar-toggle-btn.shifted { left: 205px; }
 
-    .sidebar-section-title { font-size: 10px; text-transform: uppercase; color: var(--muted-color); margin: 4px 0 2px 0; font-weight: 700; }
-    .nav-tabs { display: flex; flex-direction: column; gap: 3px; margin-bottom: 6px; }
+    .sidebar-section-title { font-size: 10px; text-transform: uppercase; color: var(--muted-color); margin: 6px 0 3px 0; font-weight: 700; }
+    .nav-tabs { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
     .tab-btn {
       background: var(--input-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 6px 8px;
+      padding: 7px 10px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 600;
@@ -208,8 +210,8 @@
       width: 100%;
     }
     .tab-btn.active { background: var(--primary-gradient); color: white; border-color: transparent; }
-    .action-buttons { display: flex; flex-direction: column; gap: 5px; }
-    .action-buttons button { width: 100%; padding: 6px; }
+    .action-buttons { display: flex; flex-direction: column; gap: 6px; }
+    .action-buttons button { width: 100%; padding: 7px; }
 
     #full-offer-container { display: flex; flex-direction: column; gap: 20px; background: transparent; }
 
@@ -320,12 +322,12 @@
       z-index: 10;
     }
 
-    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; max-height: 480px; overflow-y: auto; }
-    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; white-space: nowrap; }
-    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 8px 10px; font-weight: 700; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 5; }
-    .payment-table td { padding: 7px 10px; border-bottom: 1px solid var(--border-color); }
+    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; overflow-x: auto; }
+    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; white-space: nowrap; }
+    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 10px 12px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
+    .payment-table td { padding: 9px 12px; border-bottom: 1px solid var(--border-color); }
 
-    .status { margin-top: 3px; font-size: 10px; font-weight: 600; text-align: center; }
+    .status { margin-top: 5px; font-size: 11px; font-weight: 600; text-align: center; }
 
     .admin-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
     .admin-form-block { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: left; }
@@ -353,6 +355,10 @@
       border-radius: 8px;
       border: 1px solid var(--border-color);
     }
+
+    @media (min-width: 600px) {
+      body { padding: 15px; }
+    }
   </style>
 </head>
 <body data-theme="dark">
@@ -366,9 +372,6 @@
     <h2>M Squared Login</h2>
     <input type="email" id="loginEmail" placeholder="Email" autocomplete="username"><br>
     <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"><br>
-    <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; margin-bottom: 10px; text-align: left; color: var(--muted-color);">
-      <input type="checkbox" id="rememberMeCheck" checked style="width: auto; max-width: none; margin: 0;"> Remember Me
-    </div>
     <button class="btn-search" style="width:100%;" onclick="login()">Login</button>
     <div id="loginError"></div>
     <span class="toggle-link" onclick="showSignup()">Create account</span>
@@ -397,15 +400,16 @@
       <div class="controls">
         <input type="text" id="unitInput" placeholder="Unit Code" onkeypress="if(event.key==='Enter') searchUnit()">
         <input type="text" id="clientInput" placeholder="Client Name">
+        <select id="projectSelect" onchange="changeMasterplanManual()"></select>
         <button class="btn-search" onclick="searchUnit()">Search</button>
-        <button class="btn-sync" onclick="loadCloudData(true)" title="Sync Data">Sync</button>
+        <button class="btn-sync" onclick="loadCloudData(true)">Sync</button>
       </div>
       <div id="status" class="status">Loading...</div>
     </div>
 
     <div id="welcome-screen">
-      <h2 style="font-size:1.3rem; margin-bottom:6px;">Welcome M Squared</h2>
-      <p style="font-size:11px; color:var(--muted-color);">Enter unit code above to view offer.</p>
+      <h2 style="font-size:1.4rem; margin-bottom:8px;">Welcome M Squared</h2>
+      <p style="font-size:12px; color:var(--muted-color);">Enter unit code above to view offer.</p>
     </div>
 
     <div id="main-app-content">
@@ -425,7 +429,7 @@
         
         <div class="sidebar-section-title">Actions</div>
         <div class="action-buttons">
-          <button class="btn-preview" onclick="previewFullPDF()">Preview (PDF)</button>
+          <button class="btn-preview" onclick="previewFullPDF()">Preview (Multi-Page)</button>
           <button class="btn-pdf" onclick="exportFullPDF()">Download PDF</button>
         </div>
       </div>
@@ -569,9 +573,11 @@
           <div class="admin-gallery-manage" id="adminGalleryPreview"></div>
         </div>
 
+        <!-- INDEPENDENT UNIT LAYOUTS MANAGER -->
         <div class="admin-form-block" style="margin-top:15px; border: 1px solid rgba(59, 130, 246, 0.4);">
           <h4 style="color: #3b82f6;">Unit Layouts Manager (Independent)</h4>
           
+          <!-- Throttled Safe Batch Upload By Filename -->
           <div style="margin-bottom:12px; background:var(--card-bg); padding:10px; border-radius:6px;">
             <div style="font-size:11px; font-weight:700; margin-bottom:4px;">1. Batch Upload Layouts (Files named by Unit Code, e.g., A101.jpg):</div>
             <input type="file" id="adm_batch_layout_files" accept="image/*" multiple style="font-size:11px; margin-bottom:6px;">
@@ -579,6 +585,7 @@
             <div class="admin-msg" id="adminBatchLayoutMsg"></div>
           </div>
 
+          <!-- Single Unit Layout Add/Delete -->
           <div style="background:var(--card-bg); padding:10px; border-radius:6px;">
             <div style="font-size:11px; font-weight:700; margin-bottom:4px;">2. Single Unit Layout Control:</div>
             <input type="text" id="adm_single_layout_code" placeholder="Unit Code (e.g. A101)" style="margin-bottom:6px; max-width:100%;">
@@ -603,9 +610,7 @@
   <script>
     const SUPABASE_URL = 'https://qiflwudikwuavyljlhnx.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_CXh9qukpJYZbS6glxcPwlQ_X57JR4sC';
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true, storage: window.localStorage }
-    });
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     function placeholderImg(label) {
       const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'>
@@ -624,7 +629,9 @@
 
     function toggleSidebar() {
       const sidebar = document.getElementById('appSidebar');
+      const toggleBtn = document.getElementById('sidebarToggleBtn');
       sidebar.classList.toggle('collapsed');
+      toggleBtn.classList.toggle('shifted');
     }
 
     function showSignup() {
@@ -648,7 +655,7 @@
       await onLoggedIn(data.user);
     }
 
-    // دالة التسجيل المُحسنة (تتجنب أخطاء التريجر عبر الإدخال اليدوي المباشر في profiles)
+    // دالة التسجيل المُحدثة والآمنة لتفادي أخطاء الـ Triggers وحفظ البروفايل يدوياً بحالة pending
     async function signUp() {
       const full_name = document.getElementById('signupName').value.trim();
       const email = document.getElementById('signupEmail').value.trim();
@@ -658,7 +665,7 @@
       errBox.innerText = ''; okBox.innerText = '';
 
       if (!full_name || !email || !password) { errBox.innerText = 'Fill all fields.'; return; }
-
+      
       const { data, error } = await supabaseClient.auth.signUp({ 
         email, 
         password, 
@@ -668,23 +675,21 @@
       if (error) { errBox.innerText = error.message; return; }
 
       if (data && data.user) {
-        const { error: profileError } = await supabaseClient
-          .from('profiles')
-          .insert([{ 
-            id: data.user.id, 
-            email: email, 
-            full_name: full_name, 
-            status: 'pending', 
-            role: 'user' 
-          }]);
+        const { error: profileError } = await supabaseClient.from('profiles').insert([{ 
+          id: data.user.id, 
+          email: email, 
+          full_name: full_name, 
+          status: 'pending', 
+          role: 'user' 
+        }]);
 
         if (profileError) {
-          console.error('Profile insert warning:', profileError.message);
+          console.warn('Profile insert warning:', profileError.message);
         }
       }
 
       okBox.innerText = 'Account created! Pending admin approval.';
-      setTimeout(() => showLogin(), 2000);
+      setTimeout(() => showLogin(), 2500);
     }
 
     async function logout() {
@@ -693,6 +698,7 @@
       sessionStorage.clear();
       document.getElementById('app-root').style.display = 'none';
       document.getElementById('pending-screen').style.display = 'none';
+      document.getElementById('signup-screen').style.display = 'none';
       document.getElementById('logoutBtn').style.display = 'none';
       document.getElementById('login-screen').style.display = 'block';
     }
@@ -735,84 +741,703 @@
     });
 
     function toggleTheme() {
-      const currentTheme = document.body.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      document.body.setAttribute('data-theme', newTheme);
-      localStorage.setItem('m2_theme', newTheme);
-      document.getElementById('themeToggleBtn').innerHTML = newTheme === 'light' ? 'Dark' : 'Light';
-    }
-
-    function scrollToSection(sectionId, btn) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      const el = document.getElementById(sectionId);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const body = document.body;
+      const btn = document.getElementById('themeToggleBtn');
+      if (body.getAttribute('data-theme') === 'dark') {
+        body.setAttribute('data-theme', 'light'); btn.innerHTML = 'Dark'; localStorage.setItem('m2_theme', 'light');
+      } else {
+        body.setAttribute('data-theme', 'dark'); btn.innerHTML = 'Light'; localStorage.setItem('m2_theme', 'dark');
       }
     }
 
-    async function loadCloudData(isSync) {
-      const statusEl = document.getElementById('status');
-      statusEl.innerText = isSync ? 'Syncing...' : 'Ready';
+    function scrollToSection(sectionId, btnElement) {
+      const target = document.getElementById(sectionId);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      if (btnElement) btnElement.classList.add('active');
     }
 
     async function loadPendingApprovals() {
-      const { data, error } = await supabaseClient
-        .from('profiles')
-        .select('*')
-        .eq('status', 'pending');
-
-      const container = document.getElementById('approvalList');
-      if (!container) return;
-      container.innerHTML = '';
-
-      if (error || !data || data.length === 0) {
-        container.innerHTML = '<p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p>';
-        return;
-      }
-
-      data.forEach(user => {
-        container.innerHTML += `
-          <div class="approval-item">
-            <div>
-              <strong>${user.full_name || 'N/A'}</strong><br>
-              <small>${user.email}</small>
-            </div>
-            <button class="btn-search" onclick="approveUser('${user.id}')" style="padding:4px 10px; font-size:10px;">Approve</button>
-          </div>
-        `;
+      if (!currentProfile || currentProfile.role !== 'admin') return;
+      const listEl = document.getElementById('approvalList');
+      const { data } = await supabaseClient.from('profiles').select('*').eq('status', 'pending');
+      if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p>'; return; }
+      listEl.innerHTML = '';
+      data.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'approval-item';
+        div.innerHTML = `<span>${p.full_name || 'User'} (${p.email})</span>`;
+        const btn = document.createElement('button');
+        btn.className = 'btn-search'; btn.innerText = 'Approve';
+        btn.onclick = async () => { 
+          await supabaseClient.from('profiles').update({ status: 'approved' }).eq('id', p.id); 
+          loadPendingApprovals(); 
+        };
+        div.appendChild(btn); listEl.appendChild(div);
       });
     }
 
-    async function approveUser(userId) {
-      const { error } = await supabaseClient
-        .from('profiles')
-        .update({ status: 'approved' })
-        .eq('id', userId);
+    async function loadImportLogs() {
+      const listEl = document.getElementById('importLogList');
+      const { data } = await supabaseClient.from('import_logs').select('*').order('created_at', { ascending: false }).limit(5);
+      if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:11px; color:var(--muted-color);">No imports.</p>'; return; }
+      listEl.innerHTML = '';
+      data.forEach(log => {
+        const div = document.createElement('div');
+        div.className = 'import-log-item';
+        div.innerHTML = `<span>${log.unit_count} units</span><span>${new Date(log.created_at).toLocaleDateString()}</span>`;
+        listEl.appendChild(div);
+      });
+    }
 
-      if (error) {
-        alert('Failed: ' + error.message);
-      } else {
-        alert('User approved successfully!');
-        loadPendingApprovals();
+    async function loadCloudData(forceRefresh = false) {
+      const st = document.getElementById('status');
+      
+      if (!forceRefresh) {
+        const cachedUnits = sessionStorage.getItem('m2_units');
+        const cachedProjects = sessionStorage.getItem('m2_projects');
+        const cachedLocations = sessionStorage.getItem('m2_locations');
+
+        if (cachedUnits && cachedProjects) {
+          try {
+            const units = JSON.parse(cachedUnits);
+            const projects = JSON.parse(cachedProjects);
+            const locations = cachedLocations ? JSON.parse(cachedLocations) : [];
+
+            liveUnitsData = {}; units.forEach(u => { liveUnitsData[u.unit_code.toUpperCase()] = u; });
+            projectsByName = {}; projects.forEach(p => { projectsByName[p.name.toLowerCase().trim()] = p; });
+            window.cloudLocations = {}; locations.forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
+
+            populateProjectDropdown(projects);
+            st.style.color = "#34d399"; st.innerText = `Ready (Loaded instantly)`;
+            return;
+          } catch (e) { console.warn("Cache parse failed, fetching from server..."); }
+        }
+      }
+
+      st.style.color = "#60a5fa"; st.innerText = "Syncing from cloud...";
+      try {
+        const [{ data: units }, { data: projects }, { data: locations }] = await Promise.all([
+          supabaseClient.from('units').select('unit_code, project_name, price, delivery_date, unit_type, bedrooms, floor, bua, garden_area, land_area, roof_area, penthouse_area, finishing_type'),
+          supabaseClient.from('projects').select('*'),
+          supabaseClient.from('unit_locations').select('*')
+        ]);
+        
+        liveUnitsData = {}; (units || []).forEach(u => { liveUnitsData[u.unit_code.toUpperCase()] = u; });
+        projectsByName = {}; (projects || []).forEach(p => { projectsByName[p.name.toLowerCase().trim()] = p; });
+        window.cloudLocations = {}; (locations || []).forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
+
+        sessionStorage.setItem('m2_units', JSON.stringify(units || []));
+        sessionStorage.setItem('m2_projects', JSON.stringify(projects || []));
+        sessionStorage.setItem('m2_locations', JSON.stringify(locations || []));
+
+        populateProjectDropdown(projects || []);
+        st.style.color = "#34d399"; st.innerText = `Synced successfully (${(units || []).length} units)`;
+      } catch (err) {
+        st.style.color = "#f87171"; st.innerText = "Sync failed.";
       }
     }
 
-    function loadImportLogs() {}
-    function searchUnit() {}
-    function handleMapClick(e) {}
-    function adminImportFile() {}
-    function importFromGoogleSheet() {}
-    function adminSaveProject() {}
-    function loadAdminProjectGallery() {}
-    function adminUploadBatchLayouts() {}
-    function adminSaveSingleLayout() {}
-    function adminDeleteSingleLayout() {}
+    function populateProjectDropdown(projects) {
+      const sel = document.getElementById('projectSelect');
+      sel.innerHTML = '';
+      projects.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.name; opt.innerText = p.name; sel.appendChild(opt);
+      });
+      if (projects.length > 0) setupProjectVisuals(projects[0].name);
+    }
 
-    function previewFullPDF() { window.print(); }
-    function exportFullPDF() {
+    function extractBuildingKey(unitCode) {
+      const code = unitCode.trim().toUpperCase();
+      const match31 = code.match(/^([A-Z]+\d+[A-Z]?)/);
+      if (match31) return match31[1];
+      return code.substring(0, 4);
+    }
+
+    async function handleMapClick(event) {
+      if (!currentLoadedBuildingKey || !currentProfile || currentProfile.role !== 'admin') return;
+      const img = event.target;
+      const x = parseFloat(((event.offsetX / img.clientWidth) * 100).toFixed(2));
+      const y = parseFloat(((event.offsetY / img.clientHeight) * 100).toFixed(2));
+      window.cloudLocations[currentLoadedBuildingKey] = { x, y };
+      sessionStorage.setItem('m2_locations', JSON.stringify(Object.entries(window.cloudLocations).map(([k, v]) => ({ building_key: k, x: v.x, y: v.y }))));
+      const marker = document.getElementById('marker');
+      marker.style.display = 'block'; marker.style.left = `${x}%`; marker.style.top = `${y}%`;
+      await supabaseClient.from('unit_locations').upsert({ building_key: currentLoadedBuildingKey, x, y, updated_at: new Date().toISOString() });
+    }
+
+    function setupProjectVisuals(projectName) {
+      const pLower = (projectName || '').toLowerCase().trim();
+      const label = document.getElementById('currentProjectLabel');
+      let proj = projectsByName[pLower] || Object.values(projectsByName)[0];
+
+      const logoUrl = proj && proj.logo_url ? proj.logo_url : placeholderImg('Logo');
+      ['Summary','Pictures','Masterplan','Layout','Payment'].forEach(sec => {
+        document.getElementById('projectLogoImg' + sec).src = logoUrl;
+      });
+
+      const picGrid = document.getElementById('picturesGridContainer');
+      picGrid.innerHTML = '';
+      const gallery = (proj && Array.isArray(proj.gallery) && proj.gallery.length) ? proj.gallery : [placeholderImg('Gallery')];
+      gallery.forEach(imgUrl => {
+        const div = document.createElement('div');
+        div.className = 'gallery-card-item';
+        div.innerHTML = `<img src="${imgUrl}" alt="View" crossorigin="anonymous" loading="lazy">`;
+        picGrid.appendChild(div);
+      });
+
+      document.getElementById('mpImg').src = (proj && proj.masterplan_image_url) ? proj.masterplan_image_url : placeholderImg('Masterplan');
+      if (label) label.innerText = proj ? proj.name : 'M Squared';
+
+      loadAdminProjectGallery();
+    }
+
+    function changeMasterplanManual() {
+      const selected = document.getElementById('projectSelect').value;
+      if (selected) setupProjectVisuals(selected);
+    }
+
+    function loadAdminProjectGallery() {
+      const name = document.getElementById('adm_proj_name').value.trim();
+      const container = document.getElementById('adminGalleryPreview');
+      const mpContainer = document.getElementById('adminMasterplanPreviewContainer');
+      if (!container || !mpContainer) return;
+      
+      container.innerHTML = '';
+      mpContainer.innerHTML = '';
+      if (!name) return;
+
+      const proj = projectsByName[name.toLowerCase().trim()];
+      if (!proj) return;
+
+      if (proj.masterplan_image_url) {
+        mpContainer.innerHTML = `
+          <div style="font-size:11px; color:var(--muted-color); margin-bottom:4px;">Current Masterplan:</div>
+          <div style="display:flex; align-items:center; gap:8px; background:var(--card-bg); padding:6px; border-radius:6px; border:1px solid var(--border-color);">
+            <img src="${proj.masterplan_image_url}" style="width:60px; height:40px; object-fit:cover; border-radius:4px;">
+            <button class="btn-delete-img" onclick="deleteMasterplanImage('${name}')">Delete Masterplan ❌</button>
+          </div>
+        `;
+      }
+
+      if (!proj.gallery || !proj.gallery.length) {
+        container.innerHTML = '<p style="font-size:10px; color:var(--muted-color); grid-column: 1/-1;">No uploaded gallery images yet.</p>';
+        return;
+      }
+
+      proj.gallery.forEach((imgUrl, index) => {
+        const item = document.createElement('div');
+        item.className = 'admin-gallery-item';
+        item.innerHTML = `
+          <img src="${imgUrl}" alt="Gallery ${index}">
+          <button class="btn-delete-img" onclick="deleteGalleryImage('${name}', ${index})">Delete ❌</button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    async function deleteMasterplanImage(projectName) {
+      const projKey = projectName.toLowerCase().trim();
+      let proj = projectsByName[projKey];
+      if (!proj) return;
+
+      if (confirm('Are you sure you want to delete the masterplan image?')) {
+        proj.masterplan_image_url = '';
+        const { error } = await supabaseClient.from('projects').upsert({
+          name: proj.name,
+          logo_url: proj.logo_url,
+          masterplan_image_url: '',
+          gallery: proj.gallery
+        }, { onConflict: 'name' });
+
+        if (error) {
+          alert('Error deleting masterplan: ' + error.message);
+        } else {
+          sessionStorage.clear();
+          loadCloudData(true);
+        }
+      }
+    }
+
+    async function deleteGalleryImage(projectName, index) {
+      const projKey = projectName.toLowerCase().trim();
+      let proj = projectsByName[projKey];
+      if (!proj || !proj.gallery) return;
+
+      if (confirm('Are you sure you want to delete this gallery image?')) {
+        proj.gallery.splice(index, 1);
+        const { error } = await supabaseClient.from('projects').upsert({
+          name: proj.name,
+          logo_url: proj.logo_url,
+          masterplan_image_url: proj.masterplan_image_url,
+          gallery: proj.gallery
+        }, { onConflict: 'name' });
+
+        if (error) {
+          alert('Error deleting image: ' + error.message);
+        } else {
+          sessionStorage.clear();
+          loadCloudData(true);
+        }
+      }
+    }
+
+    async function adminUploadBatchLayouts() {
+      if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
+      const msg = document.getElementById('adminBatchLayoutMsg');
+      const fileInput = document.getElementById('adm_batch_layout_files');
+      if (!fileInput.files || fileInput.files.length === 0) {
+        msg.style.color = '#f87171'; msg.innerText = 'Please select layout images first.'; return;
+      }
+
+      const totalFiles = fileInput.files.length;
+      msg.style.color = '#60a5fa'; 
+      msg.innerText = `Processing batch upload (0 / ${totalFiles})...`;
+
+      let updatedCount = 0;
+      for (let i = 0; i < totalFiles; i++) {
+        const file = fileInput.files[i];
+        const fileName = file.name;
+        const dotIndex = fileName.lastIndexOf('.');
+        const unitCode = (dotIndex !== -1 ? fileName.substring(0, dotIndex) : fileName).toUpperCase().trim();
+
+        if (!unitCode) continue;
+
+        try {
+          const compressedDataUrl = await compressImage(file, 800, 0.8);
+
+          const { error } = await supabaseClient
+            .from('units')
+            .update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() })
+            .eq('unit_code', unitCode);
+
+          if (!error) {
+            updatedCount++;
+            if (liveUnitsData[unitCode]) {
+              liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
+            }
+          }
+
+          await new Promise(resolve => setTimeout(resolve, 250));
+        } catch (e) {
+          console.warn(`Failed to upload layout for ${unitCode}:`, e);
+        }
+
+        msg.innerText = `Processing batch upload (${i + 1} / ${totalFiles})...`;
+      }
+
+      sessionStorage.clear();
+      msg.style.color = '#34d399';
+      msg.innerText = `Successfully matched and updated layouts for ${updatedCount} units!`;
+      loadCloudData(true);
+    }
+
+    async function adminSaveSingleLayout() {
+      if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
+      const msg = document.getElementById('adminSingleLayoutMsg');
+      const unitCode = document.getElementById('adm_single_layout_code').value.trim().toUpperCase();
+      const fileInput = document.getElementById('adm_single_layout_file').files[0];
+
+      if (!unitCode || !fileInput) {
+        msg.style.color = '#f87171'; msg.innerText = 'Enter unit code and select an image.'; return;
+      }
+
+      msg.style.color = '#60a5fa'; msg.innerText = 'Saving layout...';
+      const compressedDataUrl = await compressImage(fileInput, 1200, 0.9);
+
+      const { error } = await supabaseClient
+        .from('units')
+        .update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() })
+        .eq('unit_code', unitCode);
+
+      if (error) {
+        msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message;
+      } else {
+        if (liveUnitsData[unitCode]) liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
+        sessionStorage.clear();
+        msg.style.color = '#34d399'; msg.innerText = `Layout for unit [${unitCode}] updated successfully!`;
+        loadCloudData(true);
+      }
+    }
+
+    async function adminDeleteSingleLayout() {
+      if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
+      const msg = document.getElementById('adminSingleLayoutMsg');
+      const unitCode = document.getElementById('adm_single_layout_code').value.trim().toUpperCase();
+
+      if (!unitCode) {
+        msg.style.color = '#f87171'; msg.innerText = 'Enter unit code first.'; return;
+      }
+
+      if (confirm(`Are you sure you want to delete the layout for unit [${unitCode}]?`)) {
+        msg.style.color = '#60a5fa'; msg.innerText = 'Deleting...';
+        const { error } = await supabaseClient
+          .from('units')
+          .update({ layout_image_url: '', updated_at: new Date().toISOString() })
+          .eq('unit_code', unitCode);
+
+        if (error) {
+          msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message;
+        } else {
+          if (liveUnitsData[unitCode]) liveUnitsData[unitCode].layout_image_url = '';
+          sessionStorage.clear();
+          msg.style.color = '#34d399'; msg.innerText = `Layout for unit [${unitCode}] deleted!`;
+          loadCloudData(true);
+        }
+      }
+    }
+
+    async function searchUnit() {
+      const val = document.getElementById('unitInput').value.trim().toUpperCase();
+      const clientName = document.getElementById('clientInput').value.trim();
+      const st = document.getElementById('status');
+      const grid = document.getElementById('detailsGrid');
+      const marker = document.getElementById('marker');
+      const greetingBox = document.getElementById('greetingBox');
+      const welcomeScreen = document.getElementById('welcome-screen');
+      const mainAppContent = document.getElementById('main-app-content');
+
+      if (!val) return;
+      marker.style.display = 'none';
+      st.style.color = "#60a5fa"; st.innerText = `Searching unit [${val}]...`;
+
+      const { data: uData, error } = await supabaseClient.from('units').select('*').eq('unit_code', val).single();
+
+      if (uData && !error) {
+        currentUnitCode = val;
+        welcomeScreen.style.display = 'none';
+        mainAppContent.style.display = 'block';
+
+        document.getElementById('uNameSummary').innerText = val;
+        const projName = uData.project_name || 'M Squared';
+        document.getElementById('projectSelect').value = projName;
+        document.getElementById('uProjectDisplay').innerText = projName;
+
+        if (clientName) {
+          greetingBox.style.display = 'block';
+          greetingBox.innerHTML = `Dear <span class="client-highlight">${clientName}</span>,<br>Find your offer details below.`;
+        } else {
+          greetingBox.style.display = 'none';
+        }
+
+        setupProjectVisuals(projName);
+
+        const layoutImgElement = document.getElementById('unitLayoutImg');
+        layoutImgElement.src = uData.layout_image_url || placeholderImg('No Layout');
+
+        currentLoadedBuildingKey = extractBuildingKey(val);
+        if (window.cloudLocations && window.cloudLocations[currentLoadedBuildingKey]) {
+          const coords = window.cloudLocations[currentLoadedBuildingKey];
+          marker.style.display = 'block'; marker.style.left = `${coords.x}%`; marker.style.top = `${coords.y}%`;
+        }
+
+        grid.innerHTML = '';
+        const known = [
+          ['Price', uData.price ? Number(uData.price).toLocaleString() + ' EGP' : '-'],
+          ['Unit Type', uData.unit_type || '-'],
+          ['Delivery Date', uData.delivery_date || '-'],
+          ['Floor', uData.floor || '-'],
+          ['Bedrooms', uData.bedrooms || '-'],
+          ['BUA (SQM)', uData.bua ? uData.bua + ' sqm' : '-'],
+          ['Garden Area', uData.garden_area ? uData.garden_area + ' sqm' : '-'],
+          ['Land Area', uData.land_area ? uData.land_area + ' sqm' : '-'],
+          ['Roof Area', uData.roof_area ? uData.roof_area + ' sqm' : '-'],
+          ['Penthouse Area', uData.penthouse_area ? uData.penthouse_area + ' sqm' : '-'],
+          ['Finishing Type', uData.finishing_type || '-']
+        ];
+        known.forEach(([label, value]) => {
+          const card = document.createElement('div');
+          card.className = 'detail-card';
+          card.innerHTML = `<strong>${label}</strong><span>${value}</span>`;
+          grid.appendChild(card);
+        });
+
+        const unitPriceVal = Number(uData.price) || 0;
+        document.getElementById('paymentUnitPrice').innerText = unitPriceVal > 0 ? unitPriceVal.toLocaleString() + ' EGP' : '-';
+        const paymentTbody = document.getElementById('paymentTableBody');
+        paymentTbody.innerHTML = '';
+        if (unitPriceVal > 0) {
+          const dp = unitPriceVal * 0.05;
+          const q = (unitPriceVal - dp) / 40;
+          paymentTbody.innerHTML = `
+            <tr><td>Down Payment (5%)</td><td>Immediate</td><td>${dp.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>
+            <tr><td>Quarterly (x40)</td><td>10 Years</td><td>${q.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>
+            <tr><td>Maintenance</td><td>Delivery</td><td>${(unitPriceVal * 0.07).toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+        } else {
+          paymentTbody.innerHTML = `<tr><td colspan="3" style="text-align: center;">No price available.</td></tr>`;
+        }
+
+        st.style.color = "#34d399"; st.innerText = `Unit [${val}] loaded!`;
+      } else {
+        st.style.color = "#f87171"; st.innerText = `Unit [${val}] not found.`;
+      }
+    }
+
+    async function compressImage(file, maxWidth = 1200, quality = 0.9) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = event => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+        };
+      });
+    }
+
+    async function adminSaveProject() {
+      if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
+      const msg = document.getElementById('adminProjMsg');
+      msg.style.color = '#60a5fa'; msg.innerText = 'Processing images...';
+
+      const name = document.getElementById('adm_proj_name').value.trim();
+      if (!name) { msg.style.color = '#f87171'; msg.innerText = 'Project name is required.'; return; }
+
+      let existing = projectsByName[name.toLowerCase().trim()] || {};
+      let gallery = existing.gallery || [];
+
+      const masterplanFile = document.getElementById('adm_masterplan_file').files[0];
+      let masterplan_image_url = existing.masterplan_image_url || '';
+      if (masterplanFile) {
+        masterplan_image_url = await compressImage(masterplanFile, 1600, 0.95);
+      }
+
+      const fileInput = document.getElementById('adm_gallery_files');
+      if (fileInput.files && fileInput.files.length > 0) {
+        for (let i = 0; i < fileInput.files.length; i++) {
+          const compressedDataUrl = await compressImage(fileInput.files[i], 1200, 0.9);
+          gallery.push(compressedDataUrl);
+        }
+      }
+
+      const row = {
+        name,
+        logo_url: document.getElementById('adm_proj_logo').value.trim() || existing.logo_url || '',
+        masterplan_image_url,
+        gallery
+      };
+
+      const { error } = await supabaseClient.from('projects').upsert(row, { onConflict: 'name' });
+      if (error) { msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message; return; }
+
+      sessionStorage.clear();
+      msg.style.color = '#34d399'; msg.innerText = 'Saved successfully!';
+      loadCloudData(true);
+    }
+
+    function normHeader(h) { return String(h || '').toLowerCase().trim(); }
+    
+    function findColumn(keys, patterns) { 
+      return keys.find(k => {
+        const norm = normHeader(k);
+        return patterns.some(p => norm === p || norm.includes(p));
+      }); 
+    }
+
+    function parseWorkbookRows(workbook) {
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      
+      const rowsArray = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+      if (!rowsArray.length) return [];
+
+      let headerRowIndex = -1;
+      const exactPatterns = ['unit: unit name', 'unit name', 'unit code', 'unit', 'code'];
+      
+      for (let i = 0; i < rowsArray.length; i++) {
+        const row = rowsArray[i];
+        const found = row.some(cell => {
+          const norm = String(cell || '').toLowerCase().trim();
+          return exactPatterns.includes(norm);
+        });
+        if (found) {
+          headerRowIndex = i;
+          break;
+        }
+      }
+
+      if (headerRowIndex === -1) headerRowIndex = 9;
+
+      const headers = rowsArray[headerRowIndex].map(h => String(h || '').trim());
+      const results = [];
+
+      for (let i = headerRowIndex + 1; i < rowsArray.length; i++) {
+        const row = rowsArray[i];
+        if (!row || row.every(cell => String(cell || '').trim() === '')) continue;
+        
+        const obj = {};
+        headers.forEach((header, index) => {
+          if (header) {
+            obj[header] = row[index] !== undefined ? row[index] : '';
+          }
+        });
+        results.push(obj);
+      }
+
+      return results;
+    }
+
+    function buildUnitsFromRows(rows) {
+      if (!rows.length) return { error: 'Empty file.' };
+      const keys = Object.keys(rows[0]);
+      
+      const codeKey = findColumn(keys, ['unit: unit name', 'unit name', 'unit code', 'unit', 'code']);
+      const projectKey = findColumn(keys, ['project', 'phase']);
+      const deliveryKey = findColumn(keys, ['delivery date', 'delivery', 'date', 'year']);
+      const typeKey = findColumn(keys, ['unit type', 'type']);
+      const roomsKey = findColumn(keys, ['number of rooms', 'rooms', 'bedrooms', 'bedroom']);
+      const floorKey = findColumn(keys, ['floor']);
+      const buaKey = findColumn(keys, ['bua (sqm)', 'bua', 'area', 'space']);
+      const gardenKey = findColumn(keys, ['garden area', 'garden']);
+      const landKey = findColumn(keys, ['land area', 'land']);
+      const roofKey = findColumn(keys, ['roof area', 'roof']);
+      const penthouseKey = findColumn(keys, ['penthouse area', 'penthouse']);
+      const priceKey = findColumn(keys, ['unit total price', 'price', 'total']);
+      const finishingKey = findColumn(keys, ['finishing type', 'finishing']);
+      const layoutKey = findColumn(keys, ['layout', 'image']);
+
+      if (!codeKey) return { error: `Unit code column missing. Found columns: ${keys.join(', ')}` };
+
+      const unitsToImport = [];
+      rows.forEach(row => {
+        const unit_code = String(row[codeKey] || '').toUpperCase().trim();
+        if (!unit_code || unit_code === 'TOTAL') return;
+        unitsToImport.push({
+          owner_id: currentUser.id,
+          unit_code,
+          project_name: projectKey ? String(row[projectKey] || '').trim() : '',
+          delivery_date: deliveryKey ? String(row[deliveryKey] || '').trim() : '',
+          unit_type: typeKey ? String(row[typeKey] || '').trim() : '',
+          bedrooms: roomsKey ? String(row[roomsKey] || '').trim() : '',
+          floor: floorKey ? String(row[floorKey] || '').trim() : '',
+          bua: buaKey ? String(row[buaKey] || '').trim() : '',
+          garden_area: gardenKey ? String(row[gardenKey] || '').trim() : '',
+          land_area: landKey ? String(row[landKey] || '').trim() : '',
+          roof_area: roofKey ? String(row[roofKey] || '').trim() : '',
+          penthouse_area: penthouseKey ? String(row[penthouseKey] || '').trim() : '',
+          price: priceKey ? (parseFloat(String(row[priceKey]).replace(/[^0-9.]/g, '')) || null) : null,
+          finishing_type: finishingKey ? String(row[finishingKey] || '').trim() : '',
+          layout_image_url: layoutKey ? String(row[layoutKey] || '').trim() : '',
+          updated_at: new Date().toISOString()
+        });
+      });
+      return { units: unitsToImport };
+    }
+
+    async function performBulkImport(unitsToImport, msgEl) {
+      msgEl.style.color = '#60a5fa'; 
+      msgEl.innerText = `Preparing ${unitsToImport.length} units for upload...`;
+      
+      const uniqueMap = new Map();
+      unitsToImport.forEach(u => {
+        if (u.unit_code) uniqueMap.set(u.unit_code, u);
+      });
+      const cleanUnits = Array.from(uniqueMap.values());
+
+      const { error: delError } = await supabaseClient.from('units').delete().not('unit_code', 'is', null);
+      if (delError) {
+        msgEl.style.color = '#f87171';
+        msgEl.innerText = 'Delete Error: ' + delError.message;
+        return;
+      }
+
+      const batchSize = 100;
+      for (let i = 0; i < cleanUnits.length; i += batchSize) {
+        const batch = cleanUnits.slice(i, i + batchSize);
+        msgEl.innerText = `Uploading batch ${Math.floor(i/batchSize) + 1} of ${Math.ceil(cleanUnits.length/batchSize)}...`;
+        
+        const { error } = await supabaseClient.from('units').insert(batch);
+        if (error) {
+          msgEl.style.color = '#f87171';
+          msgEl.innerText = 'Upload Error: ' + error.message;
+          return;
+        }
+      }
+
+      sessionStorage.clear();
+      msgEl.style.color = '#34d399'; 
+      msgEl.innerText = `Inventory updated successfully! (${cleanUnits.length} units uploaded)`;
+      loadCloudData(true);
+    }
+
+    function adminImportFile() {
+      const msg = document.getElementById('adminImportMsg');
+      const file = document.getElementById('adm_import_file').files[0];
+      if (!file) { msg.style.color = '#f87171'; msg.innerText = 'Choose file first.'; return; }
+      const reader = new FileReader();
+      reader.onload = async function (e) {
+        const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+        const result = buildUnitsFromRows(parseWorkbookRows(workbook));
+        if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
+        await performBulkImport(result.units, msg);
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    async function importFromGoogleSheet() {
+      const msg = document.getElementById('adminGsheetMsg');
+      const url = document.getElementById('adm_gsheet_url').value.trim();
+      if (!url) { msg.style.color = '#f87171'; msg.innerText = 'Paste link first.'; return; }
+      try {
+        const res = await fetch(url);
+        const csvText = await res.text();
+        const workbook = XLSX.read(csvText, { type: 'string' });
+        const result = buildUnitsFromRows(parseWorkbookRows(workbook));
+        if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
+        await performBulkImport(result.units, msg);
+      } catch (err) {
+        msg.style.color = '#f87171'; msg.innerText = 'Import failed.';
+      }
+    }
+
+    async function prepareAndGeneratePDF(actionType) {
       const element = document.getElementById('full-offer-container');
-      html2pdf().from(element).save('M_Squared_Offer.pdf');
+      
+      const images = element.querySelectorAll('img');
+      await Promise.all(Array.from(images).map(img => {
+        if (img.complete) return Promise.resolve();
+        return new Promise(resolve => { img.onload = img.onerror = resolve; });
+      }));
+
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      const opt = {
+        margin:       10,
+        filename:     `M-Squared-Offer-${currentUnitCode || 'Unit'}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false, scrollY: 0 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      if (actionType === 'preview') {
+        html2pdf().from(element).set(opt).toPdf().get('pdf').then((pdf) => {
+          window.open(pdf.output('bloburl'), '_blank');
+        });
+      } else {
+        html2pdf().from(element).set(opt).save();
+      }
+    }
+
+    function previewFullPDF() {
+      prepareAndGeneratePDF('preview');
+    }
+
+    function exportFullPDF() {
+      prepareAndGeneratePDF('download');
     }
   </script>
 </body>
