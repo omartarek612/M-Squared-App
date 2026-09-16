@@ -267,9 +267,9 @@
     .summary-hero-card .project-small-text { font-size: 14px; font-weight: 600; }
 
     .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .detail-card { background: var(--input-bg); padding: 12px 14px; border-radius: 8px; border-left: 3px solid #3b82f6; border: 1px solid var(--border-color); word-break: break-word; }
-    .detail-card strong { display: block; font-size: 10px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 3px; }
-    .detail-card span { font-size: 14px; font-weight: 700; }
+    .detail-card { background: var(--input-bg); padding: 10px 12px; border-radius: 8px; border-left: 3px solid #3b82f6; border: 1px solid var(--border-color); word-break: break-word; text-align: left; }
+    .detail-card strong { display: block; font-size: 9px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 2px; }
+    .detail-card span { font-size: 13px; font-weight: 700; }
 
     .pictures-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .gallery-card-item { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; aspect-ratio: 1 / 1; }
@@ -792,7 +792,7 @@
       st.style.color = "#60a5fa"; st.innerText = "Syncing from cloud...";
       try {
         const [{ data: units }, { data: projects }, { data: locations }] = await Promise.all([
-          supabaseClient.from('units').select('unit_code, project_name, price, delivery_year, area, bedrooms'),
+          supabaseClient.from('units').select('unit_code, project_name, price, delivery_date, unit_type, bedrooms, floor, bua, garden_area, land_area, roof_area, penthouse_area, finishing_type'),
           supabaseClient.from('projects').select('*'),
           supabaseClient.from('unit_locations').select('*')
         ]);
@@ -1109,9 +1109,16 @@
         grid.innerHTML = '';
         const known = [
           ['Price', uData.price ? Number(uData.price).toLocaleString() + ' EGP' : '-'],
-          ['Delivery', uData.delivery_year || '-'],
-          ['Area', uData.area || '-'],
-          ['Bedrooms', uData.bedrooms || '-']
+          ['Unit Type', uData.unit_type || '-'],
+          ['Delivery Date', uData.delivery_date || '-'],
+          ['Floor', uData.floor || '-'],
+          ['Bedrooms', uData.bedrooms || '-'],
+          ['BUA (SQM)', uData.bua ? uData.bua + ' sqm' : '-'],
+          ['Garden Area', uData.garden_area ? uData.garden_area + ' sqm' : '-'],
+          ['Land Area', uData.land_area ? uData.land_area + ' sqm' : '-'],
+          ['Roof Area', uData.roof_area ? uData.roof_area + ' sqm' : '-'],
+          ['Penthouse Area', uData.penthouse_area ? uData.penthouse_area + ' sqm' : '-'],
+          ['Finishing Type', uData.finishing_type || '-']
         ];
         known.forEach(([label, value]) => {
           const card = document.createElement('div');
@@ -1226,10 +1233,17 @@
       
       const codeKey = findColumn(keys, ['unit: unit name', 'unit name', 'unit code', 'unit', 'code']);
       const projectKey = findColumn(keys, ['project', 'phase']);
-      const priceKey = findColumn(keys, ['price', 'total']);
-      const deliveryKey = findColumn(keys, ['delivery', 'date', 'year']);
-      const areaKey = findColumn(keys, ['area', 'space']);
-      const bedroomKey = findColumn(keys, ['bedroom']);
+      const deliveryKey = findColumn(keys, ['delivery date', 'delivery', 'date', 'year']);
+      const typeKey = findColumn(keys, ['unit type', 'type']);
+      const roomsKey = findColumn(keys, ['number of rooms', 'rooms', 'bedrooms', 'bedroom']);
+      const floorKey = findColumn(keys, ['floor']);
+      const buaKey = findColumn(keys, ['bua (sqm)', 'bua', 'area', 'space']);
+      const gardenKey = findColumn(keys, ['garden area', 'garden']);
+      const landKey = findColumn(keys, ['land area', 'land']);
+      const roofKey = findColumn(keys, ['roof area', 'roof']);
+      const penthouseKey = findColumn(keys, ['penthouse area', 'penthouse']);
+      const priceKey = findColumn(keys, ['unit total price', 'price', 'total']);
+      const finishingKey = findColumn(keys, ['finishing type', 'finishing']);
       const layoutKey = findColumn(keys, ['layout', 'image']);
 
       if (!codeKey) return { error: `Unit code column missing. Found columns: ${keys.join(', ')}` };
@@ -1242,10 +1256,17 @@
           owner_id: currentUser.id,
           unit_code,
           project_name: projectKey ? String(row[projectKey] || '').trim() : '',
+          delivery_date: deliveryKey ? String(row[deliveryKey] || '').trim() : '',
+          unit_type: typeKey ? String(row[typeKey] || '').trim() : '',
+          bedrooms: roomsKey ? String(row[roomsKey] || '').trim() : '',
+          floor: floorKey ? String(row[floorKey] || '').trim() : '',
+          bua: buaKey ? String(row[buaKey] || '').trim() : '',
+          garden_area: gardenKey ? String(row[gardenKey] || '').trim() : '',
+          land_area: landKey ? String(row[landKey] || '').trim() : '',
+          roof_area: roofKey ? String(row[roofKey] || '').trim() : '',
+          penthouse_area: penthouseKey ? String(row[penthouseKey] || '').trim() : '',
           price: priceKey ? (parseFloat(String(row[priceKey]).replace(/[^0-9.]/g, '')) || null) : null,
-          delivery_year: deliveryKey ? String(row[deliveryKey] || '').trim() : '',
-          area: areaKey ? String(row[areaKey] || '').trim() : '',
-          bedrooms: bedroomKey ? String(row[bedroomKey] || '').trim() : '',
+          finishing_type: finishingKey ? String(row[finishingKey] || '').trim() : '',
           layout_image_url: layoutKey ? String(row[layoutKey] || '').trim() : '',
           updated_at: new Date().toISOString()
         });
