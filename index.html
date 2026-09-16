@@ -532,7 +532,7 @@
         <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
         <div class="admin-grid">
           <div class="admin-form-block">
-            <h4>Import File (.xlsx, .csv)</h4>
+            <h4>Import Excel File (.xlsx, .xls)</h4>
             <input type="file" id="adm_import_file" accept=".xlsx,.xls,.csv" style="font-size:11px;">
             <button class="btn-sync" onclick="adminImportFile()">Import & Overwrite</button>
             <div class="admin-msg" id="adminImportMsg"></div>
@@ -764,7 +764,6 @@
       });
     }
 
-    // Optimized sync: Excludes layout base64 strings from bulk download to prevent Payload Too Large / Timeout
     async function loadCloudData(forceRefresh = false) {
       const st = document.getElementById('status');
       
@@ -958,7 +957,6 @@
       }
     }
 
-    // --- THROTTLED SAFE BATCH UPLOAD FOR LAYOUTS ---
     async function adminUploadBatchLayouts() {
       if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
       const msg = document.getElementById('adminBatchLayoutMsg');
@@ -1063,9 +1061,7 @@
         }
       }
     }
-    // ---------------------------------------------------
 
-    // On-demand fetch for specific unit including layout image
     async function searchUnit() {
       const val = document.getElementById('unitInput').value.trim().toUpperCase();
       const clientName = document.getElementById('clientInput').value.trim();
@@ -1080,7 +1076,6 @@
       marker.style.display = 'none';
       st.style.color = "#60a5fa"; st.innerText = `Searching unit [${val}]...`;
 
-      // Fetch the specific unit with its layout from database
       const { data: uData, error } = await supabaseClient.from('units').select('*').eq('unit_code', val).single();
 
       if (uData && !error) {
@@ -1212,7 +1207,14 @@
     }
 
     function normHeader(h) { return String(h || '').toLowerCase().trim(); }
-    function findColumn(keys, patterns) { return keys.find(k => patterns.some(p => normHeader(k).includes(p))); }
+    
+    // Updated column matcher to support 'unit', 'unit name', 'unit code', etc.
+    function findColumn(keys, patterns) { 
+      return keys.find(k => {
+        const norm = normHeader(k);
+        return patterns.some(p => norm === p || norm.includes(p));
+      }); 
+    }
 
     function parseWorkbookRows(workbook) {
       const sheetName = workbook.SheetNames[0];
@@ -1222,7 +1224,9 @@
     function buildUnitsFromRows(rows) {
       if (!rows.length) return { error: 'Empty file.' };
       const keys = Object.keys(rows[0]);
-      const codeKey = findColumn(keys, ['unit', 'code']);
+      
+      // Extended patterns to match "unit", "unit name", "unit code", "code", etc.
+      const codeKey = findColumn(keys, ['unit: unit name', 'unit name', 'unit code', 'unit', 'code']);
       const projectKey = findColumn(keys, ['project', 'phase']);
       const priceKey = findColumn(keys, ['price', 'total']);
       const deliveryKey = findColumn(keys, ['delivery', 'date', 'year']);
@@ -1230,7 +1234,7 @@
       const bedroomKey = findColumn(keys, ['bedroom']);
       const layoutKey = findColumn(keys, ['layout', 'image']);
 
-      if (!codeKey) return { error: 'Unit code column missing.' };
+      if (!codeKey) return { error: `Unit code column missing. Found columns: ${keys.join(', ')}` };
 
       const unitsToImport = [];
       rows.forEach(row => {
@@ -1260,6 +1264,7 @@
       loadCloudData(true);
     }
 
+    // Handles direct Excel (.xlsx, .xls) and CSV files
     function adminImportFile() {
       const msg = document.getElementById('adminImportMsg');
       const file = document.getElementById('adm_import_file').files[0];
@@ -1285,7 +1290,7 @@
         const result = buildUnitsFromRows(parseWorkbookRows(workbook));
         if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
         await performBulkImport(result.units, msg);
-      } catch (err) {
+      } else {
         msg.style.color = '#f87171'; msg.innerText = 'Import failed.';
       }
     }
