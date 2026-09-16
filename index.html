@@ -1377,7 +1377,6 @@
         
         const code = String(u.unit_code).toUpperCase().trim();
         
-        // Filter conditions to exclude totals, unit counts, and summary rows
         if (
           code === 'TOTAL' || 
           code.includes('TOTAL') || 
@@ -1446,7 +1445,8 @@
 
       sessionStorage.clear();
       msgEl.style.color = '#34d399'; 
-      msgEl.innerText = `Inventory updated successfully! (Saved ${cleanUnits.length} valid units, excluded ${skippedCount} extra rows)`;
+      // تم إزالة جملة الاستبعاد واستبقاء عدد الوحدات فقط كما طلبت
+      msgEl.innerText = `Inventory updated successfully! (Saved ${cleanUnits.length} units)`;
       loadCloudData(true);
       loadImportLogs();
     }
