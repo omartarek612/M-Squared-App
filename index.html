@@ -1369,7 +1369,19 @@
         const code = u.unit_code.toUpperCase().trim();
         
         // استبعاد أي صف إجمالي أو كلمات غير كود وحدة
-        if (code === 'TOTAL' || code.includes('TOTAL') || code.includes('الإجمالي') || code.includes('SUM')) return;
+        if (
+          code === 'TOTAL' || 
+          code.includes('TOTAL') || 
+          code.includes('الإجمالي') || 
+          code.includes('المجموع') || 
+          code.includes('SUM') || 
+          code.includes('GRAND') || 
+          code.includes('AVERAGE') ||
+          code.length > 20
+        ) {
+          console.warn('Skipped non-unit row:', code);
+          return;
+        }
 
         // استعادة الـ Layout القديم إن وُجد
         if (!u.layout_image_url && existingLayouts[code]) {
@@ -1378,7 +1390,11 @@
 
         uniqueMap.set(code, u);
       });
+
       const cleanUnits = Array.from(uniqueMap.values());
+      
+      console.log("Clean Units Count:", cleanUnits.length);
+      console.log("All Unit Codes:", cleanUnits.map(u => u.unit_code));
 
       const { error: delError } = await supabaseClient.from('units').delete().not('unit_code', 'is', null);
       if (delError) {
