@@ -831,7 +831,7 @@
           sessionStorage.setItem('m2_projects', JSON.stringify(projects || []));
           sessionStorage.setItem('m2_locations', JSON.stringify(locations || []));
         } catch (storageErr) {
-          console.warn("Session storage quota exceeded (images too large for cache), skipping local cache:", storageErr);
+          console.warn("Session storage quota exceeded:", storageErr);
         }
 
         st.style.color = "#34d399"; st.innerText = `Synced successfully (${(units || []).length} units)`;
@@ -1015,7 +1015,6 @@
 
           await new Promise(resolve => setTimeout(resolve, 150));
         } catch (e) {
-          console.warn(`Failed to upload layout for ${unitCode}:`, e);
           failedCount++;
         }
 
@@ -1269,7 +1268,7 @@
       if (!rowsArray.length) return [];
 
       let headerRowIndex = -1;
-      const exactPatterns = ['unit: unit name', 'unit name', 'unit code', 'unit', 'code'];
+      const exactPatterns = ['unit: unit name', 'unit name', 'unit code', 'unit', 'code', 'كود الوحدة'];
       
       for (let i = 0; i < rowsArray.length; i++) {
         const row = rowsArray[i];
@@ -1283,7 +1282,7 @@
         }
       }
 
-      if (headerRowIndex === -1) headerRowIndex = 9;
+      if (headerRowIndex === -1) headerRowIndex = 0;
 
       const headers = rowsArray[headerRowIndex].map(h => String(h || '').trim());
       const results = [];
@@ -1307,29 +1306,32 @@
       if (!rows.length) return { error: 'Empty file.' };
       const keys = Object.keys(rows[0]);
       
-      const codeKey = findColumn(keys, ['unit: unit name', 'unit name', 'unit code', 'unit', 'code']);
-      const projectKey = findColumn(keys, ['project', 'phase']);
-      const deliveryKey = findColumn(keys, ['delivery date', 'delivery', 'date', 'year']);
-      const typeKey = findColumn(keys, ['unit type', 'type']);
-      const roomsKey = findColumn(keys, ['number of rooms', 'rooms', 'bedrooms', 'bedroom']);
-      const floorKey = findColumn(keys, ['floor']);
-      const buaKey = findColumn(keys, ['bua (sqm)', 'bua', 'area', 'space']);
-      const gardenKey = findColumn(keys, ['garden area', 'garden']);
-      const landKey = findColumn(keys, ['land area', 'land']);
-      const roofKey = findColumn(keys, ['roof area', 'roof']);
-      const penthouseKey = findColumn(keys, ['penthouse area', 'penthouse']);
-      const priceKey = findColumn(keys, ['unit total price', 'price', 'total']);
-      const finishingKey = findColumn(keys, ['finishing type', 'finishing']);
-      const layoutKey = findColumn(keys, ['layout', 'image']);
+      const codeKey = findColumn(keys, ['unit: unit name', 'unit name', 'unit code', 'unit', 'code', 'كود الوحدة']);
+      const projectKey = findColumn(keys, ['project', 'phase', 'المشروع']);
+      const deliveryKey = findColumn(keys, ['delivery date', 'delivery', 'date', 'year', 'تاريخ الاستلام']);
+      const typeKey = findColumn(keys, ['unit type', 'type', 'نوع الوحدة']);
+      const roomsKey = findColumn(keys, ['number of rooms', 'rooms', 'bedrooms', 'bedroom', 'غرف']);
+      const floorKey = findColumn(keys, ['floor', 'الدور']);
+      const buaKey = findColumn(keys, ['bua (sqm)', 'bua', 'area', 'space', 'المساحة']);
+      const gardenKey = findColumn(keys, ['garden area', 'garden', 'حديقة']);
+      const landKey = findColumn(keys, ['land area', 'land', 'أرض']);
+      const roofKey = findColumn(keys, ['roof area', 'roof', 'رووف']);
+      const penthouseKey = findColumn(keys, ['penthouse area', 'penthouse', 'بنتاهاوس']);
+      const priceKey = findColumn(keys, ['unit total price', 'price', 'total', 'السعر', 'الإجمالي']);
+      const finishingKey = findColumn(keys, ['finishing type', 'finishing', 'التشطيب']);
+      const layoutKey = findColumn(keys, ['layout', 'image', 'الصورة']);
 
       if (!codeKey) return { error: `Unit code column missing. Found columns: ${keys.join(', ')}` };
 
       const unitsToImport = [];
       rows.forEach(row => {
-        const unit_code = String(row[codeKey] || '').toUpperCase().trim();
-        if (!unit_code || unit_code === 'TOTAL') return;
+        const rawCode = row[codeKey];
+        if (rawCode === undefined || rawCode === null) return;
+        const unit_code = String(rawCode).toUpperCase().trim();
+        if (!unit_code) return;
+
         unitsToImport.push({
-          owner_id: currentUser.id,
+          owner_id: currentUser ? currentUser.id : null,
           unit_code,
           project_name: projectKey ? String(row[projectKey] || '').trim() : '',
           delivery_date: deliveryKey ? String(row[deliveryKey] || '').trim() : '',
@@ -1350,23 +1352,33 @@
       return { units: unitsToImport };
     }
 
+    // الدالة المحسنة لفلترة ورفع الوحدات بدون أي صفوف زائدة أو خطأ
     async function performBulkImport(unitsToImport, msgEl) {
       msgEl.style.color = '#60a5fa'; 
-      msgEl.innerText = `Preparing ${unitsToImport.length} units for upload...`;
+      msgEl.innerText = `جاري فحص وحساب الوحدات (${unitsToImport.length} صف)...`;
       
       const { data: oldUnits } = await supabaseClient.from('units').select('unit_code, layout_image_url');
       const existingLayouts = {};
       if (oldUnits) {
         oldUnits.forEach(u => {
-          if (u.layout_image_url) existingLayouts[u.unit_code.toUpperCase()] = u.layout_image_url;
+          if (u.layout_image_url && u.unit_code) {
+            existingLayouts[u.unit_code.toUpperCase().trim()] = u.layout_image_url;
+          }
         });
       }
 
       const uniqueMap = new Map();
+      let skippedCount = 0;
+
       unitsToImport.forEach(u => {
-        if (!u.unit_code) return;
-        const code = u.unit_code.toUpperCase().trim();
+        if (!u.unit_code) { 
+          skippedCount++; 
+          return; 
+        }
         
+        const code = String(u.unit_code).toUpperCase().trim();
+        
+        // شروط الفلترة الدقيقة لاستبعاد الإجماليات والأرقام المسلسلة البحتة
         if (
           code === 'TOTAL' || 
           code.includes('TOTAL') || 
@@ -1375,23 +1387,37 @@
           code.includes('SUM') || 
           code.includes('GRAND') || 
           code.includes('AVERAGE') ||
-          code.length > 20
+          code.includes('SUBTOTAL') ||
+          code.length > 25 ||
+          code.length < 2 ||
+          (/^\d+$/.test(code) && Number(code) < 999) 
         ) {
-          console.warn('Skipped non-unit row:', code);
+          skippedCount++;
           return;
         }
 
-        if (!u.layout_image_url && existingLayouts[code]) {
-          u.layout_image_url = existingLayouts[code];
+        let layoutUrl = u.layout_image_url || null;
+        if (!layoutUrl && existingLayouts[code]) {
+          layoutUrl = existingLayouts[code];
         }
 
-        uniqueMap.set(code, u);
+        uniqueMap.set(code, { 
+          ...u,
+          unit_code: code, 
+          layout_image_url: layoutUrl 
+        });
       });
 
       const cleanUnits = Array.from(uniqueMap.values());
       
       console.log("Clean Units Count:", cleanUnits.length);
-      console.log("All Unit Codes:", cleanUnits.map(u => u.unit_code));
+      console.log("Skipped Non-Units:", skippedCount);
+
+      if (cleanUnits.length === 0) {
+        msgEl.style.color = '#f87171';
+        msgEl.innerText = 'خطأ: لم يتم العثور على أي وحدات صحيحة في الملف لرفعها!';
+        return;
+      }
 
       const { error: delError } = await supabaseClient.from('units').delete().not('unit_code', 'is', null);
       if (delError) {
@@ -1403,7 +1429,7 @@
       const batchSize = 100;
       for (let i = 0; i < cleanUnits.length; i += batchSize) {
         const batch = cleanUnits.slice(i, i + batchSize);
-        msgEl.innerText = `Uploading batch ${Math.floor(i/batchSize) + 1} of ${Math.ceil(cleanUnits.length/batchSize)}...`;
+        msgEl.innerText = `جاري رفع الوحدات الصحيحة (${Math.floor(i/batchSize) + 1} من ${Math.ceil(cleanUnits.length/batchSize)})...`;
         
         const { error } = await supabaseClient.from('units').insert(batch);
         if (error) {
@@ -1425,7 +1451,7 @@
 
       sessionStorage.clear();
       msgEl.style.color = '#34d399'; 
-      msgEl.innerText = `Inventory updated successfully! (${cleanUnits.length} units uploaded, layouts preserved)`;
+      msgEl.innerText = `تم تحديث المخزون بنجاح! 🎯 (تم حفظ ${cleanUnits.length} وحدة حقيقية، واستبعاد ${skippedCount} صف زائد)`;
       loadCloudData(true);
       loadImportLogs();
     }
