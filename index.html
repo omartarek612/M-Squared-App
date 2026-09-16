@@ -1222,6 +1222,7 @@
       }); 
     }
 
+    // Fully robust row parser that reads ALL rows manually without stopping early at blank cells/rows
     function parseWorkbookRows(workbook) {
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
@@ -1232,7 +1233,7 @@
       let headerRowIndex = 0;
       const patterns = ['unit: unit name', 'unit name', 'unit code', 'unit', 'code'];
       
-      for (let i = 0; i < Math.min(rowsArray.length, 10); i++) {
+      for (let i = 0; i < Math.min(rowsArray.length, 15); i++) {
         const row = rowsArray[i];
         const found = row.some(cell => {
           const norm = String(cell || '').toLowerCase().trim();
@@ -1244,7 +1245,23 @@
         }
       }
 
-      return XLSX.utils.sheet_to_json(sheet, { range: headerRowIndex, defval: '', raw: false });
+      const headers = rowsArray[headerRowIndex].map(h => String(h || '').trim());
+      const results = [];
+
+      for (let i = headerRowIndex + 1; i < rowsArray.length; i++) {
+        const row = rowsArray[i];
+        if (!row || row.every(cell => String(cell || '').trim() === '')) continue;
+        
+        const obj = {};
+        headers.forEach((header, index) => {
+          if (header) {
+            obj[header] = row[index] !== undefined ? row[index] : '';
+          }
+        });
+        results.push(obj);
+      }
+
+      return results;
     }
 
     function buildUnitsFromRows(rows) {
@@ -1297,7 +1314,6 @@
     async function performBulkImport(unitsToImport, msgEl) {
       msgEl.style.color = '#60a5fa'; msgEl.innerText = `Deduplicating and uploading units...`;
       
-      // Deduplicate rows by unit_code to prevent duplicate key constraint errors
       const uniqueMap = new Map();
       unitsToImport.forEach(u => {
         uniqueMap.set(u.unit_code, u);
