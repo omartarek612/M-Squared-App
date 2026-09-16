@@ -1354,9 +1354,29 @@
       msgEl.style.color = '#60a5fa'; 
       msgEl.innerText = `Preparing ${unitsToImport.length} units for upload...`;
       
+      // سحب الـ Layouts القديمة لضمان عدم ضياعها
+      const { data: oldUnits } = await supabaseClient.from('units').select('unit_code, layout_image_url');
+      const existingLayouts = {};
+      if (oldUnits) {
+        oldUnits.forEach(u => {
+          if (u.layout_image_url) existingLayouts[u.unit_code.toUpperCase()] = u.layout_image_url;
+        });
+      }
+
       const uniqueMap = new Map();
       unitsToImport.forEach(u => {
-        if (u.unit_code) uniqueMap.set(u.unit_code, u);
+        if (!u.unit_code) return;
+        const code = u.unit_code.toUpperCase().trim();
+        
+        // استبعاد أي صف إجمالي أو كلمات غير كود وحدة
+        if (code === 'TOTAL' || code.includes('TOTAL') || code.includes('الإجمالي') || code.includes('SUM')) return;
+
+        // استعادة الـ Layout القديم إن وُجد
+        if (!u.layout_image_url && existingLayouts[code]) {
+          u.layout_image_url = existingLayouts[code];
+        }
+
+        uniqueMap.set(code, u);
       });
       const cleanUnits = Array.from(uniqueMap.values());
 
@@ -1388,7 +1408,7 @@
 
       sessionStorage.clear();
       msgEl.style.color = '#34d399'; 
-      msgEl.innerText = `Inventory updated successfully! (${cleanUnits.length} units uploaded)`;
+      msgEl.innerText = `Inventory updated successfully! (${cleanUnits.length} units uploaded, layouts preserved)`;
       loadCloudData(true);
       loadImportLogs();
     }
