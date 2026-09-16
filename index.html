@@ -1208,7 +1208,6 @@
 
     function normHeader(h) { return String(h || '').toLowerCase().trim(); }
     
-    // Updated column matcher to support 'unit', 'unit name', 'unit code', etc.
     function findColumn(keys, patterns) { 
       return keys.find(k => {
         const norm = normHeader(k);
@@ -1225,7 +1224,6 @@
       if (!rows.length) return { error: 'Empty file.' };
       const keys = Object.keys(rows[0]);
       
-      // Extended patterns to match "unit", "unit name", "unit code", "code", etc.
       const codeKey = findColumn(keys, ['unit: unit name', 'unit name', 'unit code', 'unit', 'code']);
       const projectKey = findColumn(keys, ['project', 'phase']);
       const priceKey = findColumn(keys, ['price', 'total']);
@@ -1264,7 +1262,6 @@
       loadCloudData(true);
     }
 
-    // Handles direct Excel (.xlsx, .xls) and CSV files
     function adminImportFile() {
       const msg = document.getElementById('adminImportMsg');
       const file = document.getElementById('adm_import_file').files[0];
@@ -1290,7 +1287,7 @@
         const result = buildUnitsFromRows(parseWorkbookRows(workbook));
         if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
         await performBulkImport(result.units, msg);
-      } else {
+      } catch (err) {
         msg.style.color = '#f87171'; msg.innerText = 'Import failed.';
       }
     }
