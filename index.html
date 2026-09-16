@@ -1352,7 +1352,6 @@
       return { units: unitsToImport };
     }
 
-    // الدالة المحسنة لفلترة ورفع الوحدات بدون أي صفوف زائدة أو خطأ
     async function performBulkImport(unitsToImport, msgEl) {
       msgEl.style.color = '#60a5fa'; 
       msgEl.innerText = `جاري فحص وحساب الوحدات (${unitsToImport.length} صف)...`;
@@ -1378,12 +1377,15 @@
         
         const code = String(u.unit_code).toUpperCase().trim();
         
-        // شروط الفلترة الدقيقة لاستبعاد الإجماليات والأرقام المسلسلة البحتة
+        // شروط الفلترة الدقيقة لاستبعاد الإجماليات وصفوف الـ Total Units والـ Count
         if (
           code === 'TOTAL' || 
           code.includes('TOTAL') || 
+          code.includes('UNITS') || 
+          code.includes('COUNT') || 
           code.includes('الإجمالي') || 
           code.includes('المجموع') || 
+          code.includes('عدد') || 
           code.includes('SUM') || 
           code.includes('GRAND') || 
           code.includes('AVERAGE') ||
@@ -1410,9 +1412,6 @@
 
       const cleanUnits = Array.from(uniqueMap.values());
       
-      console.log("Clean Units Count:", cleanUnits.length);
-      console.log("Skipped Non-Units:", skippedCount);
-
       if (cleanUnits.length === 0) {
         msgEl.style.color = '#f87171';
         msgEl.innerText = 'خطأ: لم يتم العثور على أي وحدات صحيحة في الملف لرفعها!';
