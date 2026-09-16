@@ -1222,7 +1222,6 @@
       }); 
     }
 
-    // Automatically detects header row by scanning first 10 rows for unit column name
     function parseWorkbookRows(workbook) {
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
@@ -1298,7 +1297,14 @@
     async function performBulkImport(unitsToImport, msgEl) {
       msgEl.style.color = '#60a5fa'; msgEl.innerText = `Uploading ${unitsToImport.length} units...`;
       await supabaseClient.from('units').delete().not('unit_code', 'is', null);
-      await supabaseClient.from('units').insert(unitsToImport);
+      
+      const { error } = await supabaseClient.from('units').insert(unitsToImport);
+      if (error) {
+        msgEl.style.color = '#f87171';
+        msgEl.innerText = 'Upload Error: ' + error.message;
+        return;
+      }
+
       sessionStorage.clear();
       msgEl.style.color = '#34d399'; msgEl.innerText = 'Inventory updated successfully!';
       loadCloudData(true);
