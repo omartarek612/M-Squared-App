@@ -1378,6 +1378,7 @@
         const code = String(u.unit_code).toUpperCase().trim();
         
         if (
+          (/^\d+$/.test(code) && Number(code) < 999) ||
           code === 'TOTAL' || 
           code.includes('TOTAL') || 
           code.includes('UNITS') || 
@@ -1445,7 +1446,7 @@
 
       sessionStorage.clear();
       msgEl.style.color = '#34d399'; 
-      // تم إزالة جملة الاستبعاد واستبقاء عدد الوحدات فقط كما طلبت
+      // تم إزالة جملة الصفوف المستبعدة من النص الظاهر كما طلبت
       msgEl.innerText = `Inventory updated successfully! (Saved ${cleanUnits.length} units)`;
       loadCloudData(true);
       loadImportLogs();
@@ -1506,7 +1507,7 @@
           st.style.color = "#34d399"; st.innerText = "PDF downloaded successfully!";
         }
       } catch (err) {
-        st.style.color = "#f87171"; st.innerText = "PDF generation failed.";
+        st.style.color = '#f87171'; st.innerText = "PDF generation failed.";
       }
     }
 
