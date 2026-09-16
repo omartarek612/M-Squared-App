@@ -1240,6 +1240,7 @@
       sheet['!ref'] = XLSX.utils.encode_range(range);
 
       const rowsArray = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+      console.log("Total rows read from excel:", rowsArray.length);
       
       if (!rowsArray.length) return [];
 
@@ -1274,6 +1275,7 @@
         results.push(obj);
       }
 
+      console.log("Parsed data objects count:", results.length);
       return results;
     }
 
@@ -1324,27 +1326,43 @@
       return { units: unitsToImport };
     }
 
+    // رفع البيانات على دفعات (Batches) لضمان رفع الـ 219 وحدة بالكامل بدون قيود الحجم
     async function performBulkImport(unitsToImport, msgEl) {
-      msgEl.style.color = '#60a5fa'; msgEl.innerText = `Deduplicating and uploading units...`;
+      msgEl.style.color = '#60a5fa'; 
+      msgEl.innerText = `Preparing ${unitsToImport.length} units for upload...`;
       
       const uniqueMap = new Map();
       unitsToImport.forEach(u => {
-        uniqueMap.set(u.unit_code, u);
+        if (u.unit_code) uniqueMap.set(u.unit_code, u);
       });
       const cleanUnits = Array.from(uniqueMap.values());
+      console.log("Unique units to insert:", cleanUnits.length);
 
-      await supabaseClient.from('units').delete().not('unit_code', 'is', null);
-      
-      const { error } = await supabaseClient.from('units').insert(cleanUnits);
-      if (error) {
+      // مسح القديم
+      const { error: delError } = await supabaseClient.from('units').delete().not('unit_code', 'is', null);
+      if (delError) {
         msgEl.style.color = '#f87171';
-        msgEl.innerText = 'Upload Error: ' + error.message;
+        msgEl.innerText = 'Delete Error: ' + delError.message;
         return;
+      }
+
+      // الرفع على دفعات (كل دفعة 100 وحدة) لتفادي حدود الـ API
+      const batchSize = 100;
+      for (let i = 0; i < cleanUnits.length; i += batchSize) {
+        const batch = cleanUnits.slice(i, i + batchSize);
+        msgEl.innerText = `Uploading batch ${Math.floor(i/batchSize) + 1} of ${Math.ceil(cleanUnits.length/batchSize)}...`;
+        
+        const { error } = await supabaseClient.from('units').insert(batch);
+        if (error) {
+          msgEl.style.color = '#f87171';
+          msgEl.innerText = 'Upload Error: ' + error.message;
+          return;
+        }
       }
 
       sessionStorage.clear();
       msgEl.style.color = '#34d399'; 
-      msgEl.innerText = `Inventory updated successfully! (${cleanUnits.length} unique units uploaded)`;
+      msgEl.innerText = `Inventory updated successfully! (${cleanUnits.length} units uploaded)`;
       loadCloudData(true);
     }
 
