@@ -826,9 +826,13 @@
         projectsByName = {}; (projects || []).forEach(p => { projectsByName[p.name.toLowerCase().trim()] = p; });
         window.cloudLocations = {}; (locations || []).forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
 
-        sessionStorage.setItem('m2_units', JSON.stringify(units || []));
-        sessionStorage.setItem('m2_projects', JSON.stringify(projects || []));
-        sessionStorage.setItem('m2_locations', JSON.stringify(locations || []));
+        try {
+          sessionStorage.setItem('m2_units', JSON.stringify(units || []));
+          sessionStorage.setItem('m2_projects', JSON.stringify(projects || []));
+          sessionStorage.setItem('m2_locations', JSON.stringify(locations || []));
+        } catch (storageErr) {
+          console.warn("Session storage quota exceeded (images too large for cache), skipping local cache:", storageErr);
+        }
 
         st.style.color = "#34d399"; st.innerText = `Synced successfully (${(units || []).length} units)`;
       } catch (err) {
@@ -850,7 +854,9 @@
       const x = parseFloat(((event.offsetX / img.clientWidth) * 100).toFixed(2));
       const y = parseFloat(((event.offsetY / img.clientHeight) * 100).toFixed(2));
       window.cloudLocations[currentLoadedBuildingKey] = { x, y };
-      sessionStorage.setItem('m2_locations', JSON.stringify(Object.entries(window.cloudLocations).map(([k, v]) => ({ building_key: k, x: v.x, y: v.y }))));
+      try {
+        sessionStorage.setItem('m2_locations', JSON.stringify(Object.entries(window.cloudLocations).map(([k, v]) => ({ building_key: k, x: v.x, y: v.y }))));
+      } catch (e) {}
       const marker = document.getElementById('marker');
       marker.style.display = 'block'; marker.style.left = `${x}%`; marker.style.top = `${y}%`;
       await supabaseClient.from('unit_locations').upsert({ building_key: currentLoadedBuildingKey, x, y, updated_at: new Date().toISOString() });
