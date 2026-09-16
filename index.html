@@ -601,7 +601,6 @@
   </div>
 
   <script>
-    // ضع بيانات السوبابيس الخاصة بك هنا
     const SUPABASE_URL = 'https://qiflwudikwuavyljlhnx.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_CXh9qukpJYZbS6glxcPwlQ_X57JR4sC';
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -740,7 +739,18 @@
         div.innerHTML = `<span>${p.full_name || 'User'}</span>`;
         const btn = document.createElement('button');
         btn.className = 'btn-search'; btn.innerText = 'Approve';
-        btn.onclick = async () => { await supabaseClient.from('profiles').update({ status: 'approved' }).eq('id', p.id); loadPendingApprovals(); };
+        
+        // استخدام دالة الـ RPC المحدثة لتأكيد الحساب والإيميل معاً من داخل التطبيق
+        btn.onclick = async () => { 
+          const { error } = await supabaseClient.rpc('admin_approve_user', { target_user_id: p.id });
+          if (error) {
+            alert('فشل الاعتماد: ' + error.message);
+          } else {
+            alert('تم اعتماد المستخدم وتأكيد حسابه بنجاح!');
+            loadPendingApprovals(); 
+          }
+        };
+
         div.appendChild(btn); listEl.appendChild(div);
       });
     }
