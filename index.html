@@ -1354,7 +1354,6 @@
       msgEl.style.color = '#60a5fa'; 
       msgEl.innerText = `Preparing ${unitsToImport.length} units for upload...`;
       
-      // سحب الـ Layouts القديمة لضمان عدم ضياعها
       const { data: oldUnits } = await supabaseClient.from('units').select('unit_code, layout_image_url');
       const existingLayouts = {};
       if (oldUnits) {
@@ -1368,7 +1367,6 @@
         if (!u.unit_code) return;
         const code = u.unit_code.toUpperCase().trim();
         
-        // استبعاد أي صف إجمالي أو كلمات غير كود وحدة
         if (
           code === 'TOTAL' || 
           code.includes('TOTAL') || 
@@ -1383,7 +1381,6 @@
           return;
         }
 
-        // استعادة الـ Layout القديم إن وُجد
         if (!u.layout_image_url && existingLayouts[code]) {
           u.layout_image_url = existingLayouts[code];
         }
@@ -1416,11 +1413,15 @@
         }
       }
 
-      await supabaseClient.from('import_logs').insert({
-        unit_count: cleanUnits.length,
-        user_email: currentUser.email,
-        created_at: new Date().toISOString()
-      });
+      try {
+        await supabaseClient.from('import_logs').insert({
+          unit_count: cleanUnits.length,
+          user_email: currentUser ? currentUser.email : 'unknown',
+          created_at: new Date().toISOString()
+        });
+      } catch (logErr) {
+        console.warn('Import log insert skipped:', logErr);
+      }
 
       sessionStorage.clear();
       msgEl.style.color = '#34d399'; 
@@ -1433,18 +1434,22 @@
       const msg = document.getElementById('adminImportMsg');
       const file = document.getElementById('adm_import_file').files[0];
       if (!file) { msg.style.color = '#f87171'; msg.innerText = 'Choose file first.'; return; }
+      
       const reader = new FileReader();
       reader.onload = async function (e) {
         try {
-          const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+          const data = e.target.result;
+          const workbook = XLSX.read(data, { type: 'binary' });
           const result = buildUnitsFromRows(parseWorkbookRows(workbook));
           if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
           await performBulkImport(result.units, msg);
         } catch (err) {
-          msg.style.color = '#f87171'; msg.innerText = 'Error parsing Excel file.';
+          msg.style.color = '#f87171'; 
+          msg.innerText = 'Error parsing file. Make sure it is a valid Excel or CSV file.';
+          console.error(err);
         }
       };
-      reader.readAsArrayBuffer(file);
+      reader.readAsBinaryString(file);
     }
 
     async function prepareAndGeneratePDF(actionType) {
