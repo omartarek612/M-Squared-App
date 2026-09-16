@@ -1222,13 +1222,22 @@
       }); 
     }
 
-    // Fully robust row parser that clears restricted range and reads ALL rows
+    // Fully robust row parser with dynamic range recalculation
     function parseWorkbookRows(workbook) {
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       
-      // Fixes restricted range / print area bug in SheetJS
-      delete sheet['!ref'];
+      // إعادة حساب نطاق الخلايا بالكامل لتفادي خطأ Empty file وقراءة كل البيانات
+      const range = { s: { c: 10000000, r: 10000000 }, e: { c: 0, r: 0 } };
+      Object.keys(sheet).forEach(key => {
+        if (key.startsWith('!')) return;
+        const cell = XLSX.utils.decode_cell(key);
+        if (cell.r < range.s.r) range.s.r = cell.r;
+        if (cell.c < range.s.c) range.s.c = cell.c;
+        if (cell.r > range.e.r) range.e.r = cell.r;
+        if (cell.c > range.e.c) range.e.c = cell.c;
+      });
+      sheet['!ref'] = XLSX.utils.encode_range(range);
 
       const rowsArray = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
       
