@@ -1354,7 +1354,7 @@
 
     async function performBulkImport(unitsToImport, msgEl) {
       msgEl.style.color = '#60a5fa'; 
-      msgEl.innerText = `جاري فحص وحساب الوحدات (${unitsToImport.length} صف)...`;
+      msgEl.innerText = `Inspecting and calculating units (${unitsToImport.length} rows)...`;
       
       const { data: oldUnits } = await supabaseClient.from('units').select('unit_code, layout_image_url');
       const existingLayouts = {};
@@ -1377,22 +1377,18 @@
         
         const code = String(u.unit_code).toUpperCase().trim();
         
-        // شروط الفلترة الدقيقة لاستبعاد الإجماليات وصفوف الـ Total Units والـ Count
+        // Filter conditions to exclude totals, unit counts, and summary rows
         if (
           code === 'TOTAL' || 
           code.includes('TOTAL') || 
           code.includes('UNITS') || 
           code.includes('COUNT') || 
-          code.includes('الإجمالي') || 
-          code.includes('المجموع') || 
-          code.includes('عدد') || 
           code.includes('SUM') || 
           code.includes('GRAND') || 
           code.includes('AVERAGE') ||
           code.includes('SUBTOTAL') ||
           code.length > 25 ||
-          code.length < 2 ||
-          (/^\d+$/.test(code) && Number(code) < 999) 
+          code.length < 2
         ) {
           skippedCount++;
           return;
@@ -1414,7 +1410,7 @@
       
       if (cleanUnits.length === 0) {
         msgEl.style.color = '#f87171';
-        msgEl.innerText = 'خطأ: لم يتم العثور على أي وحدات صحيحة في الملف لرفعها!';
+        msgEl.innerText = 'Error: No valid units found in the file to upload!';
         return;
       }
 
@@ -1428,7 +1424,7 @@
       const batchSize = 100;
       for (let i = 0; i < cleanUnits.length; i += batchSize) {
         const batch = cleanUnits.slice(i, i + batchSize);
-        msgEl.innerText = `جاري رفع الوحدات الصحيحة (${Math.floor(i/batchSize) + 1} من ${Math.ceil(cleanUnits.length/batchSize)})...`;
+        msgEl.innerText = `Uploading valid units (${Math.floor(i/batchSize) + 1} of ${Math.ceil(cleanUnits.length/batchSize)})...`;
         
         const { error } = await supabaseClient.from('units').insert(batch);
         if (error) {
@@ -1450,7 +1446,7 @@
 
       sessionStorage.clear();
       msgEl.style.color = '#34d399'; 
-      msgEl.innerText = `تم تحديث المخزون بنجاح! 🎯 (تم حفظ ${cleanUnits.length} وحدة حقيقية، واستبعاد ${skippedCount} صف زائد)`;
+      msgEl.innerText = `Inventory updated successfully! (Saved ${cleanUnits.length} valid units, excluded ${skippedCount} extra rows)`;
       loadCloudData(true);
       loadImportLogs();
     }
