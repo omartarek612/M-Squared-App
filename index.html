@@ -57,12 +57,24 @@
       top: 0;
       z-index: 10000;
       display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 6px;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
       background: var(--bg-color);
-      padding: 4px 10px;
-      border-bottom: none;
+      padding: 6px 12px;
+    }
+
+    .top-buttons-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .user-welcome-text {
+      font-size: 10px;
+      color: var(--muted-color);
+      font-weight: 600;
+      display: none;
     }
 
     .btn-theme, .btn-logout {
@@ -78,7 +90,7 @@
 
     .sticky-header {
       position: sticky;
-      top: 28px;
+      top: 42px;
       z-index: 9999;
       background: var(--bg-color);
       padding: 4px 0;
@@ -161,7 +173,7 @@
 
     .app-sidebar {
       position: fixed;
-      top: 75px;
+      top: 90px;
       left: 10px;
       z-index: 9998;
       width: 180px;
@@ -176,7 +188,7 @@
 
     .sidebar-toggle-btn {
       position: fixed;
-      top: 75px;
+      top: 90px;
       left: 10px;
       z-index: 9999;
       background: var(--primary-gradient);
@@ -358,8 +370,11 @@
 <body data-theme="dark">
 
   <div class="top-global-bar">
-    <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
-    <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">Light</button>
+    <div class="top-buttons-row">
+      <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
+      <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">Light</button>
+    </div>
+    <div id="userWelcomeDisplay" class="user-welcome-text"></div>
   </div>
 
   <div id="login-screen">
@@ -524,26 +539,6 @@
 
       </div>
 
-      <div class="offer-page-section" id="sec-inventory" style="margin-top: 15px; break-before: auto; page-break-before: auto; min-height: auto; display: block;">
-        <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
-        <div class="admin-grid">
-          <div class="admin-form-block">
-            <h4>Import Excel File (.xlsx, .xls)</h4>
-            <input type="file" id="adm_import_file" accept=".xlsx,.xls,.csv" style="font-size:11px;">
-            <button class="btn-sync" onclick="adminImportFile()">Import & Overwrite</button>
-            <div class="admin-msg" id="adminImportMsg"></div>
-          </div>
-          <div class="admin-form-block">
-            <h4>Google Sheet Link</h4>
-            <input type="text" id="adm_gsheet_url" placeholder="https://docs.google.com/.../pub?output=csv">
-            <button class="btn-sync" onclick="importFromGoogleSheet()">Import & Overwrite</button>
-            <div class="admin-msg" id="adminGsheetMsg"></div>
-          </div>
-        </div>
-        <h4 style="margin-top:12px; font-size:12px;">Recent Imports</h4>
-        <div class="import-log-list" id="importLogList"><p style="font-size:11px; color:var(--muted-color);">No imports yet.</p></div>
-      </div>
-
       <div class="offer-page-section" id="sec-admin" style="display:none; margin-top: 15px; break-before: auto; page-break-before: auto; min-height: auto; display: block;">
         <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Admin Control Panel</h3>
         <h4 style="font-size:12px;">Pending Accounts</h4>
@@ -594,6 +589,21 @@
           </div>
         </div>
 
+      </div>
+
+      <!-- INVENTORY SECTION MOVED TO THE VERY BOTTOM -->
+      <div class="offer-page-section" id="sec-inventory" style="margin-top: 15px; break-before: auto; page-break-before: auto; min-height: auto; display: block;">
+        <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
+        <div class="admin-grid">
+          <div class="admin-form-block">
+            <h4>Import Excel File (.xlsx, .xls)</h4>
+            <input type="file" id="adm_import_file" accept=".xlsx,.xls,.csv" style="font-size:11px;">
+            <button class="btn-sync" onclick="adminImportFile()">Import & Overwrite</button>
+            <div class="admin-msg" id="adminImportMsg"></div>
+          </div>
+        </div>
+        <h4 style="margin-top:12px; font-size:12px;">Recent Imports</h4>
+        <div class="import-log-list" id="importLogList"><p style="font-size:11px; color:var(--muted-color);">No imports yet.</p></div>
       </div>
 
       <div class="app-copyrights">
@@ -673,6 +683,7 @@
       document.getElementById('app-root').style.display = 'none';
       document.getElementById('pending-screen').style.display = 'none';
       document.getElementById('logoutBtn').style.display = 'none';
+      document.getElementById('userWelcomeDisplay').style.display = 'none';
       document.getElementById('login-screen').style.display = 'block';
     }
 
@@ -684,6 +695,15 @@
 
       const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
       currentProfile = profile;
+
+      const welcomeEl = document.getElementById('userWelcomeDisplay');
+      if (profile && profile.full_name) {
+        welcomeEl.style.display = 'block';
+        welcomeEl.innerText = `Welcome, ${profile.full_name}`;
+      } else if (user.email) {
+        welcomeEl.style.display = 'block';
+        welcomeEl.innerText = `Welcome, ${user.email.split('@')[0]}`;
+      }
 
       if (!profile || profile.status !== 'approved') {
         document.getElementById('pending-screen').style.display = 'block';
@@ -755,7 +775,9 @@
       data.forEach(log => {
         const div = document.createElement('div');
         div.className = 'import-log-item';
-        div.innerHTML = `<span>${log.unit_count} units</span><span>${new Date(log.created_at).toLocaleDateString()}</span>`;
+        const userEmail = log.user_email || 'Unknown';
+        const dateStr = new Date(log.created_at).toLocaleString();
+        div.innerHTML = `<span>${log.unit_count} units</span><span style="font-size:10px; color:var(--muted-color);">${userEmail} — ${dateStr}</span>`;
         listEl.appendChild(div);
       });
     }
@@ -1343,10 +1365,18 @@
         }
       }
 
+      // Record in import logs with user email and timestamp
+      await supabaseClient.from('import_logs').insert({
+        unit_count: cleanUnits.length,
+        user_email: currentUser.email,
+        created_at: new Date().toISOString()
+      });
+
       sessionStorage.clear();
       msgEl.style.color = '#34d399'; 
       msgEl.innerText = `Inventory updated successfully! (${cleanUnits.length} units uploaded)`;
       loadCloudData(true);
+      loadImportLogs();
     }
 
     function adminImportFile() {
@@ -1365,22 +1395,6 @@
         }
       };
       reader.readAsArrayBuffer(file);
-    }
-
-    async function importFromGoogleSheet() {
-      const msg = document.getElementById('adminGsheetMsg');
-      const url = document.getElementById('adm_gsheet_url').value.trim();
-      if (!url) { msg.style.color = '#f87171'; msg.innerText = 'Paste link first.'; return; }
-      try {
-        const res = await fetch(url);
-        const csvText = await res.text();
-        const workbook = XLSX.read(csvText, { type: 'string' });
-        const result = buildUnitsFromRows(parseWorkbookRows(workbook));
-        if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
-        await performBulkImport(result.units, msg);
-      } catch (err) {
-        msg.style.color = '#f87171'; msg.innerText = 'Import failed.';
-      }
     }
 
     async function prepareAndGeneratePDF(actionType) {
