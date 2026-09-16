@@ -655,7 +655,7 @@
       await onLoggedIn(data.user);
     }
 
-    // دالة التسجيل المُحدثة والآمنة لتفادي أخطاء الـ Triggers وحفظ البروفايل يدوياً بحالة pending
+    // دالة التسجيل المُحدثة والآمنة لتفادي أخطاء الـ Triggers وحفظ البروفايل يدوياً في جدول profiles
     async function signUp() {
       const full_name = document.getElementById('signupName').value.trim();
       const email = document.getElementById('signupEmail').value.trim();
