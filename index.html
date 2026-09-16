@@ -802,17 +802,25 @@
 
             st.style.color = "#34d399"; st.innerText = `Ready (Loaded instantly)`;
             return;
-          } catch (e) { console.warn("Cache parse failed, fetching from server..."); }
+          } catch (e) { console.warn("Cache parse failed:", e); }
         }
       }
 
       st.style.color = "#60a5fa"; st.innerText = "Syncing from cloud...";
       try {
-        const [{ data: units }, { data: projects }, { data: locations }] = await Promise.all([
+        const [unitsRes, projectsRes, locationsRes] = await Promise.all([
           supabaseClient.from('units').select('unit_code, project_name, price, delivery_date, unit_type, bedrooms, floor, bua, garden_area, land_area, roof_area, penthouse_area, finishing_type, layout_image_url'),
           supabaseClient.from('projects').select('*'),
           supabaseClient.from('unit_locations').select('*')
         ]);
+
+        if (unitsRes.error) throw unitsRes.error;
+        if (projectsRes.error) throw projectsRes.error;
+        if (locationsRes.error) throw locationsRes.error;
+
+        const units = unitsRes.data;
+        const projects = projectsRes.data;
+        const locations = locationsRes.data;
         
         liveUnitsData = {}; (units || []).forEach(u => { liveUnitsData[u.unit_code.toUpperCase()] = u; });
         projectsByName = {}; (projects || []).forEach(p => { projectsByName[p.name.toLowerCase().trim()] = p; });
@@ -824,7 +832,8 @@
 
         st.style.color = "#34d399"; st.innerText = `Synced successfully (${(units || []).length} units)`;
       } catch (err) {
-        st.style.color = "#f87171"; st.innerText = "Sync failed.";
+        console.error("Detailed Sync Error:", err);
+        st.style.color = "#f87171"; st.innerText = `Sync failed: ${err.message || 'Check Console'}`;
       }
     }
 
@@ -1365,7 +1374,6 @@
         }
       }
 
-      // Record in import logs with user email and timestamp
       await supabaseClient.from('import_logs').insert({
         unit_count: cleanUnits.length,
         user_email: currentUser.email,
