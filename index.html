@@ -62,7 +62,7 @@
       gap: 6px;
       background: var(--bg-color);
       padding: 4px 10px;
-      border-bottom: none; /* إزالة أي فواصل */
+      border-bottom: none;
     }
 
     .btn-theme, .btn-logout {
@@ -82,21 +82,22 @@
       z-index: 9999;
       background: var(--bg-color);
       padding: 4px 0;
-      border-bottom: none; /* إزالة الخط الفاصل تحت الهيدر تماماً */
+      border-bottom: none;
     }
 
+    /* إزالة الكارت/البر المحيط بحقول البحث والأزرار */
     .controls {
-      background: var(--card-bg);
-      padding: 6px 10px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      box-shadow: none;
       margin: 0 auto;
       display: flex;
       flex-wrap: nowrap;
       justify-content: center;
       align-items: center;
       gap: 6px;
-      border: 1px solid var(--border-color);
+      border: none;
       max-width: 650px;
       width: 100%;
     }
