@@ -62,6 +62,7 @@
       gap: 6px;
       background: var(--bg-color);
       padding: 4px 10px;
+      border-bottom: none; /* إزالة أي فواصل */
     }
 
     .btn-theme, .btn-logout {
@@ -81,6 +82,7 @@
       z-index: 9999;
       background: var(--bg-color);
       padding: 4px 0;
+      border-bottom: none; /* إزالة الخط الفاصل تحت الهيدر تماماً */
     }
 
     .controls {
@@ -189,7 +191,6 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      /* تم تثبيت الزرار وعدم جعله يتحرك بشكل عشوائي */
     }
 
     .sidebar-section-title { font-size: 10px; text-transform: uppercase; color: var(--muted-color); margin: 4px 0 2px 0; font-weight: 700; }
@@ -627,7 +628,6 @@
     function toggleSidebar() {
       const sidebar = document.getElementById('appSidebar');
       sidebar.classList.toggle('collapsed');
-      // تم إلغاء تأثير الحركة الجانبية للزرار عشان يفضل ثابت في مكانه وما يتحركش شكلاً غلط
     }
 
     function showSignup() {
