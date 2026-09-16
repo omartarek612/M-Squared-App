@@ -1295,10 +1295,18 @@
     }
 
     async function performBulkImport(unitsToImport, msgEl) {
-      msgEl.style.color = '#60a5fa'; msgEl.innerText = `Uploading ${unitsToImport.length} units...`;
+      msgEl.style.color = '#60a5fa'; msgEl.innerText = `Deduplicating and uploading units...`;
+      
+      // Deduplicate rows by unit_code to prevent duplicate key constraint errors
+      const uniqueMap = new Map();
+      unitsToImport.forEach(u => {
+        uniqueMap.set(u.unit_code, u);
+      });
+      const cleanUnits = Array.from(uniqueMap.values());
+
       await supabaseClient.from('units').delete().not('unit_code', 'is', null);
       
-      const { error } = await supabaseClient.from('units').insert(unitsToImport);
+      const { error } = await supabaseClient.from('units').insert(cleanUnits);
       if (error) {
         msgEl.style.color = '#f87171';
         msgEl.innerText = 'Upload Error: ' + error.message;
@@ -1306,7 +1314,8 @@
       }
 
       sessionStorage.clear();
-      msgEl.style.color = '#34d399'; msgEl.innerText = 'Inventory updated successfully!';
+      msgEl.style.color = '#34d399'; 
+      msgEl.innerText = `Inventory updated successfully! (${cleanUnits.length} unique units uploaded)`;
       loadCloudData(true);
     }
 
