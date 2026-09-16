@@ -1222,7 +1222,7 @@
       }); 
     }
 
-    // Fully robust row parser designed specifically for M Squared exported metadata reports
+    // Fully robust row parser matching exact header row for M Squared reports
     function parseWorkbookRows(workbook) {
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
@@ -1233,14 +1233,14 @@
       if (!rowsArray.length) return [];
 
       let headerRowIndex = -1;
-      const patterns = ['unit: unit name', 'unit name', 'unit code', 'unit', 'code'];
+      const exactPatterns = ['unit: unit name', 'unit name', 'unit code', 'unit', 'code'];
       
-      // Find the exact header row by scanning for unit name/code patterns
+      // Find the exact header row by checking exact match
       for (let i = 0; i < rowsArray.length; i++) {
         const row = rowsArray[i];
         const found = row.some(cell => {
           const norm = String(cell || '').toLowerCase().trim();
-          return patterns.some(p => norm === p || norm.includes(p));
+          return exactPatterns.includes(norm);
         });
         if (found) {
           headerRowIndex = i;
@@ -1248,7 +1248,7 @@
         }
       }
 
-      if (headerRowIndex === -1) headerRowIndex = 9; // Fallback to row 9 if not found
+      if (headerRowIndex === -1) headerRowIndex = 9; // Fallback to row 9
 
       const headers = rowsArray[headerRowIndex].map(h => String(h || '').trim());
       const results = [];
@@ -1294,7 +1294,7 @@
       const unitsToImport = [];
       rows.forEach(row => {
         const unit_code = String(row[codeKey] || '').toUpperCase().trim();
-        if (!unit_code || unit_code === 'TOTAL') return; // Skip total row if exists
+        if (!unit_code || unit_code === 'TOTAL') return;
         unitsToImport.push({
           owner_id: currentUser.id,
           unit_code,
