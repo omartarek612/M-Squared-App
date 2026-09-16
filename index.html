@@ -46,7 +46,7 @@
       background: var(--bg-color);
       color: var(--text-color);
       margin: 0;
-      padding: 10px;
+      padding: 5px;
       text-align: center;
       transition: background 0.3s, color 0.3s;
       position: relative;
@@ -61,69 +61,69 @@
       align-items: center;
       gap: 6px;
       background: var(--bg-color);
-      padding: 6px;
+      padding: 4px 10px;
+      border-bottom: none;
     }
 
     .btn-theme, .btn-logout {
       background: var(--card-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 4px 10px;
-      border-radius: 12px;
+      padding: 3px 8px;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
     }
 
     .sticky-header {
       position: sticky;
-      top: 35px;
+      top: 28px;
       z-index: 9999;
       background: var(--bg-color);
-      padding: 6px 0;
+      padding: 4px 0;
+      border-bottom: none;
     }
 
     .controls {
-      background: var(--card-bg);
-      padding: 8px 12px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      box-shadow: none;
       margin: 0 auto;
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       justify-content: center;
       align-items: center;
-      gap: 8px;
-      border: 1px solid var(--border-color);
-      max-width: 800px;
+      gap: 6px;
+      border: none;
+      max-width: 650px;
       width: 100%;
     }
 
-    input, select, textarea {
-      padding: 8px 10px;
+    input {
+      padding: 6px 8px;
       font-family: 'Cairo', sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       border: 1px solid var(--border-color);
       background: var(--input-bg);
       color: var(--text-color);
-      border-radius: 8px;
+      border-radius: 6px;
       outline: none;
-      width: 100%;
-      max-width: 160px;
     }
-    input#unitInput { text-transform: uppercase; font-weight: 600; max-width: 110px; }
-    input#clientInput { max-width: 140px; }
+    input#unitInput { text-transform: uppercase; font-weight: 600; width: 110px; }
+    input#clientInput { width: 150px; }
 
     button {
-      padding: 8px 14px;
+      padding: 6px 12px;
       font-family: 'Cairo', sans-serif;
-      font-size: 12px;
+      font-size: 11px;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: 700;
       transition: all 0.2s ease;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     button:active { transform: scale(0.97); }
 
@@ -131,7 +131,7 @@
     .btn-sync { background: var(--sync-gradient); color: white; }
     .btn-preview { background: var(--preview-gradient); color: #0f172a; }
     .btn-pdf { background: var(--pdf-gradient); color: white; }
-    .btn-delete-img { background: #ef4444; color: white; padding: 3px 8px; font-size: 10px; border-radius: 4px; margin-top: 4px; }
+    .btn-delete-img { background: #ef4444; color: white; padding: 3px 6px; font-size: 10px; border-radius: 4px; margin-top: 4px; }
 
     #login-screen, #signup-screen, #pending-screen {
       background: var(--card-bg);
@@ -142,7 +142,7 @@
       margin: 30px auto;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-    #login-screen input, #signup-screen input { max-width: 100%; margin-bottom: 10px; }
+    #login-screen input, #signup-screen input { max-width: 100%; margin-bottom: 10px; width: 100%; }
     #loginError, #signupError { color: #f87171; font-size: 12px; margin-top: 6px; }
     #signupSuccess { color: #34d399; font-size: 12px; margin-top: 6px; }
     #signup-screen, #pending-screen { display: none; }
@@ -152,56 +152,54 @@
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 35px 20px;
-      max-width: 550px;
-      margin: 20px auto;
+      padding: 25px 20px;
+      max-width: 500px;
+      margin: 15px auto;
     }
 
     #main-app-content { display: none; max-width: 800px; margin: 10px auto; text-align: left; }
 
     .app-sidebar {
       position: fixed;
-      top: 90px;
+      top: 75px;
       left: 10px;
       z-index: 9998;
-      width: 190px;
+      width: 180px;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 12px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      padding: 10px;
+      padding: 8px;
       transition: transform 0.3s ease, opacity 0.3s ease;
     }
-    .app-sidebar.collapsed { transform: translateX(-220px); opacity: 0; pointer-events: none; }
+    .app-sidebar.collapsed { transform: translateX(-210px); opacity: 0; pointer-events: none; }
 
     .sidebar-toggle-btn {
       position: fixed;
-      top: 90px;
+      top: 75px;
       left: 10px;
       z-index: 9999;
       background: var(--primary-gradient);
       color: white;
       border: none;
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      transition: left 0.3s ease;
     }
-    .sidebar-toggle-btn.shifted { left: 205px; }
 
-    .sidebar-section-title { font-size: 10px; text-transform: uppercase; color: var(--muted-color); margin: 6px 0 3px 0; font-weight: 700; }
-    .nav-tabs { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
+    .sidebar-section-title { font-size: 10px; text-transform: uppercase; color: var(--muted-color); margin: 4px 0 2px 0; font-weight: 700; }
+    .nav-tabs { display: flex; flex-direction: column; gap: 3px; margin-bottom: 6px; }
     .tab-btn {
       background: var(--input-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 7px 10px;
+      padding: 6px 8px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 600;
@@ -210,8 +208,8 @@
       width: 100%;
     }
     .tab-btn.active { background: var(--primary-gradient); color: white; border-color: transparent; }
-    .action-buttons { display: flex; flex-direction: column; gap: 6px; }
-    .action-buttons button { width: 100%; padding: 7px; }
+    .action-buttons { display: flex; flex-direction: column; gap: 5px; }
+    .action-buttons button { width: 100%; padding: 6px; }
 
     #full-offer-container { display: flex; flex-direction: column; gap: 20px; background: transparent; }
 
@@ -322,12 +320,12 @@
       z-index: 10;
     }
 
-    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; overflow-x: auto; }
-    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; white-space: nowrap; }
-    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 10px 12px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
-    .payment-table td { padding: 9px 12px; border-bottom: 1px solid var(--border-color); }
+    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; max-height: 480px; overflow-y: auto; }
+    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; white-space: nowrap; }
+    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 8px 10px; font-weight: 700; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 5; }
+    .payment-table td { padding: 7px 10px; border-bottom: 1px solid var(--border-color); }
 
-    .status { margin-top: 5px; font-size: 11px; font-weight: 600; text-align: center; }
+    .status { margin-top: 3px; font-size: 10px; font-weight: 600; text-align: center; }
 
     .admin-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
     .admin-form-block { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: left; }
@@ -355,10 +353,6 @@
       border-radius: 8px;
       border: 1px solid var(--border-color);
     }
-
-    @media (min-width: 600px) {
-      body { padding: 15px; }
-    }
   </style>
 </head>
 <body data-theme="dark">
@@ -372,6 +366,9 @@
     <h2>M Squared Login</h2>
     <input type="email" id="loginEmail" placeholder="Email" autocomplete="username"><br>
     <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"><br>
+    <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; margin-bottom: 10px; text-align: left; color: var(--muted-color);">
+      <input type="checkbox" id="rememberMeCheck" checked style="width: auto; max-width: none; margin: 0;"> Remember Me
+    </div>
     <button class="btn-search" style="width:100%;" onclick="login()">Login</button>
     <div id="loginError"></div>
     <span class="toggle-link" onclick="showSignup()">Create account</span>
@@ -400,16 +397,15 @@
       <div class="controls">
         <input type="text" id="unitInput" placeholder="Unit Code" onkeypress="if(event.key==='Enter') searchUnit()">
         <input type="text" id="clientInput" placeholder="Client Name">
-        <select id="projectSelect" onchange="changeMasterplanManual()"></select>
         <button class="btn-search" onclick="searchUnit()">Search</button>
-        <button class="btn-sync" onclick="loadCloudData(true)">Sync</button>
+        <button class="btn-sync" onclick="loadCloudData(true)" title="Sync Data">Sync</button>
       </div>
       <div id="status" class="status">Loading...</div>
     </div>
 
     <div id="welcome-screen">
-      <h2 style="font-size:1.4rem; margin-bottom:8px;">Welcome M Squared</h2>
-      <p style="font-size:12px; color:var(--muted-color);">Enter unit code above to view offer.</p>
+      <h2 style="font-size:1.3rem; margin-bottom:6px;">Welcome M Squared</h2>
+      <p style="font-size:11px; color:var(--muted-color);">Enter unit code above to view offer.</p>
     </div>
 
     <div id="main-app-content">
@@ -429,7 +425,7 @@
         
         <div class="sidebar-section-title">Actions</div>
         <div class="action-buttons">
-          <button class="btn-preview" onclick="previewFullPDF()">Preview (Multi-Page)</button>
+          <button class="btn-preview" onclick="previewFullPDF()">Preview (PDF)</button>
           <button class="btn-pdf" onclick="exportFullPDF()">Download PDF</button>
         </div>
       </div>
@@ -610,7 +606,9 @@
   <script>
     const SUPABASE_URL = 'https://qiflwudikwuavyljlhnx.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_CXh9qukpJYZbS6glxcPwlQ_X57JR4sC';
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, storage: window.localStorage }
+    });
 
     function placeholderImg(label) {
       const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'>
@@ -629,9 +627,7 @@
 
     function toggleSidebar() {
       const sidebar = document.getElementById('appSidebar');
-      const toggleBtn = document.getElementById('sidebarToggleBtn');
       sidebar.classList.toggle('collapsed');
-      toggleBtn.classList.toggle('shifted');
     }
 
     function showSignup() {
@@ -655,7 +651,6 @@
       await onLoggedIn(data.user);
     }
 
-    // دالة التسجيل المُحدثة والآمنة لتفادي أخطاء الـ Triggers وحفظ البروفايل يدوياً في جدول profiles
     async function signUp() {
       const full_name = document.getElementById('signupName').value.trim();
       const email = document.getElementById('signupEmail').value.trim();
@@ -665,31 +660,10 @@
       errBox.innerText = ''; okBox.innerText = '';
 
       if (!full_name || !email || !password) { errBox.innerText = 'Fill all fields.'; return; }
-      
-      const { data, error } = await supabaseClient.auth.signUp({ 
-        email, 
-        password, 
-        options: { data: { full_name } } 
-      });
-
+      const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { data: { full_name } } });
       if (error) { errBox.innerText = error.message; return; }
-
-      if (data && data.user) {
-        const { error: profileError } = await supabaseClient.from('profiles').insert([{ 
-          id: data.user.id, 
-          email: email, 
-          full_name: full_name, 
-          status: 'pending', 
-          role: 'user' 
-        }]);
-
-        if (profileError) {
-          console.warn('Profile insert warning:', profileError.message);
-        }
-      }
-
-      okBox.innerText = 'Account created! Pending admin approval.';
-      setTimeout(() => showLogin(), 2500);
+      okBox.innerText = 'Account created! Please log in.';
+      showLogin();
     }
 
     async function logout() {
@@ -698,7 +672,6 @@
       sessionStorage.clear();
       document.getElementById('app-root').style.display = 'none';
       document.getElementById('pending-screen').style.display = 'none';
-      document.getElementById('signup-screen').style.display = 'none';
       document.getElementById('logoutBtn').style.display = 'none';
       document.getElementById('login-screen').style.display = 'block';
     }
@@ -766,13 +739,10 @@
       data.forEach(p => {
         const div = document.createElement('div');
         div.className = 'approval-item';
-        div.innerHTML = `<span>${p.full_name || 'User'} (${p.email})</span>`;
+        div.innerHTML = `<span>${p.full_name || 'User'}</span>`;
         const btn = document.createElement('button');
         btn.className = 'btn-search'; btn.innerText = 'Approve';
-        btn.onclick = async () => { 
-          await supabaseClient.from('profiles').update({ status: 'approved' }).eq('id', p.id); 
-          loadPendingApprovals(); 
-        };
+        btn.onclick = async () => { await supabaseClient.from('profiles').update({ status: 'approved' }).eq('id', p.id); loadPendingApprovals(); };
         div.appendChild(btn); listEl.appendChild(div);
       });
     }
@@ -808,7 +778,6 @@
             projectsByName = {}; projects.forEach(p => { projectsByName[p.name.toLowerCase().trim()] = p; });
             window.cloudLocations = {}; locations.forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
 
-            populateProjectDropdown(projects);
             st.style.color = "#34d399"; st.innerText = `Ready (Loaded instantly)`;
             return;
           } catch (e) { console.warn("Cache parse failed, fetching from server..."); }
@@ -818,7 +787,7 @@
       st.style.color = "#60a5fa"; st.innerText = "Syncing from cloud...";
       try {
         const [{ data: units }, { data: projects }, { data: locations }] = await Promise.all([
-          supabaseClient.from('units').select('unit_code, project_name, price, delivery_date, unit_type, bedrooms, floor, bua, garden_area, land_area, roof_area, penthouse_area, finishing_type'),
+          supabaseClient.from('units').select('unit_code, project_name, price, delivery_date, unit_type, bedrooms, floor, bua, garden_area, land_area, roof_area, penthouse_area, finishing_type, layout_image_url'),
           supabaseClient.from('projects').select('*'),
           supabaseClient.from('unit_locations').select('*')
         ]);
@@ -831,21 +800,10 @@
         sessionStorage.setItem('m2_projects', JSON.stringify(projects || []));
         sessionStorage.setItem('m2_locations', JSON.stringify(locations || []));
 
-        populateProjectDropdown(projects || []);
         st.style.color = "#34d399"; st.innerText = `Synced successfully (${(units || []).length} units)`;
       } catch (err) {
         st.style.color = "#f87171"; st.innerText = "Sync failed.";
       }
-    }
-
-    function populateProjectDropdown(projects) {
-      const sel = document.getElementById('projectSelect');
-      sel.innerHTML = '';
-      projects.forEach(p => {
-        const opt = document.createElement('option');
-        opt.value = p.name; opt.innerText = p.name; sel.appendChild(opt);
-      });
-      if (projects.length > 0) setupProjectVisuals(projects[0].name);
     }
 
     function extractBuildingKey(unitCode) {
@@ -891,11 +849,6 @@
       if (label) label.innerText = proj ? proj.name : 'M Squared';
 
       loadAdminProjectGallery();
-    }
-
-    function changeMasterplanManual() {
-      const selected = document.getElementById('projectSelect').value;
-      if (selected) setupProjectVisuals(selected);
     }
 
     function loadAdminProjectGallery() {
@@ -996,13 +949,15 @@
       msg.innerText = `Processing batch upload (0 / ${totalFiles})...`;
 
       let updatedCount = 0;
+      let failedCount = 0;
+
       for (let i = 0; i < totalFiles; i++) {
         const file = fileInput.files[i];
         const fileName = file.name;
         const dotIndex = fileName.lastIndexOf('.');
         const unitCode = (dotIndex !== -1 ? fileName.substring(0, dotIndex) : fileName).toUpperCase().trim();
 
-        if (!unitCode) continue;
+        if (!unitCode) { failedCount++; continue; }
 
         try {
           const compressedDataUrl = await compressImage(file, 800, 0.8);
@@ -1017,11 +972,14 @@
             if (liveUnitsData[unitCode]) {
               liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
             }
+          } else {
+            failedCount++;
           }
 
-          await new Promise(resolve => setTimeout(resolve, 250));
+          await new Promise(resolve => setTimeout(resolve, 150));
         } catch (e) {
           console.warn(`Failed to upload layout for ${unitCode}:`, e);
+          failedCount++;
         }
 
         msg.innerText = `Processing batch upload (${i + 1} / ${totalFiles})...`;
@@ -1029,7 +987,7 @@
 
       sessionStorage.clear();
       msg.style.color = '#34d399';
-      msg.innerText = `Successfully matched and updated layouts for ${updatedCount} units!`;
+      msg.innerText = `Batch completed! Updated: ${updatedCount}, Failed/Skipped: ${failedCount}`;
       loadCloudData(true);
     }
 
@@ -1044,20 +1002,24 @@
       }
 
       msg.style.color = '#60a5fa'; msg.innerText = 'Saving layout...';
-      const compressedDataUrl = await compressImage(fileInput, 1200, 0.9);
+      try {
+        const compressedDataUrl = await compressImage(fileInput, 1200, 0.9);
 
-      const { error } = await supabaseClient
-        .from('units')
-        .update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() })
-        .eq('unit_code', unitCode);
+        const { error } = await supabaseClient
+          .from('units')
+          .update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() })
+          .eq('unit_code', unitCode);
 
-      if (error) {
-        msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message;
-      } else {
-        if (liveUnitsData[unitCode]) liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
-        sessionStorage.clear();
-        msg.style.color = '#34d399'; msg.innerText = `Layout for unit [${unitCode}] updated successfully!`;
-        loadCloudData(true);
+        if (error) {
+          msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message;
+        } else {
+          if (liveUnitsData[unitCode]) liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
+          sessionStorage.clear();
+          msg.style.color = '#34d399'; msg.innerText = `Layout for unit [${unitCode}] updated successfully!`;
+          loadCloudData(true);
+        }
+      } catch (err) {
+        msg.style.color = '#f87171'; msg.innerText = 'Error processing image.';
       }
     }
 
@@ -1111,7 +1073,6 @@
 
         document.getElementById('uNameSummary').innerText = val;
         const projName = uData.project_name || 'M Squared';
-        document.getElementById('projectSelect').value = projName;
         document.getElementById('uProjectDisplay').innerText = projName;
 
         if (clientName) {
@@ -1157,13 +1118,22 @@
         document.getElementById('paymentUnitPrice').innerText = unitPriceVal > 0 ? unitPriceVal.toLocaleString() + ' EGP' : '-';
         const paymentTbody = document.getElementById('paymentTableBody');
         paymentTbody.innerHTML = '';
+
         if (unitPriceVal > 0) {
           const dp = unitPriceVal * 0.05;
-          const q = (unitPriceVal - dp) / 40;
-          paymentTbody.innerHTML = `
-            <tr><td>Down Payment (5%)</td><td>Immediate</td><td>${dp.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>
-            <tr><td>Quarterly (x40)</td><td>10 Years</td><td>${q.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>
-            <tr><td>Maintenance</td><td>Delivery</td><td>${(unitPriceVal * 0.07).toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          const remainingAmount = unitPriceVal - dp;
+          const quarterAmount = remainingAmount / 39;
+          const maintenanceAmount = unitPriceVal * 0.07;
+
+          let rowsHtml = `<tr><td>Down Payment (5%)</td><td>Immediate</td><td>${dp.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          
+          for (let qNum = 1; qNum <= 39; qNum++) {
+            rowsHtml += `<tr><td>Quarterly Installment (${qNum}/39)</td><td>Quarter ${qNum}</td><td>${quarterAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          }
+
+          rowsHtml += `<tr style="color: #38bdf8; font-weight: bold; background: rgba(56, 189, 248, 0.1);"><td>Maintenance (7%)</td><td>Before delivery by 6 months</td><td>${maintenanceAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+
+          paymentTbody.innerHTML = rowsHtml;
         } else {
           paymentTbody.innerHTML = `<tr><td colspan="3" style="text-align: center;">No price available.</td></tr>`;
         }
@@ -1175,12 +1145,14 @@
     }
 
     async function compressImage(file, maxWidth = 1200, quality = 0.9) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
+        reader.onerror = error => reject(error);
         reader.onload = event => {
           const img = new Image();
           img.src = event.target.result;
+          img.onerror = error => reject(error);
           img.onload = () => {
             const canvas = document.createElement('canvas');
             let width = img.width;
@@ -1210,33 +1182,37 @@
       let existing = projectsByName[name.toLowerCase().trim()] || {};
       let gallery = existing.gallery || [];
 
-      const masterplanFile = document.getElementById('adm_masterplan_file').files[0];
-      let masterplan_image_url = existing.masterplan_image_url || '';
-      if (masterplanFile) {
-        masterplan_image_url = await compressImage(masterplanFile, 1600, 0.95);
-      }
-
-      const fileInput = document.getElementById('adm_gallery_files');
-      if (fileInput.files && fileInput.files.length > 0) {
-        for (let i = 0; i < fileInput.files.length; i++) {
-          const compressedDataUrl = await compressImage(fileInput.files[i], 1200, 0.9);
-          gallery.push(compressedDataUrl);
+      try {
+        const masterplanFile = document.getElementById('adm_masterplan_file').files[0];
+        let masterplan_image_url = existing.masterplan_image_url || '';
+        if (masterplanFile) {
+          masterplan_image_url = await compressImage(masterplanFile, 1600, 0.95);
         }
+
+        const fileInput = document.getElementById('adm_gallery_files');
+        if (fileInput.files && fileInput.files.length > 0) {
+          for (let i = 0; i < fileInput.files.length; i++) {
+            const compressedDataUrl = await compressImage(fileInput.files[i], 1200, 0.9);
+            gallery.push(compressedDataUrl);
+          }
+        }
+
+        const row = {
+          name,
+          logo_url: document.getElementById('adm_proj_logo').value.trim() || existing.logo_url || '',
+          masterplan_image_url,
+          gallery
+        };
+
+        const { error } = await supabaseClient.from('projects').upsert(row, { onConflict: 'name' });
+        if (error) { msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message; return; }
+
+        sessionStorage.clear();
+        msg.style.color = '#34d399'; msg.innerText = 'Saved successfully!';
+        loadCloudData(true);
+      } catch (err) {
+        msg.style.color = '#f87171'; msg.innerText = 'Error processing project visuals.';
       }
-
-      const row = {
-        name,
-        logo_url: document.getElementById('adm_proj_logo').value.trim() || existing.logo_url || '',
-        masterplan_image_url,
-        gallery
-      };
-
-      const { error } = await supabaseClient.from('projects').upsert(row, { onConflict: 'name' });
-      if (error) { msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message; return; }
-
-      sessionStorage.clear();
-      msg.style.color = '#34d399'; msg.innerText = 'Saved successfully!';
-      loadCloudData(true);
     }
 
     function normHeader(h) { return String(h || '').toLowerCase().trim(); }
@@ -1287,7 +1263,6 @@
         });
         results.push(obj);
       }
-
       return results;
     }
 
@@ -1380,10 +1355,14 @@
       if (!file) { msg.style.color = '#f87171'; msg.innerText = 'Choose file first.'; return; }
       const reader = new FileReader();
       reader.onload = async function (e) {
-        const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-        const result = buildUnitsFromRows(parseWorkbookRows(workbook));
-        if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
-        await performBulkImport(result.units, msg);
+        try {
+          const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+          const result = buildUnitsFromRows(parseWorkbookRows(workbook));
+          if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
+          await performBulkImport(result.units, msg);
+        } catch (err) {
+          msg.style.color = '#f87171'; msg.innerText = 'Error parsing Excel file.';
+        }
       };
       reader.readAsArrayBuffer(file);
     }
@@ -1405,6 +1384,9 @@
     }
 
     async function prepareAndGeneratePDF(actionType) {
+      const st = document.getElementById('status');
+      st.style.color = "#60a5fa"; st.innerText = "Preparing PDF generation...";
+
       const element = document.getElementById('full-offer-container');
       
       const images = element.querySelectorAll('img');
@@ -1423,12 +1405,18 @@
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      if (actionType === 'preview') {
-        html2pdf().from(element).set(opt).toPdf().get('pdf').then((pdf) => {
-          window.open(pdf.output('bloburl'), '_blank');
-        });
-      } else {
-        html2pdf().from(element).set(opt).save();
+      try {
+        if (actionType === 'preview') {
+          html2pdf().from(element).set(opt).toPdf().get('pdf').then((pdf) => {
+            window.open(pdf.output('bloburl'), '_blank');
+            st.style.color = "#34d399"; st.innerText = "PDF preview opened successfully!";
+          });
+        } else {
+          await html2pdf().from(element).set(opt).save();
+          st.style.color = "#34d399"; st.innerText = "PDF downloaded successfully!";
+        }
+      } catch (err) {
+        st.style.color = "#f87171"; st.innerText = "PDF generation failed.";
       }
     }
 
