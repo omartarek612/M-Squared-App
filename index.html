@@ -322,10 +322,10 @@
       z-index: 10;
     }
 
-    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; overflow-x: auto; }
-    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; white-space: nowrap; }
-    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 10px 12px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
-    .payment-table td { padding: 9px 12px; border-bottom: 1px solid var(--border-color); }
+    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; max-height: 480px; overflow-y: auto; }
+    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; white-space: nowrap; }
+    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 8px 10px; font-weight: 700; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 5; }
+    .payment-table td { padding: 7px 10px; border-bottom: 1px solid var(--border-color); }
 
     .status { margin-top: 5px; font-size: 11px; font-weight: 600; text-align: center; }
 
@@ -372,6 +372,9 @@
     <h2>M Squared Login</h2>
     <input type="email" id="loginEmail" placeholder="Email" autocomplete="username"><br>
     <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"><br>
+    <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; margin-bottom: 10px; text-align: left; color: var(--muted-color);">
+      <input type="checkbox" id="rememberMeCheck" checked style="width: auto; max-width: none; margin: 0;"> Remember Me
+    </div>
     <button class="btn-search" style="width:100%;" onclick="login()">Login</button>
     <div id="loginError"></div>
     <span class="toggle-link" onclick="showSignup()">Create account</span>
@@ -610,7 +613,9 @@
   <script>
     const SUPABASE_URL = 'https://qiflwudikwuavyljlhnx.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_CXh9qukpJYZbS6glxcPwlQ_X57JR4sC';
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, storage: window.localStorage }
+    });
 
     function placeholderImg(label) {
       const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'>
@@ -1131,13 +1136,22 @@
         document.getElementById('paymentUnitPrice').innerText = unitPriceVal > 0 ? unitPriceVal.toLocaleString() + ' EGP' : '-';
         const paymentTbody = document.getElementById('paymentTableBody');
         paymentTbody.innerHTML = '';
+
         if (unitPriceVal > 0) {
           const dp = unitPriceVal * 0.05;
-          const q = (unitPriceVal - dp) / 40;
-          paymentTbody.innerHTML = `
-            <tr><td>Down Payment (5%)</td><td>Immediate</td><td>${dp.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>
-            <tr><td>Quarterly (x40)</td><td>10 Years</td><td>${q.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>
-            <tr><td>Maintenance</td><td>Delivery</td><td>${(unitPriceVal * 0.07).toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          const remainingAmount = unitPriceVal - dp;
+          const quarterAmount = remainingAmount / 39;
+          const maintenanceAmount = unitPriceVal * 0.07;
+
+          let rowsHtml = `<tr><td>Down Payment (5%)</td><td>Immediate</td><td>${dp.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          
+          for (let qNum = 1; qNum <= 39; qNum++) {
+            rowsHtml += `<tr><td>Quarterly Installment (${qNum}/39)</td><td>Quarter ${qNum}</td><td>${quarterAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          }
+
+          rowsHtml += `<tr style="color: #38bdf8; font-weight: bold; background: rgba(56, 189, 248, 0.1);"><td>Maintenance (7%)</td><td>Before delivery by 6 months</td><td>${maintenanceAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+
+          paymentTbody.innerHTML = rowsHtml;
         } else {
           paymentTbody.innerHTML = `<tr><td colspan="3" style="text-align: center;">No price available.</td></tr>`;
         }
@@ -1222,20 +1236,16 @@
       }); 
     }
 
-    // Fully robust row parser matching exact header row for M Squared reports
     function parseWorkbookRows(workbook) {
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       
       const rowsArray = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-      console.log("Total raw rows read from excel:", rowsArray.length);
-      
       if (!rowsArray.length) return [];
 
       let headerRowIndex = -1;
       const exactPatterns = ['unit: unit name', 'unit name', 'unit code', 'unit', 'code'];
       
-      // Find the exact header row by checking exact match
       for (let i = 0; i < rowsArray.length; i++) {
         const row = rowsArray[i];
         const found = row.some(cell => {
@@ -1248,7 +1258,7 @@
         }
       }
 
-      if (headerRowIndex === -1) headerRowIndex = 9; // Fallback to row 9
+      if (headerRowIndex === -1) headerRowIndex = 9;
 
       const headers = rowsArray[headerRowIndex].map(h => String(h || '').trim());
       const results = [];
@@ -1265,8 +1275,6 @@
         });
         results.push(obj);
       }
-
-      console.log("Parsed data objects count:", results.length);
       return results;
     }
 
@@ -1317,7 +1325,6 @@
       return { units: unitsToImport };
     }
 
-    // رفع البيانات على دفعات (Batches) لضمان رفع الـ 219 وحدة بالكامل بدون قيود الحجم
     async function performBulkImport(unitsToImport, msgEl) {
       msgEl.style.color = '#60a5fa'; 
       msgEl.innerText = `Preparing ${unitsToImport.length} units for upload...`;
@@ -1327,9 +1334,7 @@
         if (u.unit_code) uniqueMap.set(u.unit_code, u);
       });
       const cleanUnits = Array.from(uniqueMap.values());
-      console.log("Unique units to insert:", cleanUnits.length);
 
-      // مسح القديم
       const { error: delError } = await supabaseClient.from('units').delete().not('unit_code', 'is', null);
       if (delError) {
         msgEl.style.color = '#f87171';
@@ -1337,7 +1342,6 @@
         return;
       }
 
-      // الرفع على دفعات (كل دفعة 100 وحدة) لتفادي حدود الـ API
       const batchSize = 100;
       for (let i = 0; i < cleanUnits.length; i += batchSize) {
         const batch = cleanUnits.slice(i, i + batchSize);
