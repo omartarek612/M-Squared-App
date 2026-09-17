@@ -60,8 +60,13 @@
       flex-direction: column;
       align-items: flex-end;
       gap: 3px;
-      background: var(--bg-color);
+      background: transparent;
       padding: 6px 12px;
+      pointer-events: none;
+    }
+
+    .top-global-bar > * {
+      pointer-events: auto;
     }
 
     .top-buttons-row {
@@ -86,15 +91,17 @@
       cursor: pointer;
       font-size: 10px;
       font-weight: 600;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     }
 
     .sticky-header {
       position: sticky;
-      top: 42px;
+      top: 35px;
       z-index: 9999;
-      background: var(--bg-color);
+      background: transparent;
       padding: 4px 0;
       border-bottom: none;
+      pointer-events: none;
     }
 
     .controls {
@@ -111,6 +118,7 @@
       border: none;
       max-width: 650px;
       width: 100%;
+      pointer-events: auto;
     }
 
     input {
@@ -118,10 +126,11 @@
       font-family: 'Cairo', sans-serif;
       font-size: 12px;
       border: 1px solid var(--border-color);
-      background: var(--input-bg);
+      background: var(--card-bg);
       color: var(--text-color);
-      border-radius: 6px;
+      border-radius: 8px;
       outline: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     input#unitInput { text-transform: uppercase; font-weight: 600; width: 110px; }
     input#clientInput { width: 150px; }
@@ -131,11 +140,11 @@
       font-family: 'Cairo', sans-serif;
       font-size: 11px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: 700;
       transition: all 0.2s ease;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     button:active { transform: scale(0.97); }
 
@@ -337,7 +346,7 @@
     .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 8px 10px; font-weight: 700; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 5; }
     .payment-table td { padding: 7px 10px; border-bottom: 1px solid var(--border-color); }
 
-    .status { margin-top: 3px; font-size: 10px; font-weight: 600; text-align: center; }
+    .status { margin-top: 4px; font-size: 10px; font-weight: 600; text-align: center; background: var(--card-bg); display: inline-block; padding: 2px 8px; border-radius: 6px; border: 1px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
 
     .admin-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
     .admin-form-block { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: left; }
@@ -415,10 +424,10 @@
         <button class="btn-search" onclick="searchUnit()">Search</button>
         <button class="btn-sync" onclick="loadCloudData(true)" title="Sync Data">Sync</button>
       </div>
-      <div id="status" class="status">Loading...</div>
+      <div style="text-align: center;"><div id="status" class="status">Loading...</div></div>
     </div>
 
-    <div id="welcome-screen">
+    <div id="welcome-screen" style="margin-top: 25px;">
       <h2 style="font-size:1.3rem; margin-bottom:6px;">Welcome M Squared</h2>
       <p style="font-size:11px; color:var(--muted-color);">Enter unit code above to view offer.</p>
     </div>
@@ -564,11 +573,9 @@
           <div class="admin-gallery-manage" id="adminGalleryPreview"></div>
         </div>
 
-        <!-- INDEPENDENT UNIT LAYOUTS MANAGER -->
         <div class="admin-form-block" style="margin-top:15px; border: 1px solid rgba(59, 130, 246, 0.4);">
           <h4 style="color: #3b82f6;">Unit Layouts Manager (Independent)</h4>
           
-          <!-- Throttled Safe Batch Upload By Filename -->
           <div style="margin-bottom:12px; background:var(--card-bg); padding:10px; border-radius:6px;">
             <div style="font-size:11px; font-weight:700; margin-bottom:4px;">1. Batch Upload Layouts (Files named by Unit Code, e.g., A101.jpg):</div>
             <input type="file" id="adm_batch_layout_files" accept="image/*" multiple style="font-size:11px; margin-bottom:6px;">
@@ -576,7 +583,6 @@
             <div class="admin-msg" id="adminBatchLayoutMsg"></div>
           </div>
 
-          <!-- Single Unit Layout Add/Delete -->
           <div style="background:var(--card-bg); padding:10px; border-radius:6px;">
             <div style="font-size:11px; font-weight:700; margin-bottom:4px;">2. Single Unit Layout Control:</div>
             <input type="text" id="adm_single_layout_code" placeholder="Unit Code (e.g. A101)" style="margin-bottom:6px; max-width:100%;">
@@ -591,7 +597,6 @@
 
       </div>
 
-      <!-- INVENTORY SECTION MOVED TO THE VERY BOTTOM -->
       <div class="offer-page-section" id="sec-inventory" style="margin-top: 15px; break-before: auto; page-break-before: auto; min-height: auto; display: block;">
         <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
         <div class="admin-grid">
@@ -1013,7 +1018,6 @@
             failedCount++;
           }
 
-          // Optimized minimal pause for maximum lightning speed
           await new Promise(resolve => setTimeout(resolve, 30));
         } catch (e) {
           failedCount++;
@@ -1100,7 +1104,6 @@
       if (!val) return;
       marker.style.display = 'none';
 
-      // Lightning Fast Local Search First if available in liveUnitsData!
       let uData = liveUnitsData[val];
       if (!uData) {
         st.style.color = "#60a5fa"; st.innerText = `Searching unit [${val}]...`;
@@ -1427,7 +1430,7 @@
         return;
       }
 
-      const batchSize = 150; // Increased batch size for maximum high-speed upload
+      const batchSize = 150;
       for (let i = 0; i < cleanUnits.length; i += batchSize) {
         const batch = cleanUnits.slice(i, i + batchSize);
         msgEl.innerText = `Uploading batch (${Math.floor(i/batchSize) + 1} of ${Math.ceil(cleanUnits.length/batchSize)})...`;
