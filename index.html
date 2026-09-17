@@ -255,7 +255,7 @@
     .detail-card strong { display: block; font-size: 9px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 2px; }
     .detail-card span { font-size: 13px; font-weight: 700; }
 
-    /* Gallery Grid: Centered, Square, No Stretching, Fixed Layout for PDF & Preview */
+    /* Gallery Grid: Centered, Square, No Stretching */
     .pictures-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; justify-content: center; align-items: center; padding: 10px; }
     .gallery-card-item { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; aspect-ratio: 1 / 1; max-width: 320px; width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
     .gallery-card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -455,7 +455,8 @@
           </div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <h3 style="margin: 0; font-size: 14px; text-align: left;">Project Gallery</h3>
-            <div id="gallerySelectionControls" style="display:none; font-size: 11px;">
+            <!-- Added hide-on-pdf class so it never shows in download or preview -->
+            <div id="gallerySelectionControls" class="hide-on-pdf" style="display:none; font-size: 11px;">
               <button class="btn-sync" style="padding: 4px 8px; font-size: 10px;" onclick="openGallerySelector()">⚙️ Select 4 Photos</button>
             </div>
           </div>
@@ -564,10 +565,10 @@
         </div>
 
         <div class="admin-form-block" style="margin-top:15px; border: 1px solid rgba(59, 130, 246, 0.4);">
-          <h4 style="color: #3b82f6;">Unit Layouts Manager (Independent & Safe Update)</h4>
+          <h4 style="color: #3b82f6;">Unit Layouts Manager (Mandatory Project Name)</h4>
           
           <div style="margin-bottom:12px; background:var(--card-bg); padding:10px; border-radius:6px;">
-            <div style="font-size:11px; font-weight:700; margin-bottom:4px;">1. Batch Upload Layouts (Files named by Unit Code, updates only specific Mists/Units safely):</div>
+            <div style="font-size:11px; font-weight:700; margin-bottom:4px;">1. Batch Upload Layouts (Requires Project Name above, files named by Unit Code):</div>
             <input type="file" id="adm_batch_layout_files" accept="image/*" multiple style="font-size:11px; margin-bottom:6px;">
             <button class="btn-sync" onclick="adminUploadBatchLayouts()">Upload & Update Mists</button>
             <div class="admin-msg" id="adminBatchLayoutMsg"></div>
@@ -1086,6 +1087,15 @@
     async function adminUploadBatchLayouts() {
       if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
       const msg = document.getElementById('adminBatchLayoutMsg');
+      const projectName = document.getElementById('adm_proj_name').value.trim();
+      
+      if (!projectName) {
+        msg.style.color = '#f87171';
+        msg.innerText = 'Mandatory Error: Please type the Project Name above first!';
+        document.getElementById('adm_proj_name').focus();
+        return;
+      }
+
       const fileInput = document.getElementById('adm_batch_layout_files');
       if (!fileInput.files || fileInput.files.length === 0) {
         msg.style.color = '#f87171'; msg.innerText = 'Please select layout images first.'; return;
@@ -1093,7 +1103,7 @@
 
       const totalFiles = fileInput.files.length;
       msg.style.color = '#60a5fa'; 
-      msg.innerText = `Processing batch layouts (0 / ${totalFiles})...`;
+      msg.innerText = `Processing batch layouts for [${projectName}] (0 / ${totalFiles})...`;
 
       let updatedCount = 0;
       for (let i = 0; i < totalFiles; i++) {
@@ -1105,10 +1115,19 @@
 
         try {
           const compressedDataUrl = await compressImage(file, 700, 0.65);
-          const { error } = await supabaseClient.from('units').update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() }).eq('unit_code', unitCode);
+          // Update unit layout and assign to project name
+          const { error } = await supabaseClient.from('units').update({ 
+            layout_image_url: compressedDataUrl, 
+            project_name: projectName,
+            updated_at: new Date().toISOString() 
+          }).eq('unit_code', unitCode);
+
           if (!error) {
             updatedCount++;
-            if (liveUnitsData[unitCode]) liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
+            if (liveUnitsData[unitCode]) {
+              liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
+              liveUnitsData[unitCode].project_name = projectName;
+            }
           }
         } catch (e) {}
         msg.innerText = `Processing batch layouts (${i + 1} / ${totalFiles})...`;
@@ -1116,7 +1135,7 @@
 
       sessionStorage.clear();
       msg.style.color = '#34d399';
-      msg.innerText = `Layout batch completed! Updated specific mists safely: ${updatedCount}`;
+      msg.innerText = `Layout batch completed for [${projectName}]! Updated specific units safely: ${updatedCount}`;
       loadCloudData(true);
     }
 
@@ -1482,7 +1501,6 @@
       const cleanUnits = Array.from(uniqueMap.values());
       await supabaseClient.from('units').delete().not('unit_code', 'is', null);
 
-      // Optimized fast batch chunking for rapid upload
       const batchSize = 300;
       for (let i = 0; i < cleanUnits.length; i += batchSize) {
         const batch = cleanUnits.slice(i, i + batchSize);
@@ -1527,6 +1545,10 @@
       const st = document.getElementById('status');
       st.style.color = "#60a5fa"; st.innerText = "Exporting high-quality PDF...";
 
+      // Temporarily hide elements with .hide-on-pdf class before capturing
+      const hideElements = document.querySelectorAll('.hide-on-pdf');
+      hideElements.forEach(el => el.style.display = 'none');
+
       const element = document.getElementById('full-offer-container');
       
       const opt = {
@@ -1543,12 +1565,15 @@
             const blobUrl = URL.createObjectURL(pdfBlob);
             window.open(blobUrl, '_blank');
             st.style.color = "#34d399"; st.innerText = "PDF preview opened!";
+            hideElements.forEach(el => el.style.display = '');
           });
         } else {
           await html2pdf().from(element).set(opt).save();
           st.style.color = "#34d399"; st.innerText = "PDF downloaded successfully!";
+          hideElements.forEach(el => el.style.display = '');
         }
       } catch (err) {
+        hideElements.forEach(el => el.style.display = '');
         st.style.color = '#f87171'; st.innerText = "PDF generation failed.";
       }
     }
