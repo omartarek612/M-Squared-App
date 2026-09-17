@@ -1484,7 +1484,7 @@
 
     async function prepareAndGeneratePDF(actionType) {
       const st = document.getElementById('status');
-      st.style.color = "#60a5fa"; st.innerText = "Generating PDF quickly...";
+      st.style.color = "#60a5fa"; st.innerText = "Generating PDF...";
 
       const element = document.getElementById('full-offer-container');
       
@@ -1503,16 +1503,27 @@
       };
 
       try {
-        if (actionType === 'preview') {
-          html2pdf().from(element).set(opt).toPdf().get('pdf').then((pdf) => {
-            window.open(pdf.output('bloburl'), '_blank');
-            st.style.color = "#34d399"; st.innerText = "PDF preview opened successfully!";
-          });
-        } else {
-          await html2pdf().from(element).set(opt).save();
-          st.style.color = "#34d399"; st.innerText = "PDF downloaded successfully!";
-        }
+        html2pdf().from(element).set(opt).outputPdf('blob').then((pdfBlob) => {
+          const blobUrl = URL.createObjectURL(pdfBlob);
+
+          if (actionType === 'preview') {
+            const newWindow = window.open(blobUrl, '_blank');
+            if (!newWindow) {
+              alert('Please allow pop-ups for this site to preview the PDF.');
+            }
+            st.style.color = "#34d399"; st.innerText = "PDF preview opened!";
+          } else {
+            const downloadLink = document.createElement('a');
+            downloadLink.href = blobUrl;
+            downloadLink.download = `M-Squared-Offer-${currentUnitCode || 'Unit'}.pdf`;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            st.style.color = "#34d399"; st.innerText = "PDF downloaded successfully!";
+          }
+        });
       } catch (err) {
+        console.error(err);
         st.style.color = '#f87171'; st.innerText = "PDF generation failed.";
       }
     }
