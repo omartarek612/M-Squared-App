@@ -341,17 +341,10 @@
       z-index: 10;
     }
 
-    /* Payment Split Side-by-Side Styles */
-    .payment-tables-split {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      width: 100%;
-    }
-    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; overflow: visible; }
-    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 10px; white-space: nowrap; }
-    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 6px 8px; font-weight: 700; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 5; }
-    .payment-table td { padding: 5px 8px; border-bottom: 1px solid var(--border-color); }
+    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; max-height: 480px; overflow-y: auto; }
+    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; white-space: nowrap; }
+    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 8px 10px; font-weight: 700; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 5; }
+    .payment-table td { padding: 7px 10px; border-bottom: 1px solid var(--border-color); }
 
     .status { margin-top: 4px; font-size: 10px; font-weight: 600; text-align: center; background: var(--card-bg); display: inline-block; padding: 2px 8px; border-radius: 6px; border: 1px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
 
@@ -537,28 +530,18 @@
               <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
               <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
             </div>
-            <h3 style="margin: 0 0 6px 0; font-size: 14px; text-align: left;">Payment Schedule</h3>
-            <div class="summary-hero-card" style="margin-bottom: 8px; text-align: left; padding: 8px 12px;">
-              <div style="font-size: 11px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 14px; font-weight: 700; color: #3b82f6;">-</span></div>
+            <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Payment Schedule</h3>
+            <div class="summary-hero-card" style="margin-bottom: 10px; text-align: left; padding: 10px 14px;">
+              <div style="font-size: 11px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 15px; font-weight: 700; color: #3b82f6;">-</span></div>
             </div>
           </div>
-          <div class="payment-tables-split">
-            <div class="payment-table-container">
-              <table class="payment-table">
-                <thead><tr><th>Milestone & Date</th><th>Amount (EGP)</th></tr></thead>
-                <tbody id="paymentTableBodyLeft">
-                  <tr><td colspan="2" style="text-align: center; color: var(--muted-color);">Loading...</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="payment-table-container">
-              <table class="payment-table">
-                <thead><tr><th>Milestone & Date</th><th>Amount (EGP)</th></tr></thead>
-                <tbody id="paymentTableBodyRight">
-                  <tr><td colspan="2" style="text-align: center; color: var(--muted-color);">Loading...</td></tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="payment-table-container">
+            <table class="payment-table">
+              <thead><tr><th>Milestone</th><th>Timeline</th><th>Amount (EGP)</th></tr></thead>
+              <tbody id="paymentTableBody">
+                <tr><td colspan="3" style="text-align: center; color: var(--muted-color);">Search unit to load schedule...</td></tr>
+              </tbody>
+            </table>
           </div>
           <div></div>
         </div>
@@ -615,7 +598,7 @@
       </div>
 
       <div class="offer-page-section" id="sec-inventory" style="margin-top: 15px; break-before: auto; page-break-before: auto; min-height: auto; display: block;">
-        <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory & Activity Logs</h3>
+        <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
         <div class="admin-grid">
           <div class="admin-form-block">
             <h4>Import Excel File (.xlsx, .xls)</h4>
@@ -624,8 +607,8 @@
             <div class="admin-msg" id="adminImportMsg"></div>
           </div>
         </div>
-        <h4 style="margin-top:12px; font-size:12px;">Activity Log History (Who & When)</h4>
-        <div class="import-log-list" id="importLogList"><p style="font-size:11px; color:var(--muted-color);">No logs yet.</p></div>
+        <h4 style="margin-top:12px; font-size:12px;">Recent Imports</h4>
+        <div class="import-log-list" id="importLogList"><p style="font-size:11px; color:var(--muted-color);">No imports yet.</p></div>
       </div>
 
       <div class="app-copyrights">
@@ -656,7 +639,6 @@
     let projectsByName = {};
     let currentLoadedBuildingKey = "";
     let currentUnitCode = "";
-    let currentProjectName = "";
 
     function toggleSidebar() {
       const sidebar = document.getElementById('appSidebar');
@@ -670,21 +652,6 @@
     function showLogin() {
       document.getElementById('signup-screen').style.display = 'none';
       document.getElementById('login-screen').style.display = 'block';
-    }
-
-    async function logActivity(actionDesc) {
-      try {
-        const email = currentUser ? (currentUser.email || currentUser.id) : 'Unknown User';
-        const fullName = currentProfile && currentProfile.full_name ? currentProfile.full_name : email;
-        await supabaseClient.from('import_logs').insert({
-          unit_count: 0,
-          user_email: `${fullName} (${email}) — ${actionDesc}`,
-          created_at: new Date().toISOString()
-        });
-        loadImportLogs();
-      } catch (e) {
-        console.warn("Log activity error:", e);
-      }
     }
 
     async function login() {
@@ -800,27 +767,22 @@
         div.innerHTML = `<span>${p.full_name || 'User'}</span>`;
         const btn = document.createElement('button');
         btn.className = 'btn-search'; btn.innerText = 'Approve';
-        btn.onclick = async () => { 
-          await supabaseClient.from('profiles').update({ status: 'approved' }).eq('id', p.id); 
-          await logActivity(`Approved account for user: ${p.full_name || p.id}`);
-          loadPendingApprovals(); 
-        };
+        btn.onclick = async () => { await supabaseClient.from('profiles').update({ status: 'approved' }).eq('id', p.id); loadPendingApprovals(); };
         div.appendChild(btn); listEl.appendChild(div);
       });
     }
 
     async function loadImportLogs() {
       const listEl = document.getElementById('importLogList');
-      const { data } = await supabaseClient.from('import_logs').select('*').order('created_at', { ascending: false }).limit(6);
-      if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:11px; color:var(--muted-color);">No logs yet.</p>'; return; }
+      const { data } = await supabaseClient.from('import_logs').select('*').order('created_at', { ascending: false }).limit(5);
+      if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:11px; color:var(--muted-color);">No imports.</p>'; return; }
       listEl.innerHTML = '';
       data.forEach(log => {
         const div = document.createElement('div');
         div.className = 'import-log-item';
-        const details = log.user_email || 'Unknown action';
+        const userEmail = log.user_email || 'Unknown';
         const dateStr = new Date(log.created_at).toLocaleString();
-        const countStr = log.unit_count > 0 ? `[Imported ${log.unit_count} units]` : '';
-        div.innerHTML = `<span>${details} ${countStr}</span><span style="font-size:10px; color:var(--muted-color);">${dateStr}</span>`;
+        div.innerHTML = `<span>${log.unit_count} units</span><span style="font-size:10px; color:var(--muted-color);">${userEmail} — ${dateStr}</span>`;
         listEl.appendChild(div);
       });
     }
@@ -903,7 +865,6 @@
       const marker = document.getElementById('marker');
       marker.style.display = 'block'; marker.style.left = `${x}%`; marker.style.top = `${y}%`;
       await supabaseClient.from('unit_locations').upsert({ building_key: currentLoadedBuildingKey, x, y, updated_at: new Date().toISOString() });
-      await logActivity(`Updated masterplan pin coordinate for building key [${currentLoadedBuildingKey}]`);
     }
 
     function setupProjectVisuals(projectName) {
@@ -988,7 +949,6 @@
         if (error) {
           alert('Error deleting masterplan: ' + error.message);
         } else {
-          await logActivity(`Deleted masterplan image for project: ${projectName}`);
           sessionStorage.clear();
           loadCloudData(true);
         }
@@ -1012,7 +972,6 @@
         if (error) {
           alert('Error deleting image: ' + error.message);
         } else {
-          await logActivity(`Deleted a gallery image from project: ${projectName}`);
           sessionStorage.clear();
           loadCloudData(true);
         }
@@ -1029,7 +988,7 @@
 
       const totalFiles = fileInput.files.length;
       msg.style.color = '#60a5fa'; 
-      msg.innerText = `Processing batch upload (0 / ${totalFiles})...`;
+      msg.innerText = `Processing high-speed batch upload (0 / ${totalFiles})...`;
 
       let updatedCount = 0;
       let failedCount = 0;
@@ -1067,10 +1026,9 @@
         msg.innerText = `Processing batch upload (${i + 1} / ${totalFiles})...`;
       }
 
-      await logActivity(`Batch uploaded ${updatedCount} unit layouts`);
       sessionStorage.clear();
       msg.style.color = '#34d399';
-      msg.innerText = `Batch completed! Updated: ${updatedCount}, Failed/Skipped: ${failedCount}`;
+      msg.innerText = `Batch completed instantly! Updated: ${updatedCount}, Failed/Skipped: ${failedCount}`;
       loadCloudData(true);
     }
 
@@ -1097,7 +1055,6 @@
           msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message;
         } else {
           if (liveUnitsData[unitCode]) liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
-          await logActivity(`Updated layout image for unit [${unitCode}]`);
           sessionStorage.clear();
           msg.style.color = '#34d399'; msg.innerText = `Layout for unit [${unitCode}] updated successfully!`;
           loadCloudData(true);
@@ -1127,7 +1084,6 @@
           msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message;
         } else {
           if (liveUnitsData[unitCode]) liveUnitsData[unitCode].layout_image_url = '';
-          await logActivity(`Deleted layout image for unit [${unitCode}]`);
           sessionStorage.clear();
           msg.style.color = '#34d399'; msg.innerText = `Layout for unit [${unitCode}] deleted!`;
           loadCloudData(true);
@@ -1157,12 +1113,12 @@
 
       if (uData) {
         currentUnitCode = val;
-        currentProjectName = uData.project_name || 'M Squared';
         welcomeScreen.style.display = 'none';
         mainAppContent.style.display = 'block';
 
         document.getElementById('uNameSummary').innerText = val;
-        document.getElementById('uProjectDisplay').innerText = currentProjectName;
+        const projName = uData.project_name || 'M Squared';
+        document.getElementById('uProjectDisplay').innerText = projName;
 
         if (clientName) {
           greetingBox.style.display = 'block';
@@ -1171,7 +1127,7 @@
           greetingBox.style.display = 'none';
         }
 
-        setupProjectVisuals(currentProjectName);
+        setupProjectVisuals(projName);
 
         const layoutImgElement = document.getElementById('unitLayoutImg');
         layoutImgElement.src = uData.layout_image_url || placeholderImg('No Layout');
@@ -1205,11 +1161,8 @@
 
         const unitPriceVal = Number(uData.price) || 0;
         document.getElementById('paymentUnitPrice').innerText = unitPriceVal > 0 ? unitPriceVal.toLocaleString() + ' EGP' : '-';
-        
-        const tbodyLeft = document.getElementById('paymentTableBodyLeft');
-        const tbodyRight = document.getElementById('paymentTableBodyRight');
-        tbodyLeft.innerHTML = '';
-        tbodyRight.innerHTML = '';
+        const paymentTbody = document.getElementById('paymentTableBody');
+        paymentTbody.innerHTML = '';
 
         if (unitPriceVal > 0) {
           const dp = unitPriceVal * 0.05;
@@ -1217,60 +1170,17 @@
           const quarterAmount = remainingAmount / 39;
           const maintenanceAmount = unitPriceVal * 0.07;
 
-          const now = new Date();
-          const formatDate = (d) => {
-            const day = String(d.getDate()).padStart(2, '0');
-            const month = String(d.getMonth() + 1).padStart(2, '0');
-            const year = d.getFullYear();
-            return `${day}/${month}/${year}`;
-          };
-
-          let allItems = [];
-          allItems.push({
-            desc: `Down Payment (5%) — ${formatDate(now)} (Immediate)`,
-            amt: dp.toLocaleString('en-US', {maximumFractionDigits:0}) + ' EGP',
-            isSpecial: false
-          });
-
-          let nextDate = new Date(now.getTime());
+          let rowsHtml = `<tr><td>Down Payment (5%)</td><td>Immediate</td><td>${dp.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          
           for (let qNum = 1; qNum <= 39; qNum++) {
-            nextDate.setMonth(nextDate.getMonth() + 3);
-            allItems.push({
-              desc: `Q${qNum} Installment — ${formatDate(nextDate)}`,
-              amt: quarterAmount.toLocaleString('en-US', {maximumFractionDigits:0}) + ' EGP',
-              isSpecial: false
-            });
+            rowsHtml += `<tr><td>Quarterly Installment (${qNum}/39)</td><td>Quarter ${qNum}</td><td>${quarterAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
           }
 
-          let maintDate = new Date(nextDate.getTime());
-          maintDate.setMonth(maintDate.getMonth() + 6);
-          allItems.push({
-            desc: `Maintenance (7%) — ${formatDate(maintDate)} (Delivery)`,
-            amt: maintenanceAmount.toLocaleString('en-US', {maximumFractionDigits:0}) + ' EGP',
-            isSpecial: true
-          });
+          rowsHtml += `<tr style="color: #38bdf8; font-weight: bold; background: rgba(56, 189, 248, 0.1);"><td>Maintenance (7%)</td><td>Before delivery by 6 months</td><td>${maintenanceAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
 
-          const midIndex = Math.ceil(allItems.length / 2);
-          const leftItems = allItems.slice(0, midIndex);
-          const rightItems = allItems.slice(midIndex);
-
-          let leftHtml = '';
-          leftItems.forEach(item => {
-            const styleAttr = item.isSpecial ? 'style="color: #38bdf8; font-weight: bold; background: rgba(56, 189, 248, 0.1);"' : '';
-            leftHtml += `<tr ${styleAttr}><td>${item.desc}</td><td>${item.amt}</td></tr>`;
-          });
-          tbodyLeft.innerHTML = leftHtml;
-
-          let rightHtml = '';
-          rightItems.forEach(item => {
-            const styleAttr = item.isSpecial ? 'style="color: #38bdf8; font-weight: bold; background: rgba(56, 189, 248, 0.1);"' : '';
-            rightHtml += `<tr ${styleAttr}><td>${item.desc}</td><td>${item.amt}</td></tr>`;
-          });
-          tbodyRight.innerHTML = rightHtml;
-
+          paymentTbody.innerHTML = rowsHtml;
         } else {
-          tbodyLeft.innerHTML = `<tr><td colspan="2" style="text-align: center;">No price available.</td></tr>`;
-          tbodyRight.innerHTML = `<tr><td colspan="2" style="text-align: center;">-</td></tr>`;
+          paymentTbody.innerHTML = `<tr><td colspan="3" style="text-align: center;">No price available.</td></tr>`;
         }
 
         st.style.color = "#34d399"; st.innerText = `Unit [${val}] loaded instantly!`;
@@ -1342,7 +1252,6 @@
         const { error } = await supabaseClient.from('projects').upsert(row, { onConflict: 'name' });
         if (error) { msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message; return; }
 
-        await logActivity(`Saved project visuals and gallery for: ${name}`);
         sessionStorage.clear();
         msg.style.color = '#34d399'; msg.innerText = 'Saved successfully!';
         loadCloudData(true);
@@ -1535,11 +1444,9 @@
       }
 
       try {
-        const email = currentUser ? (currentUser.email || currentUser.id) : 'Unknown';
-        const fullName = currentProfile && currentProfile.full_name ? currentProfile.full_name : email;
         await supabaseClient.from('import_logs').insert({
           unit_count: cleanUnits.length,
-          user_email: `${fullName} (${email}) — Uploaded & Overwrote Inventory Excel`,
+          user_email: currentUser ? currentUser.email : 'unknown',
           created_at: new Date().toISOString()
         });
       } catch (logErr) {
@@ -1589,13 +1496,9 @@
 
       const isMobile = window.innerWidth <= 768;
 
-      let cleanProj = (currentProjectName || 'Offer').replace(/[^a-zA-Z0-9_\u0600-\u06FF]+/g, '-');
-      let cleanUnit = (currentUnitCode || 'Unit').replace(/[^a-zA-Z0-9_\u0600-\u06FF]+/g, '');
-      const dynamicFilename = `${cleanProj}-${cleanUnit}.pdf`;
-
       const opt = {
         margin:       isMobile ? 5 : 10,
-        filename:     dynamicFilename,
+        filename:     `M-Squared-Offer-${currentUnitCode || 'Unit'}.pdf`,
         image:        { type: 'jpeg', quality: 0.95 },
         html2canvas:  { scale: isMobile ? 1.5 : 2, useCORS: true, logging: false, scrollY: 0 },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -1606,15 +1509,17 @@
           html2pdf().from(element).set(opt).outputPdf('blob').then((pdfBlob) => {
             const blobUrl = URL.createObjectURL(pdfBlob);
             const newWindow = window.open(blobUrl, '_blank');
-            if (!newWindow) {
+            if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
               const downloadLink = document.createElement('a');
               downloadLink.href = blobUrl;
               downloadLink.download = opt.filename;
               document.body.appendChild(downloadLink);
               downloadLink.click();
               document.body.removeChild(downloadLink);
+              st.style.color = "#34d399"; st.innerText = "PDF downloaded (Pop-up blocked by browser).";
+            } else {
+              st.style.color = "#34d399"; st.innerText = "PDF preview opened successfully!";
             }
-            st.style.color = "#34d399"; st.innerText = "PDF preview opened successfully!";
           });
         } else {
           await html2pdf().from(element).set(opt).save();
