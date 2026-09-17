@@ -121,7 +121,7 @@
       pointer-events: auto;
     }
 
-    input {
+    input, select {
       padding: 6px 8px;
       font-family: 'Cairo', sans-serif;
       font-size: 12px;
@@ -132,8 +132,9 @@
       outline: none;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
-    input#unitInput { text-transform: uppercase; font-weight: 600; width: 110px; }
-    input#clientInput { width: 150px; }
+    input#unitInput { text-transform: uppercase; font-weight: 600; width: 90px; }
+    select#clientTitleSelect { width: 65px; font-weight: 600; }
+    input#clientInput { width: 130px; }
 
     button {
       padding: 6px 12px;
@@ -269,6 +270,7 @@
       color: var(--greeting-text);
       font-size: 12px;
       border: 1px solid var(--border-color);
+      text-align: left;
     }
     .greeting-box .client-highlight { font-size: 14px; font-weight: 700; color: #3b82f6; }
 
@@ -420,7 +422,13 @@
     <div class="sticky-header">
       <div class="controls">
         <input type="text" id="unitInput" placeholder="Unit Code" onkeypress="if(event.key==='Enter') searchUnit()">
-        <input type="text" id="clientInput" placeholder="Client Name">
+        <select id="clientTitleSelect">
+          <option value="Mr.">Mr.</option>
+          <option value="Ms.">Ms.</option>
+          <option value="Dr.">Dr.</option>
+          <option value="Eng.">Eng.</option>
+        </select>
+        <input type="text" id="clientInput" placeholder="Client Name" onkeypress="if(event.key==='Enter') searchUnit()">
         <button class="btn-search" onclick="searchUnit()">Search</button>
         <button class="btn-sync" onclick="loadCloudData(true)" title="Sync Data">Sync</button>
       </div>
@@ -1093,6 +1101,7 @@
 
     async function searchUnit() {
       const val = document.getElementById('unitInput').value.trim().toUpperCase();
+      const clientTitle = document.getElementById('clientTitleSelect').value;
       const clientName = document.getElementById('clientInput').value.trim();
       const st = document.getElementById('status');
       const grid = document.getElementById('detailsGrid');
@@ -1122,7 +1131,7 @@
 
         if (clientName) {
           greetingBox.style.display = 'block';
-          greetingBox.innerHTML = `Dear <span class="client-highlight">${clientName}</span>,<br>Find your offer details below.`;
+          greetingBox.innerHTML = `Dear <span class="client-highlight">${clientTitle} ${clientName}</span>,<br>Find your offer details below.`;
         } else {
           greetingBox.style.display = 'none';
         }
