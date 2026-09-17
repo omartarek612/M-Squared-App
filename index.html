@@ -1484,7 +1484,7 @@
 
     async function prepareAndGeneratePDF(actionType) {
       const st = document.getElementById('status');
-      st.style.color = "#60a5fa"; st.innerText = "Generating PDF...";
+      st.style.color = "#60a5fa"; st.innerText = "Generating PDF quickly...";
 
       const element = document.getElementById('full-offer-container');
       
@@ -1494,36 +1494,28 @@
         return new Promise(resolve => { img.onload = img.onerror = resolve; });
       }));
 
+      // تحديد ما إذا كان الجهاز موبايل لضبط الـ Scale والأبعاد بكفاءة تامة
+      const isMobile = window.innerWidth <= 768;
+
       const opt = {
-        margin:       10,
+        margin:       isMobile ? 5 : 10,
         filename:     `M-Squared-Offer-${currentUnitCode || 'Unit'}.pdf`,
         image:        { type: 'jpeg', quality: 0.95 },
-        html2canvas:  { scale: 2, useCORS: true, logging: false, scrollY: 0 },
+        html2canvas:  { scale: isMobile ? 1.5 : 2, useCORS: true, logging: false, scrollY: 0 },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
       try {
-        html2pdf().from(element).set(opt).outputPdf('blob').then((pdfBlob) => {
-          const blobUrl = URL.createObjectURL(pdfBlob);
-
-          if (actionType === 'preview') {
-            const newWindow = window.open(blobUrl, '_blank');
-            if (!newWindow) {
-              alert('Please allow pop-ups for this site to preview the PDF.');
-            }
-            st.style.color = "#34d399"; st.innerText = "PDF preview opened!";
-          } else {
-            const downloadLink = document.createElement('a');
-            downloadLink.href = blobUrl;
-            downloadLink.download = `M-Squared-Offer-${currentUnitCode || 'Unit'}.pdf`;
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            st.style.color = "#34d399"; st.innerText = "PDF downloaded successfully!";
-          }
-        });
+        if (actionType === 'preview') {
+          html2pdf().from(element).set(opt).toPdf().get('pdf').then((pdf) => {
+            window.open(pdf.output('bloburl'), '_blank');
+            st.style.color = "#34d399"; st.innerText = "PDF preview opened successfully!";
+          });
+        } else {
+          await html2pdf().from(element).set(opt).save();
+          st.style.color = "#34d399"; st.innerText = "PDF downloaded successfully!";
+        }
       } catch (err) {
-        console.error(err);
         st.style.color = '#f87171'; st.innerText = "PDF generation failed.";
       }
     }
