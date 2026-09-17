@@ -94,7 +94,7 @@
     }
     input#unitInput { text-transform: uppercase; font-weight: 600; width: 100px; }
     select#clientTitleSelect { width: 70px; font-weight: 600; }
-    input#clientInput { width: 140px; }
+    input#clientInput { width: 140px; text-transform: capitalize; }
 
     button {
       padding: 6px 14px;
@@ -141,7 +141,6 @@
 
     #main-app-content { display: none; max-width: 800px; margin: 15px auto; text-align: left; }
 
-    /* Aligned Sidebar starting at top matching the offer page perfectly */
     .app-sidebar {
       position: fixed;
       top: 65px;
@@ -256,8 +255,9 @@
     .detail-card strong { display: block; font-size: 9px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 2px; }
     .detail-card span { font-size: 13px; font-weight: 700; }
 
-    .pictures-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .gallery-card-item { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; aspect-ratio: 1 / 1; }
+    /* Gallery Grid: Larger, Square, No Stretching, Max 4 images */
+    .pictures-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; justify-content: center; padding: 10px; }
+    .gallery-card-item { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; aspect-ratio: 1 / 1; max-width: 320px; width: 100%; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
     .gallery-card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
@@ -359,7 +359,7 @@
         <option value="Dr.">Dr.</option>
         <option value="Eng.">Eng.</option>
       </select>
-      <input type="text" id="clientInput" placeholder="Client Name" onkeypress="if(event.key==='Enter') searchUnit()">
+      <input type="text" id="clientInput" placeholder="Client Name" oninput="formatClientName(this)" onkeypress="if(event.key==='Enter') searchUnit()">
       <button class="btn-search" onclick="searchUnit()">Search</button>
       <button class="btn-sync" onclick="loadCloudData(true)" title="Sync Data">Sync</button>
     </div>
@@ -416,8 +416,9 @@
         <a href="#sec-summary" class="sidebar-nav-link">📄 Summary</a>
         <a href="#sec-pictures" class="sidebar-nav-link">🖼️ Gallery</a>
         <a href="#sec-masterplan" class="sidebar-nav-link">🗺️ Masterplan</a>
-        <a href="#sec-layout" class="sidebar-nav-link">📐 Floor Plan</a>
+        <a href="#sec-layout" class="sidebar-nav-link">📐 Layouts</a>
         <a href="#sec-payment" class="sidebar-nav-link">💳 Payment Plan</a>
+        <a href="#sec-admin" class="sidebar-nav-link" id="sidebarAdminLink" style="display:none;">⚙️ Admin Panel</a>
 
         <div class="sidebar-section-title">PDF Actions</div>
         <div class="action-buttons">
@@ -452,7 +453,12 @@
             <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
             <div><img id="projectLogoImgPictures" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
           </div>
-          <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Project Gallery</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="margin: 0; font-size: 14px; text-align: left;">Project Gallery</h3>
+            <div id="gallerySelectionControls" style="display:none; font-size: 11px;">
+              <button class="btn-sync" style="padding: 4px 8px; font-size: 10px;" onclick="openGallerySelector()">⚙️ Select 4 Photos</button>
+            </div>
+          </div>
           <div class="pictures-grid" id="picturesGridContainer"></div>
           <div></div>
         </div>
@@ -484,7 +490,7 @@
               <div><img id="projectLogoImgLayout" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
             </div>
             <div class="masterplan-header">
-              <h3 style="margin: 0; font-size:14px;">Unit Floor Plan</h3>
+              <h3 style="margin: 0; font-size:14px;">Unit Layouts</h3>
               <small style="color: var(--muted-color); font-weight: bold; font-size: 11px;" id="layoutSubLabel">Schematic</small>
             </div>
           </div>
@@ -530,14 +536,14 @@
 
       </div>
 
-      <div class="offer-page-section" id="sec-admin" style="display:none; margin-top: 15px; break-before: auto; page-break-before: auto; min-height: auto; display: block;">
+      <div class="offer-page-section" id="sec-admin" style="display:none; margin-top: 15px; break-before: auto; page-break-before: auto; min-height: auto;">
         <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Admin Control Panel</h3>
         <h4 style="font-size:12px;">Pending Accounts</h4>
         <div class="approval-list" id="approvalList"><p style="font-size:11px; color:var(--muted-color);">No pending accounts.</p></div>
 
         <div class="admin-form-block" style="margin-top:12px;">
-          <h4>Project & Visuals Manager</h4>
-          <input type="text" id="adm_proj_name" placeholder="Project Name (e.g. 31 West)" oninput="loadAdminProjectGallery()">
+          <h4>Project & Visuals Manager (Required: Enter Project Name)</h4>
+          <input type="text" id="adm_proj_name" placeholder="Project Name (e.g. 31 West) - Mandatory" oninput="loadAdminProjectGallery()">
           <input type="text" id="adm_proj_logo" placeholder="Logo Image URL">
           
           <label style="font-size:11px; color:var(--muted-color); display:block; margin-bottom:3px;">Upload Masterplan Image (High Quality):</label>
@@ -556,12 +562,12 @@
         </div>
 
         <div class="admin-form-block" style="margin-top:15px; border: 1px solid rgba(59, 130, 246, 0.4);">
-          <h4 style="color: #3b82f6;">Unit Layouts Manager (Independent)</h4>
+          <h4 style="color: #3b82f6;">Unit Layouts Manager (Independent & Safe Update)</h4>
           
           <div style="margin-bottom:12px; background:var(--card-bg); padding:10px; border-radius:6px;">
-            <div style="font-size:11px; font-weight:700; margin-bottom:4px;">1. Batch Upload Layouts (Files named by Unit Code, e.g., A101.jpg):</div>
+            <div style="font-size:11px; font-weight:700; margin-bottom:4px;">1. Batch Upload Layouts (Files named by Unit Code, updates only specific Mists/Units safely):</div>
             <input type="file" id="adm_batch_layout_files" accept="image/*" multiple style="font-size:11px; margin-bottom:6px;">
-            <button class="btn-sync" onclick="adminUploadBatchLayouts()">Upload & Match by Filename</button>
+            <button class="btn-sync" onclick="adminUploadBatchLayouts()">Upload & Update Mists</button>
             <div class="admin-msg" id="adminBatchLayoutMsg"></div>
           </div>
 
@@ -579,7 +585,7 @@
 
       </div>
 
-      <div class="offer-page-section" id="sec-inventory" style="margin-top: 15px; break-before: auto; page-break-before: auto; min-height: auto; display: block;">
+      <div class="offer-page-section" id="sec-inventory" style="margin-top: 15px; break-before: auto; page-break-before: auto; min-height: auto;">
         <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Inventory Update</h3>
         <div class="admin-grid">
           <div class="admin-form-block">
@@ -597,6 +603,19 @@
         Developed by Omar Tarek - 01003666683
       </div>
 
+    </div>
+  </div>
+
+  <!-- Modal for selecting 4 Gallery Photos -->
+  <div id="galleryModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:20000; justify-content:center; align-items:center;">
+    <div style="background:var(--card-bg); border:1px solid var(--border-color); padding:20px; border-radius:12px; max-width:500px; width:90%; max-height:80vh; overflow-y:auto; text-align:left;">
+      <h3 style="margin-top:0; font-size:14px;">Select up to 4 Gallery Photos to Display</h3>
+      <p style="font-size:11px; color:var(--muted-color);">Choose exactly 4 images. If none selected, the first 4 will be used automatically.</p>
+      <div id="modalGalleryPickerList" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom:15px;"></div>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button class="btn-search" onclick="saveSelectedGalleryPhotos()">Apply Selection</button>
+        <button class="btn-delete-img" style="margin-top:0;" onclick="closeGallerySelector()">Cancel</button>
+      </div>
     </div>
   </div>
 
@@ -621,6 +640,7 @@
     let projectsByName = {};
     let currentLoadedBuildingKey = "";
     let currentUnitCode = "";
+    let selectedActiveProjectName = "";
 
     function toggleSidebar() {
       const sidebar = document.getElementById('appSidebar');
@@ -634,6 +654,13 @@
     function showLogin() {
       document.getElementById('signup-screen').style.display = 'none';
       document.getElementById('login-screen').style.display = 'block';
+    }
+
+    function formatClientName(input) {
+      let val = input.value;
+      if (val.length > 0) {
+        input.value = val.charAt(0).toUpperCase() + val.slice(1);
+      }
     }
 
     async function login() {
@@ -671,6 +698,7 @@
       document.getElementById('pending-screen').style.display = 'none';
       document.getElementById('logoutBtn').style.display = 'none';
       document.getElementById('userWelcomeDisplay').style.display = 'none';
+      document.getElementById('sidebarAdminLink').style.display = 'none';
       document.getElementById('login-screen').style.display = 'block';
     }
 
@@ -704,6 +732,8 @@
 
       if (profile && profile.role === 'admin') {
         document.getElementById('sec-admin').style.display = 'block';
+        document.getElementById('sidebarAdminLink').style.display = 'block';
+        document.getElementById('gallerySelectionControls').style.display = 'block';
         loadPendingApprovals();
       }
       loadCloudData(false);
@@ -840,6 +870,7 @@
 
     function setupProjectVisuals(projectName) {
       const pLower = (projectName || '').toLowerCase().trim();
+      selectedActiveProjectName = projectName || '';
       const label = document.getElementById('currentProjectLabel');
       let proj = projectsByName[pLower] || Object.values(projectsByName)[0];
 
@@ -850,8 +881,18 @@
 
       const picGrid = document.getElementById('picturesGridContainer');
       picGrid.innerHTML = '';
-      const gallery = (proj && Array.isArray(proj.gallery) && proj.gallery.length) ? proj.gallery : [placeholderImg('Gallery')];
-      gallery.forEach(imgUrl => {
+      
+      const allGallery = (proj && Array.isArray(proj.gallery) && proj.gallery.length) ? proj.gallery : [placeholderImg('Gallery')];
+      
+      // Determine which 4 images to display (agent selected or first 4 default)
+      let activeGallery = allGallery;
+      if (proj && proj.selected_gallery && Array.isArray(proj.selected_gallery) && proj.selected_gallery.length > 0) {
+        activeGallery = proj.selected_gallery;
+      } else {
+        activeGallery = allGallery.slice(0, 4);
+      }
+
+      activeGallery.forEach(imgUrl => {
         const div = document.createElement('div');
         div.className = 'gallery-card-item';
         div.innerHTML = `<img src="${imgUrl}" alt="View" crossorigin="anonymous" loading="lazy">`;
@@ -862,6 +903,72 @@
       if (label) label.innerText = proj ? proj.name : 'M Squared';
 
       loadAdminProjectGallery();
+    }
+
+    function openGallerySelector() {
+      if (!selectedActiveProjectName) { alert('Please search a unit or select a project first.'); return; }
+      const proj = projectsByName[selectedActiveProjectName.toLowerCase().trim()];
+      if (!proj || !proj.gallery || !proj.gallery.length) { alert('No gallery images available for this project.'); return; }
+
+      const container = document.getElementById('modalGalleryPickerList');
+      container.innerHTML = '';
+      
+      const currentSelected = proj.selected_gallery || proj.gallery.slice(0, 4);
+
+      proj.gallery.forEach((imgUrl, idx) => {
+        const isChecked = currentSelected.includes(imgUrl) ? 'checked' : '';
+        const item = document.createElement('div');
+        item.style.cssText = "background:var(--input-bg); border:1px solid var(--border-color); padding:5px; border-radius:6px; text-align:center;";
+        item.innerHTML = `
+          <img src="${imgUrl}" style="width:100%; height:70px; object-fit:cover; border-radius:4px; margin-bottom:4px;">
+          <label style="font-size:10px; display:block;"><input type="checkbox" name="galleryPick" value="${imgUrl}" ${isChecked}> Select</label>
+        `;
+        container.appendChild(item);
+      });
+
+      document.getElementById('galleryModal').style.display = 'flex';
+    }
+
+    function closeGallerySelector() {
+      document.getElementById('galleryModal').style.display = 'none';
+    }
+
+    async function saveSelectedGalleryPhotos() {
+      const checkboxes = document.querySelectorAll('input[name="galleryPick"]:checked');
+      const selectedUrls = Array.from(checkboxes).map(cb => cb.value);
+
+      if (selectedUrls.length === 0) {
+        alert('Please select at least one photo.');
+        return;
+      }
+      if (selectedUrls.length > 4) {
+        alert('You can select a maximum of 4 photos.');
+        return;
+      }
+
+      const projKey = selectedActiveProjectName.toLowerCase().trim();
+      let proj = projectsByName[projKey];
+      if (!proj) return;
+
+      proj.selected_gallery = selectedUrls;
+
+      const { error } = await supabaseClient.from('projects').upsert({
+        name: proj.name,
+        logo_url: proj.logo_url,
+        masterplan_image_url: proj.masterplan_image_url,
+        gallery: proj.gallery,
+        selected_gallery: selectedUrls
+      }, { onConflict: 'name' });
+
+      if (!error) {
+        sessionStorage.clear();
+        loadCloudData(true);
+        closeGallerySelector();
+        setupProjectVisuals(selectedActiveProjectName);
+        alert('Gallery display updated successfully!');
+      } else {
+        alert('Error saving gallery selection.');
+      }
     }
 
     function loadAdminProjectGallery() {
@@ -914,7 +1021,8 @@
           name: proj.name,
           logo_url: proj.logo_url,
           masterplan_image_url: '',
-          gallery: proj.gallery
+          gallery: proj.gallery,
+          selected_gallery: proj.selected_gallery
         }, { onConflict: 'name' });
 
         if (!error) { sessionStorage.clear(); loadCloudData(true); }
@@ -928,11 +1036,15 @@
 
       if (confirm('Are you sure you want to delete this gallery image?')) {
         proj.gallery.splice(index, 1);
+        if(proj.selected_gallery) {
+          proj.selected_gallery = proj.selected_gallery.filter(url => proj.gallery.includes(url));
+        }
         const { error } = await supabaseClient.from('projects').upsert({
           name: proj.name,
           logo_url: proj.logo_url,
           masterplan_image_url: proj.masterplan_image_url,
-          gallery: proj.gallery
+          gallery: proj.gallery,
+          selected_gallery: proj.selected_gallery
         }, { onConflict: 'name' });
 
         if (!error) { sessionStorage.clear(); loadCloudData(true); }
@@ -949,7 +1061,7 @@
 
       const totalFiles = fileInput.files.length;
       msg.style.color = '#60a5fa'; 
-      msg.innerText = `Processing batch upload (0 / ${totalFiles})...`;
+      msg.innerText = `Processing batch layouts (0 / ${totalFiles})...`;
 
       let updatedCount = 0;
       for (let i = 0; i < totalFiles; i++) {
@@ -960,7 +1072,8 @@
         if (!unitCode) continue;
 
         try {
-          const compressedDataUrl = await compressImage(file, 700, 0.75);
+          // Optimized compression for fast performance and lightweight files
+          const compressedDataUrl = await compressImage(file, 800, 0.70);
           const { error } = await supabaseClient.from('units').update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() }).eq('unit_code', unitCode);
           if (!error) {
             updatedCount++;
@@ -968,12 +1081,12 @@
           }
           await new Promise(r => setTimeout(r, 20));
         } catch (e) {}
-        msg.innerText = `Processing batch upload (${i + 1} / ${totalFiles})...`;
+        msg.innerText = `Processing batch layouts (${i + 1} / ${totalFiles})...`;
       }
 
       sessionStorage.clear();
       msg.style.color = '#34d399';
-      msg.innerText = `Batch completed! Updated: ${updatedCount}`;
+      msg.innerText = `Layout batch completed! Updated specific mists safely: ${updatedCount}`;
       loadCloudData(true);
     }
 
@@ -989,7 +1102,7 @@
 
       msg.style.color = '#60a5fa'; msg.innerText = 'Saving layout...';
       try {
-        const compressedDataUrl = await compressImage(fileInput, 1000, 0.85);
+        const compressedDataUrl = await compressImage(fileInput, 900, 0.75);
         const { error } = await supabaseClient.from('units').update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() }).eq('unit_code', unitCode);
 
         if (error) {
@@ -997,7 +1110,7 @@
         } else {
           if (liveUnitsData[unitCode]) liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
           sessionStorage.clear();
-          msg.style.color = '#34d399'; msg.innerText = `Layout updated!`;
+          msg.style.color = '#34d399'; msg.innerText = `Layout updated safely for ${unitCode}!`;
           loadCloudData(true);
         }
       } catch (err) {
@@ -1139,7 +1252,7 @@
       }
     }
 
-    async function compressImage(file, maxWidth = 1000, quality = 0.8) {
+    async function compressImage(file, maxWidth = 1000, quality = 0.75) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -1169,25 +1282,32 @@
     async function adminSaveProject() {
       if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
       const msg = document.getElementById('adminProjMsg');
-      msg.style.color = '#60a5fa'; msg.innerText = 'Processing images...';
-
+      
       const name = document.getElementById('adm_proj_name').value.trim();
-      if (!name) { msg.style.color = '#f87171'; msg.innerText = 'Project name is required.'; return; }
+      if (!name) { 
+        msg.style.color = '#f87171'; 
+        msg.innerText = 'Mandatory Error: Please type the Project Name before saving!'; 
+        document.getElementById('adm_proj_name').focus();
+        return; 
+      }
+
+      msg.style.color = '#60a5fa'; msg.innerText = 'Processing images...';
 
       let existing = projectsByName[name.toLowerCase().trim()] || {};
       let gallery = existing.gallery || [];
+      let selectedGallery = existing.selected_gallery || [];
 
       try {
         const masterplanFile = document.getElementById('adm_masterplan_file').files[0];
         let masterplan_image_url = existing.masterplan_image_url || '';
         if (masterplanFile) {
-          masterplan_image_url = await compressImage(masterplanFile, 1200, 0.85);
+          masterplan_image_url = await compressImage(masterplanFile, 1100, 0.80);
         }
 
         const fileInput = document.getElementById('adm_gallery_files');
         if (fileInput.files && fileInput.files.length > 0) {
           for (let i = 0; i < fileInput.files.length; i++) {
-            const compressedDataUrl = await compressImage(fileInput.files[i], 900, 0.75);
+            const compressedDataUrl = await compressImage(fileInput.files[i], 850, 0.72);
             gallery.push(compressedDataUrl);
           }
         }
@@ -1196,14 +1316,15 @@
           name,
           logo_url: document.getElementById('adm_proj_logo').value.trim() || existing.logo_url || '',
           masterplan_image_url,
-          gallery
+          gallery,
+          selected_gallery: selectedGallery
         };
 
         const { error } = await supabaseClient.from('projects').upsert(row, { onConflict: 'name' });
         if (error) { msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message; return; }
 
         sessionStorage.clear();
-        msg.style.color = '#34d399'; msg.innerText = 'Saved successfully!';
+        msg.style.color = '#34d399'; msg.innerText = 'Project visuals saved successfully!';
         loadCloudData(true);
       } catch (err) {
         msg.style.color = '#f87171'; msg.innerText = 'Error processing visuals.';
@@ -1367,15 +1488,16 @@
 
     async function prepareAndGeneratePDF(actionType) {
       const st = document.getElementById('status');
-      st.style.color = "#60a5fa"; st.innerText = "Exporting PDF instantly...";
+      st.style.color = "#60a5fa"; st.innerText = "Exporting high-quality PDF...";
 
       const element = document.getElementById('full-offer-container');
       
+      // Optimized resolution and compression settings for crisp PDF and fast download
       const opt = {
         margin:       5,
         filename:     `M-Squared-Offer-${currentUnitCode || 'Unit'}.pdf`,
-        image:        { type: 'jpeg', quality: 0.90 },
-        html2canvas:  { scale: 1.5, useCORS: true, logging: false, scrollY: 0, letterRendering: true },
+        image:        { type: 'jpeg', quality: 0.92 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false, scrollY: 0, letterRendering: true },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
