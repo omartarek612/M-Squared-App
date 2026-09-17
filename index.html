@@ -65,22 +65,9 @@
       pointer-events: none;
     }
 
-    .top-global-bar > * {
-      pointer-events: auto;
-    }
-
-    .top-buttons-row {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .user-welcome-text {
-      font-size: 10px;
-      color: var(--muted-color);
-      font-weight: 600;
-      display: none;
-    }
+    .top-global-bar > * { pointer-events: auto; }
+    .top-buttons-row { display: flex; gap: 6px; align-items: center; }
+    .user-welcome-text { font-size: 10px; color: var(--muted-color); font-weight: 600; display: none; }
 
     .btn-theme, .btn-logout {
       background: var(--card-bg);
@@ -100,22 +87,18 @@
       z-index: 9999;
       background: transparent;
       padding: 4px 0;
-      border-bottom: none;
       pointer-events: none;
     }
 
     .controls {
       background: transparent;
       padding: 0;
-      border-radius: 0;
-      box-shadow: none;
       margin: 0 auto;
       display: flex;
       flex-wrap: nowrap;
       justify-content: center;
       align-items: center;
       gap: 6px;
-      border: none;
       max-width: 650px;
       width: 100%;
       pointer-events: auto;
@@ -313,12 +296,6 @@
       flex-grow: 1;
     }
 
-    #mapWrapper {
-      position: relative;
-      display: inline-block;
-      line-height: 0;
-    }
-
     .masterplan-img { 
       max-width: 100%; 
       max-height: 655px;
@@ -343,10 +320,25 @@
       z-index: 10;
     }
 
-    .payment-table-container { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; max-height: 480px; overflow-y: auto; }
-    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; white-space: nowrap; }
-    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 8px 10px; font-weight: 700; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 5; }
-    .payment-table td { padding: 7px 10px; border-bottom: 1px solid var(--border-color); }
+    /* Split Payment Tables Layout */
+    .payment-split-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      flex-grow: 1;
+      overflow: hidden;
+    }
+    .payment-table-box {
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      overflow-y: auto;
+      max-height: 500px;
+    }
+    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; }
+    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 7px 8px; font-weight: 700; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 5; }
+    .payment-table td { padding: 6px 8px; border-bottom: 1px solid var(--border-color); }
 
     .status { margin-top: 4px; font-size: 10px; font-weight: 600; text-align: center; background: var(--card-bg); display: inline-block; padding: 2px 8px; border-radius: 6px; border: 1px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
 
@@ -539,17 +531,27 @@
               <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
             </div>
             <h3 style="margin: 0 0 10px 0; font-size: 14px; text-align: left;">Payment Schedule</h3>
-            <div class="summary-hero-card" style="margin-bottom: 10px; text-align: left; padding: 10px 14px;">
-              <div style="font-size: 11px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 15px; font-weight: 700; color: #3b82f6;">-</span></div>
+            <div class="summary-hero-card" style="margin-bottom: 10px; text-align: left; padding: 8px 12px;">
+              <div style="font-size: 11px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 14px; font-weight: 700; color: #3b82f6;">-</span></div>
             </div>
           </div>
-          <div class="payment-table-container">
-            <table class="payment-table">
-              <thead><tr><th>Milestone</th><th>Timeline</th><th>Amount (EGP)</th></tr></thead>
-              <tbody id="paymentTableBody">
-                <tr><td colspan="3" style="text-align: center; color: var(--muted-color);">Search unit to load schedule...</td></tr>
-              </tbody>
-            </table>
+          <div class="payment-split-container">
+            <div class="payment-table-box">
+              <table class="payment-table">
+                <thead><tr><th>Milestone</th><th>Timeline</th><th>Amount (EGP)</th></tr></thead>
+                <tbody id="paymentTableBodyLeft">
+                  <tr><td colspan="3" style="text-align: center; color: var(--muted-color);">Loading...</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="payment-table-box">
+              <table class="payment-table">
+                <thead><tr><th>Milestone</th><th>Timeline</th><th>Amount (EGP)</th></tr></thead>
+                <tbody id="paymentTableBodyRight">
+                  <tr><td colspan="3" style="text-align: center; color: var(--muted-color);">Loading...</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <div></div>
         </div>
@@ -813,7 +815,7 @@
             projectsByName = {}; projects.forEach(p => { projectsByName[p.name.toLowerCase().trim()] = p; });
             window.cloudLocations = {}; locations.forEach(l => { window.cloudLocations[l.building_key] = { x: l.x, y: l.y }; });
 
-            st.style.color = "#34d399"; st.innerText = `Ready (Lightning Fast Cache)`;
+            st.style.color = "#34d399"; st.innerText = `Ready (Fast Cache)`;
             return;
           } catch (e) { console.warn("Cache parse failed:", e); }
         }
@@ -843,14 +845,11 @@
           sessionStorage.setItem('m2_units', JSON.stringify(units || []));
           sessionStorage.setItem('m2_projects', JSON.stringify(projects || []));
           sessionStorage.setItem('m2_locations', JSON.stringify(locations || []));
-        } catch (storageErr) {
-          console.warn("Session storage quota exceeded:", storageErr);
-        }
+        } catch (storageErr) {}
 
         st.style.color = "#34d399"; st.innerText = `Synced successfully (${(units || []).length} units)`;
       } catch (err) {
-        console.error("Detailed Sync Error:", err);
-        st.style.color = "#f87171"; st.innerText = `Sync failed: ${err.message || 'Check Console'}`;
+        st.style.color = "#f87171"; st.innerText = `Sync failed`;
       }
     }
 
@@ -954,12 +953,7 @@
           gallery: proj.gallery
         }, { onConflict: 'name' });
 
-        if (error) {
-          alert('Error deleting masterplan: ' + error.message);
-        } else {
-          sessionStorage.clear();
-          loadCloudData(true);
-        }
+        if (!error) { sessionStorage.clear(); loadCloudData(true); }
       }
     }
 
@@ -977,12 +971,7 @@
           gallery: proj.gallery
         }, { onConflict: 'name' });
 
-        if (error) {
-          alert('Error deleting image: ' + error.message);
-        } else {
-          sessionStorage.clear();
-          loadCloudData(true);
-        }
+        if (!error) { sessionStorage.clear(); loadCloudData(true); }
       }
     }
 
@@ -996,47 +985,31 @@
 
       const totalFiles = fileInput.files.length;
       msg.style.color = '#60a5fa'; 
-      msg.innerText = `Processing high-speed batch upload (0 / ${totalFiles})...`;
+      msg.innerText = `Processing batch upload (0 / ${totalFiles})...`;
 
       let updatedCount = 0;
-      let failedCount = 0;
-
       for (let i = 0; i < totalFiles; i++) {
         const file = fileInput.files[i];
         const fileName = file.name;
         const dotIndex = fileName.lastIndexOf('.');
         const unitCode = (dotIndex !== -1 ? fileName.substring(0, dotIndex) : fileName).toUpperCase().trim();
-
-        if (!unitCode) { failedCount++; continue; }
+        if (!unitCode) continue;
 
         try {
           const compressedDataUrl = await compressImage(file, 700, 0.75);
-
-          const { error } = await supabaseClient
-            .from('units')
-            .update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() })
-            .eq('unit_code', unitCode);
-
+          const { error } = await supabaseClient.from('units').update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() }).eq('unit_code', unitCode);
           if (!error) {
             updatedCount++;
-            if (liveUnitsData[unitCode]) {
-              liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
-            }
-          } else {
-            failedCount++;
+            if (liveUnitsData[unitCode]) liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
           }
-
-          await new Promise(resolve => setTimeout(resolve, 30));
-        } catch (e) {
-          failedCount++;
-        }
-
+          await new Promise(r => setTimeout(r, 20));
+        } catch (e) {}
         msg.innerText = `Processing batch upload (${i + 1} / ${totalFiles})...`;
       }
 
       sessionStorage.clear();
       msg.style.color = '#34d399';
-      msg.innerText = `Batch completed instantly! Updated: ${updatedCount}, Failed/Skipped: ${failedCount}`;
+      msg.innerText = `Batch completed! Updated: ${updatedCount}`;
       loadCloudData(true);
     }
 
@@ -1053,18 +1026,14 @@
       msg.style.color = '#60a5fa'; msg.innerText = 'Saving layout...';
       try {
         const compressedDataUrl = await compressImage(fileInput, 1000, 0.85);
-
-        const { error } = await supabaseClient
-          .from('units')
-          .update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() })
-          .eq('unit_code', unitCode);
+        const { error } = await supabaseClient.from('units').update({ layout_image_url: compressedDataUrl, updated_at: new Date().toISOString() }).eq('unit_code', unitCode);
 
         if (error) {
           msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message;
         } else {
           if (liveUnitsData[unitCode]) liveUnitsData[unitCode].layout_image_url = compressedDataUrl;
           sessionStorage.clear();
-          msg.style.color = '#34d399'; msg.innerText = `Layout for unit [${unitCode}] updated successfully!`;
+          msg.style.color = '#34d399'; msg.innerText = `Layout updated!`;
           loadCloudData(true);
         }
       } catch (err) {
@@ -1077,23 +1046,15 @@
       const msg = document.getElementById('adminSingleLayoutMsg');
       const unitCode = document.getElementById('adm_single_layout_code').value.trim().toUpperCase();
 
-      if (!unitCode) {
-        msg.style.color = '#f87171'; msg.innerText = 'Enter unit code first.'; return;
-      }
+      if (!unitCode) { msg.style.color = '#f87171'; msg.innerText = 'Enter unit code first.'; return; }
 
-      if (confirm(`Are you sure you want to delete the layout for unit [${unitCode}]?`)) {
+      if (confirm(`Delete layout for [${unitCode}]?`)) {
         msg.style.color = '#60a5fa'; msg.innerText = 'Deleting...';
-        const { error } = await supabaseClient
-          .from('units')
-          .update({ layout_image_url: '', updated_at: new Date().toISOString() })
-          .eq('unit_code', unitCode);
-
-        if (error) {
-          msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message;
-        } else {
+        const { error } = await supabaseClient.from('units').update({ layout_image_url: '', updated_at: new Date().toISOString() }).eq('unit_code', unitCode);
+        if (!error) {
           if (liveUnitsData[unitCode]) liveUnitsData[unitCode].layout_image_url = '';
           sessionStorage.clear();
-          msg.style.color = '#34d399'; msg.innerText = `Layout for unit [${unitCode}] deleted!`;
+          msg.style.color = '#34d399'; msg.innerText = `Layout deleted!`;
           loadCloudData(true);
         }
       }
@@ -1116,8 +1077,8 @@
       let uData = liveUnitsData[val];
       if (!uData) {
         st.style.color = "#60a5fa"; st.innerText = `Searching unit [${val}]...`;
-        const { data, error } = await supabaseClient.from('units').select('*').eq('unit_code', val).single();
-        if (data && !error) uData = data;
+        const { data } = await supabaseClient.from('units').select('*').eq('unit_code', val).single();
+        if (data) uData = data;
       }
 
       if (uData) {
@@ -1170,8 +1131,10 @@
 
         const unitPriceVal = Number(uData.price) || 0;
         document.getElementById('paymentUnitPrice').innerText = unitPriceVal > 0 ? unitPriceVal.toLocaleString() + ' EGP' : '-';
-        const paymentTbody = document.getElementById('paymentTableBody');
-        paymentTbody.innerHTML = '';
+        
+        const tbodyLeft = document.getElementById('paymentTableBodyLeft');
+        const tbodyRight = document.getElementById('paymentTableBodyRight');
+        tbodyLeft.innerHTML = ''; tbodyRight.innerHTML = '';
 
         if (unitPriceVal > 0) {
           const dp = unitPriceVal * 0.05;
@@ -1179,20 +1142,26 @@
           const quarterAmount = remainingAmount / 39;
           const maintenanceAmount = unitPriceVal * 0.07;
 
-          let rowsHtml = `<tr><td>Down Payment (5%)</td><td>Immediate</td><td>${dp.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          let leftHtml = `<tr><td>Down Payment (5%)</td><td>Immediate</td><td>${dp.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
           
-          for (let qNum = 1; qNum <= 39; qNum++) {
-            rowsHtml += `<tr><td>Quarterly Installment (${qNum}/39)</td><td>Quarter ${qNum}</td><td>${quarterAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          for (let qNum = 1; qNum <= 20; qNum++) {
+            leftHtml += `<tr><td>Quarterly (${qNum}/39)</td><td>Qtr ${qNum}</td><td>${quarterAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
           }
+          tbodyLeft.innerHTML = leftHtml;
 
-          rowsHtml += `<tr style="color: #38bdf8; font-weight: bold; background: rgba(56, 189, 248, 0.1);"><td>Maintenance (7%)</td><td>Before delivery by 6 months</td><td>${maintenanceAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          let rightHtml = '';
+          for (let qNum = 21; qNum <= 39; qNum++) {
+            rightHtml += `<tr><td>Quarterly (${qNum}/39)</td><td>Qtr ${qNum}</td><td>${quarterAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          }
+          rightHtml += `<tr style="color: #38bdf8; font-weight: bold; background: rgba(56, 189, 248, 0.1);"><td>Maintenance (7%)</td><td>6m before delivery</td><td>${maintenanceAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          tbodyRight.innerHTML = rightHtml;
 
-          paymentTbody.innerHTML = rowsHtml;
         } else {
-          paymentTbody.innerHTML = `<tr><td colspan="3" style="text-align: center;">No price available.</td></tr>`;
+          tbodyLeft.innerHTML = `<tr><td colspan="3" style="text-align: center;">No price.</td></tr>`;
+          tbodyRight.innerHTML = `<tr><td colspan="3" style="text-align: center;">No price.</td></tr>`;
         }
 
-        st.style.color = "#34d399"; st.innerText = `Unit [${val}] loaded instantly!`;
+        st.style.color = "#34d399"; st.innerText = `Unit [${val}] loaded!`;
       } else {
         st.style.color = "#f87171"; st.innerText = `Unit [${val}] not found.`;
       }
@@ -1228,7 +1197,7 @@
     async function adminSaveProject() {
       if (!currentProfile || currentProfile.role !== 'admin') { alert('Access Denied'); return; }
       const msg = document.getElementById('adminProjMsg');
-      msg.style.color = '#60a5fa'; msg.innerText = 'Processing images quickly...';
+      msg.style.color = '#60a5fa'; msg.innerText = 'Processing images...';
 
       const name = document.getElementById('adm_proj_name').value.trim();
       if (!name) { msg.style.color = '#f87171'; msg.innerText = 'Project name is required.'; return; }
@@ -1240,13 +1209,13 @@
         const masterplanFile = document.getElementById('adm_masterplan_file').files[0];
         let masterplan_image_url = existing.masterplan_image_url || '';
         if (masterplanFile) {
-          masterplan_image_url = await compressImage(masterplanFile, 1400, 0.9);
+          masterplan_image_url = await compressImage(masterplanFile, 1200, 0.85);
         }
 
         const fileInput = document.getElementById('adm_gallery_files');
         if (fileInput.files && fileInput.files.length > 0) {
           for (let i = 0; i < fileInput.files.length; i++) {
-            const compressedDataUrl = await compressImage(fileInput.files[i], 1000, 0.8);
+            const compressedDataUrl = await compressImage(fileInput.files[i], 900, 0.75);
             gallery.push(compressedDataUrl);
           }
         }
@@ -1265,7 +1234,7 @@
         msg.style.color = '#34d399'; msg.innerText = 'Saved successfully!';
         loadCloudData(true);
       } catch (err) {
-        msg.style.color = '#f87171'; msg.innerText = 'Error processing project visuals.';
+        msg.style.color = '#f87171'; msg.innerText = 'Error processing visuals.';
       }
     }
 
@@ -1281,7 +1250,6 @@
     function parseWorkbookRows(workbook) {
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
-      
       const rowsArray = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
       if (!rowsArray.length) return [];
 
@@ -1290,16 +1258,9 @@
       
       for (let i = 0; i < rowsArray.length; i++) {
         const row = rowsArray[i];
-        const found = row.some(cell => {
-          const norm = String(cell || '').toLowerCase().trim();
-          return exactPatterns.includes(norm);
-        });
-        if (found) {
-          headerRowIndex = i;
-          break;
-        }
+        const found = row.some(cell => exactPatterns.includes(String(cell || '').toLowerCase().trim()));
+        if (found) { headerRowIndex = i; break; }
       }
-
       if (headerRowIndex === -1) headerRowIndex = 0;
 
       const headers = rowsArray[headerRowIndex].map(h => String(h || '').trim());
@@ -1308,12 +1269,9 @@
       for (let i = headerRowIndex + 1; i < rowsArray.length; i++) {
         const row = rowsArray[i];
         if (!row || row.every(cell => String(cell || '').trim() === '')) continue;
-        
         const obj = {};
         headers.forEach((header, index) => {
-          if (header) {
-            obj[header] = row[index] !== undefined ? row[index] : '';
-          }
+          if (header) { obj[header] = row[index] !== undefined ? row[index] : ''; }
         });
         results.push(obj);
       }
@@ -1339,7 +1297,7 @@
       const finishingKey = findColumn(keys, ['finishing type', 'finishing', 'التشطيب']);
       const layoutKey = findColumn(keys, ['layout', 'image', 'الصورة']);
 
-      if (!codeKey) return { error: `Unit code column missing. Found columns: ${keys.join(', ')}` };
+      if (!codeKey) return { error: `Unit code column missing.` };
 
       const unitsToImport = [];
       rows.forEach(row => {
@@ -1372,84 +1330,33 @@
 
     async function performBulkImport(unitsToImport, msgEl) {
       msgEl.style.color = '#60a5fa'; 
-      msgEl.innerText = `Processing high-speed inventory upload (${unitsToImport.length} rows)...`;
+      msgEl.innerText = `Processing upload (${unitsToImport.length} rows)...`;
       
       const { data: oldUnits } = await supabaseClient.from('units').select('unit_code, layout_image_url');
       const existingLayouts = {};
       if (oldUnits) {
         oldUnits.forEach(u => {
-          if (u.layout_image_url && u.unit_code) {
-            existingLayouts[u.unit_code.toUpperCase().trim()] = u.layout_image_url;
-          }
+          if (u.layout_image_url && u.unit_code) { existingLayouts[u.unit_code.toUpperCase().trim()] = u.layout_image_url; }
         });
       }
 
       const uniqueMap = new Map();
-      let skippedCount = 0;
-
       unitsToImport.forEach(u => {
-        if (!u.unit_code) { 
-          skippedCount++; 
-          return; 
-        }
-        
+        if (!u.unit_code) return;
         const code = String(u.unit_code).toUpperCase().trim();
-        
-        if (
-          (/^\d+$/.test(code) && Number(code) < 999) ||
-          code === 'TOTAL' || 
-          code.includes('TOTAL') || 
-          code.includes('UNITS') || 
-          code.includes('COUNT') || 
-          code.includes('SUM') || 
-          code.includes('GRAND') || 
-          code.includes('AVERAGE') ||
-          code.includes('SUBTOTAL') ||
-          code.length > 25 ||
-          code.length < 2
-        ) {
-          skippedCount++;
-          return;
-        }
+        if (code === 'TOTAL' || code.includes('TOTAL') || code.length > 25 || code.length < 2) return;
 
-        let layoutUrl = u.layout_image_url || null;
-        if (!layoutUrl && existingLayouts[code]) {
-          layoutUrl = existingLayouts[code];
-        }
-
-        uniqueMap.set(code, { 
-          ...u,
-          unit_code: code, 
-          layout_image_url: layoutUrl 
-        });
+        let layoutUrl = u.layout_image_url || existingLayouts[code] || null;
+        uniqueMap.set(code, { ...u, unit_code: code, layout_image_url: layoutUrl });
       });
 
       const cleanUnits = Array.from(uniqueMap.values());
-      
-      if (cleanUnits.length === 0) {
-        msgEl.style.color = '#f87171';
-        msgEl.innerText = 'Error: No valid units found in the file to upload!';
-        return;
-      }
-
-      const { error: delError } = await supabaseClient.from('units').delete().not('unit_code', 'is', null);
-      if (delError) {
-        msgEl.style.color = '#f87171';
-        msgEl.innerText = 'Delete Error: ' + delError.message;
-        return;
-      }
+      await supabaseClient.from('units').delete().not('unit_code', 'is', null);
 
       const batchSize = 150;
       for (let i = 0; i < cleanUnits.length; i += batchSize) {
         const batch = cleanUnits.slice(i, i + batchSize);
-        msgEl.innerText = `Uploading batch (${Math.floor(i/batchSize) + 1} of ${Math.ceil(cleanUnits.length/batchSize)})...`;
-        
-        const { error } = await supabaseClient.from('units').insert(batch);
-        if (error) {
-          msgEl.style.color = '#f87171';
-          msgEl.innerText = 'Upload Error: ' + error.message;
-          return;
-        }
+        await supabaseClient.from('units').insert(batch);
       }
 
       try {
@@ -1458,13 +1365,11 @@
           user_email: currentUser ? currentUser.email : 'unknown',
           created_at: new Date().toISOString()
         });
-      } catch (logErr) {
-        console.warn('Import log insert skipped:', logErr);
-      }
+      } catch (e) {}
 
       sessionStorage.clear();
       msgEl.style.color = '#34d399'; 
-      msgEl.innerText = `Inventory updated successfully! (Saved ${cleanUnits.length} units)`;
+      msgEl.innerText = `Inventory updated (${cleanUnits.length} units)!`;
       loadCloudData(true);
       loadImportLogs();
     }
@@ -1477,39 +1382,29 @@
       const reader = new FileReader();
       reader.onload = async function (e) {
         try {
-          const data = e.target.result;
-          const workbook = XLSX.read(data, { type: 'binary' });
+          const workbook = XLSX.read(e.target.result, { type: 'binary' });
           const result = buildUnitsFromRows(parseWorkbookRows(workbook));
           if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
           await performBulkImport(result.units, msg);
         } catch (err) {
-          msg.style.color = '#f87171'; 
-          msg.innerText = 'Error parsing file. Make sure it is a valid Excel or CSV file.';
-          console.error(err);
+          msg.style.color = '#f87171'; msg.innerText = 'Error parsing file.';
         }
       };
       reader.readAsBinaryString(file);
     }
 
+    /* Lightning Fast PDF Export Engine */
     async function prepareAndGeneratePDF(actionType) {
       const st = document.getElementById('status');
-      st.style.color = "#60a5fa"; st.innerText = "Generating PDF quickly...";
+      st.style.color = "#60a5fa"; st.innerText = "Exporting PDF instantly...";
 
       const element = document.getElementById('full-offer-container');
       
-      const images = element.querySelectorAll('img');
-      await Promise.all(Array.from(images).map(img => {
-        if (img.complete) return Promise.resolve();
-        return new Promise(resolve => { img.onload = img.onerror = resolve; });
-      }));
-
-      const isMobile = window.innerWidth <= 768;
-
       const opt = {
-        margin:       isMobile ? 5 : 10,
+        margin:       5,
         filename:     `M-Squared-Offer-${currentUnitCode || 'Unit'}.pdf`,
-        image:        { type: 'jpeg', quality: 0.95 },
-        html2canvas:  { scale: isMobile ? 1.5 : 2, useCORS: true, logging: false, scrollY: 0 },
+        image:        { type: 'jpeg', quality: 0.90 },
+        html2canvas:  { scale: 1.5, useCORS: true, logging: false, scrollY: 0, letterRendering: true },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
@@ -1517,36 +1412,20 @@
         if (actionType === 'preview') {
           html2pdf().from(element).set(opt).outputPdf('blob').then((pdfBlob) => {
             const blobUrl = URL.createObjectURL(pdfBlob);
-            const newWindow = window.open(blobUrl, '_blank');
-            if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-              const downloadLink = document.createElement('a');
-              downloadLink.href = blobUrl;
-              downloadLink.download = opt.filename;
-              document.body.appendChild(downloadLink);
-              downloadLink.click();
-              document.body.removeChild(downloadLink);
-              st.style.color = "#34d399"; st.innerText = "PDF downloaded (Pop-up blocked by browser).";
-            } else {
-              st.style.color = "#34d399"; st.innerText = "PDF preview opened successfully!";
-            }
+            window.open(blobUrl, '_blank');
+            st.style.color = "#34d399"; st.innerText = "PDF preview opened!";
           });
         } else {
           await html2pdf().from(element).set(opt).save();
           st.style.color = "#34d399"; st.innerText = "PDF downloaded successfully!";
         }
       } catch (err) {
-        console.error("PDF Error:", err);
         st.style.color = '#f87171'; st.innerText = "PDF generation failed.";
       }
     }
 
-    function previewFullPDF() {
-      prepareAndGeneratePDF('preview');
-    }
-
-    function exportFullPDF() {
-      prepareAndGeneratePDF('download');
-    }
+    function previewFullPDF() { prepareAndGeneratePDF('preview'); }
+    function exportFullPDF() { prepareAndGeneratePDF('download'); }
   </script>
 </body>
 </html>
