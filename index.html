@@ -1494,7 +1494,6 @@
         return new Promise(resolve => { img.onload = img.onerror = resolve; });
       }));
 
-      // تحديد ما إذا كان الجهاز موبايل لضبط الـ Scale والأبعاد بكفاءة تامة
       const isMobile = window.innerWidth <= 768;
 
       const opt = {
@@ -1507,8 +1506,19 @@
 
       try {
         if (actionType === 'preview') {
-          html2pdf().from(element).set(opt).toPdf().get('pdf').then((pdf) => {
-            window.open(pdf.output('bloburl'), '_blank');
+          // تم تحديث طريقة الـ Preview لضمان فتح الـ PDF بشكل صحيح على اللابتوب والموبايل
+          html2pdf().from(element).set(opt).outputPdf('blob').then((pdfBlob) => {
+            const blobUrl = URL.createObjectURL(pdfBlob);
+            const newWindow = window.open(blobUrl, '_blank');
+            if (!newWindow) {
+              // لو المتصفح منع الـ Pop-up، هنعمل داونلود آلي بديل عشان المستخدم ميتحبسش
+              const downloadLink = document.createElement('a');
+              downloadLink.href = blobUrl;
+              downloadLink.download = opt.filename;
+              document.body.appendChild(downloadLink);
+              downloadLink.click();
+              document.body.removeChild(downloadLink);
+            }
             st.style.color = "#34d399"; st.innerText = "PDF preview opened successfully!";
           });
         } else {
@@ -1516,6 +1526,7 @@
           st.style.color = "#34d399"; st.innerText = "PDF downloaded successfully!";
         }
       } catch (err) {
+        console.error("PDF Error:", err);
         st.style.color = '#f87171'; st.innerText = "PDF generation failed.";
       }
     }
