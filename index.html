@@ -52,75 +52,63 @@
       position: relative;
     }
 
+    /* Top Global Bar hosting Theme, Logout, and Unit/Client Search Controls */
     .top-global-bar {
       position: sticky;
       top: 0;
       z-index: 10000;
       display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 3px;
-      background: transparent;
-      padding: 6px 12px;
-      pointer-events: none;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
-    .top-global-bar > * { pointer-events: auto; }
-    .top-buttons-row { display: flex; gap: 6px; align-items: center; }
-    .user-welcome-text { font-size: 10px; color: var(--muted-color); font-weight: 600; display: none; }
+    .top-search-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .top-action-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-welcome-text { font-size: 11px; color: var(--muted-color); font-weight: 600; display: none; }
 
     .btn-theme, .btn-logout {
-      background: var(--card-bg);
+      background: var(--input-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 3px 8px;
-      border-radius: 10px;
+      padding: 5px 12px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
       box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     }
 
-    .sticky-header {
-      position: sticky;
-      top: 35px;
-      z-index: 9999;
-      background: transparent;
-      padding: 4px 0;
-      pointer-events: none;
-    }
-
-    .controls {
-      background: transparent;
-      padding: 0;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: center;
-      align-items: center;
-      gap: 6px;
-      max-width: 650px;
-      width: 100%;
-      pointer-events: auto;
-    }
-
     input, select {
-      padding: 6px 8px;
+      padding: 6px 10px;
       font-family: 'Cairo', sans-serif;
       font-size: 12px;
       border: 1px solid var(--border-color);
-      background: var(--card-bg);
+      background: var(--input-bg);
       color: var(--text-color);
       border-radius: 8px;
       outline: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    input#unitInput { text-transform: uppercase; font-weight: 600; width: 90px; }
-    select#clientTitleSelect { width: 65px; font-weight: 600; }
-    input#clientInput { width: 130px; }
+    input#unitInput { text-transform: uppercase; font-weight: 600; width: 100px; }
+    select#clientTitleSelect { width: 70px; font-weight: 600; }
+    input#clientInput { width: 140px; }
 
     button {
-      padding: 6px 12px;
+      padding: 6px 14px;
       font-family: 'Cairo', sans-serif;
       font-size: 11px;
       border: none;
@@ -128,7 +116,7 @@
       cursor: pointer;
       font-weight: 700;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
     button:active { transform: scale(0.97); }
 
@@ -157,32 +145,33 @@
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 25px 20px;
+      padding: 35px 20px;
       max-width: 500px;
-      margin: 15px auto;
+      margin: 40px auto;
     }
 
-    #main-app-content { display: none; max-width: 800px; margin: 10px auto; text-align: left; }
+    #main-app-content { display: none; max-width: 800px; margin: 15px auto; text-align: left; }
 
+    /* Aligned Sidebar starting at top matching the offer page */
     .app-sidebar {
       position: fixed;
-      top: 90px;
-      left: 10px;
+      top: 65px;
+      left: max(10px, calc((100% - 800px) / 2 - 190px));
       z-index: 9998;
-      width: 180px;
+      width: 175px;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 12px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      padding: 8px;
+      padding: 10px;
       transition: transform 0.3s ease, opacity 0.3s ease;
     }
-    .app-sidebar.collapsed { transform: translateX(-210px); opacity: 0; pointer-events: none; }
+    .app-sidebar.collapsed { transform: translateX(-200px); opacity: 0; pointer-events: none; }
 
     .sidebar-toggle-btn {
       position: fixed;
-      top: 90px;
-      left: 10px;
+      top: 65px;
+      left: max(10px, calc((100% - 800px) / 2 - 190px));
       z-index: 9999;
       background: var(--primary-gradient);
       color: white;
@@ -198,23 +187,9 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
 
-    .sidebar-section-title { font-size: 10px; text-transform: uppercase; color: var(--muted-color); margin: 4px 0 2px 0; font-weight: 700; }
-    .nav-tabs { display: flex; flex-direction: column; gap: 3px; margin-bottom: 6px; }
-    .tab-btn {
-      background: var(--input-bg);
-      color: var(--text-color);
-      border: 1px solid var(--border-color);
-      padding: 6px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: left;
-      width: 100%;
-    }
-    .tab-btn.active { background: var(--primary-gradient); color: white; border-color: transparent; }
-    .action-buttons { display: flex; flex-direction: column; gap: 5px; }
-    .action-buttons button { width: 100%; padding: 6px; }
+    .sidebar-section-title { font-size: 10px; text-transform: uppercase; color: var(--muted-color); margin: 4px 0 4px 0; font-weight: 700; }
+    .action-buttons { display: flex; flex-direction: column; gap: 6px; }
+    .action-buttons button { width: 100%; padding: 8px; }
 
     #full-offer-container { display: flex; flex-direction: column; gap: 20px; background: transparent; }
 
@@ -320,27 +295,25 @@
       z-index: 10;
     }
 
-    /* Split Payment Tables Layout */
+    /* Split Payment Tables Layout - Fully visible without inner scrolling */
     .payment-split-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
       width: 100%;
       flex-grow: 1;
-      overflow: hidden;
     }
     .payment-table-box {
       background: var(--input-bg);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      overflow-y: auto;
-      max-height: 500px;
+      overflow: hidden;
     }
     .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; }
-    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 7px 8px; font-weight: 700; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 5; }
-    .payment-table td { padding: 6px 8px; border-bottom: 1px solid var(--border-color); }
+    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 7px 8px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
+    .payment-table td { padding: 5px 8px; border-bottom: 1px solid var(--border-color); }
 
-    .status { margin-top: 4px; font-size: 10px; font-weight: 600; text-align: center; background: var(--card-bg); display: inline-block; padding: 2px 8px; border-radius: 6px; border: 1px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+    .status { margin-top: 4px; font-size: 11px; font-weight: 600; text-align: center; color: var(--muted-color); }
 
     .admin-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
     .admin-form-block { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: left; }
@@ -373,11 +346,23 @@
 <body data-theme="dark">
 
   <div class="top-global-bar">
-    <div class="top-buttons-row">
-      <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
-      <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">Light</button>
+    <div class="top-search-group">
+      <input type="text" id="unitInput" placeholder="Unit Code" onkeypress="if(event.key==='Enter') searchUnit()">
+      <select id="clientTitleSelect">
+        <option value="Mr.">Mr.</option>
+        <option value="Ms.">Ms.</option>
+        <option value="Dr.">Dr.</option>
+        <option value="Eng.">Eng.</option>
+      </select>
+      <input type="text" id="clientInput" placeholder="Client Name" onkeypress="if(event.key==='Enter') searchUnit()">
+      <button class="btn-search" onclick="searchUnit()">Search</button>
+      <button class="btn-sync" onclick="loadCloudData(true)" title="Sync Data">Sync</button>
     </div>
-    <div id="userWelcomeDisplay" class="user-welcome-text"></div>
+    <div class="top-action-group">
+      <div id="userWelcomeDisplay" class="user-welcome-text"></div>
+      <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">Light</button>
+      <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
+    </div>
   </div>
 
   <div id="login-screen">
@@ -411,23 +396,9 @@
 
   <div id="app-root" style="display:none;">
 
-    <div class="sticky-header">
-      <div class="controls">
-        <input type="text" id="unitInput" placeholder="Unit Code" onkeypress="if(event.key==='Enter') searchUnit()">
-        <select id="clientTitleSelect">
-          <option value="Mr.">Mr.</option>
-          <option value="Ms.">Ms.</option>
-          <option value="Dr.">Dr.</option>
-          <option value="Eng.">Eng.</option>
-        </select>
-        <input type="text" id="clientInput" placeholder="Client Name" onkeypress="if(event.key==='Enter') searchUnit()">
-        <button class="btn-search" onclick="searchUnit()">Search</button>
-        <button class="btn-sync" onclick="loadCloudData(true)" title="Sync Data">Sync</button>
-      </div>
-      <div style="text-align: center;"><div id="status" class="status">Loading...</div></div>
-    </div>
+    <div style="text-align: center;"><div id="status" class="status"></div></div>
 
-    <div id="welcome-screen" style="margin-top: 25px;">
+    <div id="welcome-screen">
       <h2 style="font-size:1.3rem; margin-bottom:6px;">Welcome M Squared</h2>
       <p style="font-size:11px; color:var(--muted-color);">Enter unit code above to view offer.</p>
     </div>
@@ -436,17 +407,6 @@
 
       <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Menu">☰</button>
       <div class="app-sidebar" id="appSidebar">
-        <div class="sidebar-section-title">Navigation</div>
-        <div class="nav-tabs">
-          <button class="tab-btn active" onclick="scrollToSection('sec-summary', this)">Summary</button>
-          <button class="tab-btn" onclick="scrollToSection('sec-pictures', this)">Gallery</button>
-          <button class="tab-btn" onclick="scrollToSection('sec-masterplan', this)">Masterplan</button>
-          <button class="tab-btn" onclick="scrollToSection('sec-layout', this)">Layout</button>
-          <button class="tab-btn" onclick="scrollToSection('sec-payment', this)">Payment</button>
-          <button class="tab-btn" id="inventoryTabBtn" onclick="scrollToSection('sec-inventory', this)">Inventory</button>
-          <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="scrollToSection('sec-admin', this)">Admin</button>
-        </div>
-        
         <div class="sidebar-section-title">Actions</div>
         <div class="action-buttons">
           <button class="btn-preview" onclick="previewFullPDF()">Preview (PDF)</button>
@@ -731,7 +691,6 @@
       document.getElementById('main-app-content').style.display = 'block';
 
       if (profile && profile.role === 'admin') {
-        document.getElementById('adminTabBtn').style.display = 'block';
         document.getElementById('sec-admin').style.display = 'block';
         loadPendingApprovals();
       }
@@ -756,13 +715,6 @@
       } else {
         body.setAttribute('data-theme', 'dark'); btn.innerHTML = 'Light'; localStorage.setItem('m2_theme', 'dark');
       }
-    }
-
-    function scrollToSection(sectionId, btnElement) {
-      const target = document.getElementById(sectionId);
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      if (btnElement) btnElement.classList.add('active');
     }
 
     async function loadPendingApprovals() {
@@ -1142,18 +1094,26 @@
           const quarterAmount = remainingAmount / 39;
           const maintenanceAmount = unitPriceVal * 0.07;
 
-          let leftHtml = `<tr><td>Down Payment (5%)</td><td>Immediate</td><td>${dp.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          const baseDate = new Date();
+          
+          function addMonths(date, months) {
+            const d = new Date(date);
+            d.setMonth(d.getMonth() + months);
+            return d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+          }
+
+          let leftHtml = `<tr><td>Down Payment (5%)</td><td>${addMonths(baseDate, 0)}</td><td>${dp.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
           
           for (let qNum = 1; qNum <= 20; qNum++) {
-            leftHtml += `<tr><td>Quarterly (${qNum}/39)</td><td>Qtr ${qNum}</td><td>${quarterAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+            leftHtml += `<tr><td>Quarterly (${qNum}/39)</td><td>${addMonths(baseDate, qNum * 3)}</td><td>${quarterAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
           }
           tbodyLeft.innerHTML = leftHtml;
 
           let rightHtml = '';
           for (let qNum = 21; qNum <= 39; qNum++) {
-            rightHtml += `<tr><td>Quarterly (${qNum}/39)</td><td>Qtr ${qNum}</td><td>${quarterAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+            rightHtml += `<tr><td>Quarterly (${qNum}/39)</td><td>${addMonths(baseDate, qNum * 3)}</td><td>${quarterAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
           }
-          rightHtml += `<tr style="color: #38bdf8; font-weight: bold; background: rgba(56, 189, 248, 0.1);"><td>Maintenance (7%)</td><td>6m before delivery</td><td>${maintenanceAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          rightHtml += `<tr style="color: #f59e0b; font-weight: bold; background: rgba(245, 158, 11, 0.12);"><td>Maintenance (7%)</td><td>6m before delivery</td><td>${maintenanceAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
           tbodyRight.innerHTML = rightHtml;
 
         } else {
@@ -1393,7 +1353,6 @@
       reader.readAsBinaryString(file);
     }
 
-    /* Lightning Fast PDF Export Engine */
     async function prepareAndGeneratePDF(actionType) {
       const st = document.getElementById('status');
       st.style.color = "#60a5fa"; st.innerText = "Exporting PDF instantly...";
