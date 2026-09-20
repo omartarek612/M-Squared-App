@@ -832,16 +832,29 @@
 
     async function loadImportLogs() {
       const listEl = document.getElementById('importLogList');
+      if (!listEl) return;
       try {
-        const { data, error } = await supabaseClient.from('import_logs').select('*').order('created_at', { ascending: false }).limit(5);
-        if (error) { listEl.innerHTML = `<p style="font-size:13px; color:#f87171;">Error loading logs: ${error.message}</p>`; return; }
-        if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:13px; color:var(--muted-color);">No imports recorded yet.</p>'; return; }
-        
+        const { data, error } = await supabaseClient
+          .from('import_logs')
+          .select('*')
+          .order('id', { ascending: false })
+          .limit(5);
+
+        if (error) {
+          listEl.innerHTML = `<p style="font-size:13px; color:#f87171;">Error: ${error.message}</p>`;
+          return;
+        }
+
+        if (!data || !data.length) {
+          listEl.innerHTML = '<p style="font-size:13px; color:var(--muted-color);">No imports recorded yet.</p>';
+          return;
+        }
+
         listEl.innerHTML = '';
         data.forEach(log => {
           const div = document.createElement('div');
           div.className = 'import-log-item';
-          const userEmail = log.user_email || 'System / Admin';
+          const userEmail = log.user_email || 'System Admin';
           const dateStr = log.created_at ? new Date(log.created_at).toLocaleString() : 'Just now';
           div.innerHTML = `<span><b>${log.unit_count || 0}</b> units updated</span><span style="font-size:12px; color:var(--muted-color);">👤 ${userEmail} | 🕒 ${dateStr}</span>`;
           listEl.appendChild(div);
@@ -1579,7 +1592,7 @@
       msgEl.style.color = '#34d399'; 
       msgEl.innerText = `Inventory updated successfully (${cleanUnits.length} units)!`;
       loadCloudData(true);
-      loadImportLogs();
+      loadImportLogs(); // تحديث السجلات فوراً في واجهة المستخدم
     }
 
     function adminImportFile() {
