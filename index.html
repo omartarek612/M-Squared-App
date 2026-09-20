@@ -205,7 +205,6 @@
 
     #full-offer-container { display: flex; flex-direction: column; gap: 30px; background: transparent; }
 
-    /* جعل العرض One Long Page مفتوح ومتصل مع تكبير الخطوط والوضوح التام */
     .offer-page-section {
       background: var(--page-section-bg);
       padding: 30px;
@@ -275,7 +274,6 @@
     .detail-card strong { display: block; font-size: 13px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
     .detail-card span { font-size: 20px; font-weight: 800; color: #3b82f6; }
 
-    /* تعديل المعرض ليأخذ مساحة نصف الصفحة أو الصفحات الإضافية وبأبعاد واضحة ومن غير تمطيط */
     .pictures-grid { 
       display: flex; 
       flex-direction: column; 
@@ -357,7 +355,6 @@
       border-radius: 10px;
       overflow: hidden;
     }
-    /* تكبير خطوط جدول الأقساط لتكون واضحة وجلية بالكامل */
     .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
     .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 11px 12px; font-weight: 800; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 14px; }
     .payment-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); font-weight: 700; text-align: left; font-size: 13px; }
@@ -667,7 +664,7 @@
   <div id="galleryModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:20000; justify-content:center; align-items:center;">
     <div style="background:var(--card-bg); border:1px solid var(--border-color); padding:24px; border-radius:12px; max-width:550px; width:90%; max-height:85vh; overflow-y:auto; text-align:left;">
       <h3 style="margin-top:0; font-size:16px;">Manage & Order Gallery Photos</h3>
-      <p style="font-size:13px; color:var(--muted-color);">Select photos to display in your offer. You can pick multiple or all photos.</p>
+      <p style="font-size:13px; color:var(--muted-color);">Select photos to display in your offer.</p>
       <div id="modalGalleryPickerList" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-bottom:18px;"></div>
       <div style="display:flex; justify-content:flex-end; gap:10px;">
         <button class="btn-search" onclick="saveSelectedGalleryPhotos()">Apply Selection</button>
@@ -835,17 +832,23 @@
 
     async function loadImportLogs() {
       const listEl = document.getElementById('importLogList');
-      const { data } = await supabaseClient.from('import_logs').select('*').order('created_at', { ascending: false }).limit(5);
-      if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:13px; color:var(--muted-color);">No imports.</p>'; return; }
-      listEl.innerHTML = '';
-      data.forEach(log => {
-        const div = document.createElement('div');
-        div.className = 'import-log-item';
-        const userEmail = log.user_email || 'Unknown';
-        const dateStr = log.created_at ? new Date(log.created_at).toLocaleString() : 'Just now';
-        div.innerHTML = `<span><b>${log.unit_count}</b> units updated</span><span style="font-size:12px; color:var(--muted-color);">👤 ${userEmail} | 🕒 ${dateStr}</span>`;
-        listEl.appendChild(div);
-      });
+      try {
+        const { data, error } = await supabaseClient.from('import_logs').select('*').order('created_at', { ascending: false }).limit(5);
+        if (error) { listEl.innerHTML = `<p style="font-size:13px; color:#f87171;">Error loading logs: ${error.message}</p>`; return; }
+        if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:13px; color:var(--muted-color);">No imports recorded yet.</p>'; return; }
+        
+        listEl.innerHTML = '';
+        data.forEach(log => {
+          const div = document.createElement('div');
+          div.className = 'import-log-item';
+          const userEmail = log.user_email || 'System / Admin';
+          const dateStr = log.created_at ? new Date(log.created_at).toLocaleString() : 'Just now';
+          div.innerHTML = `<span><b>${log.unit_count || 0}</b> units updated</span><span style="font-size:12px; color:var(--muted-color);">👤 ${userEmail} | 🕒 ${dateStr}</span>`;
+          listEl.appendChild(div);
+        });
+      } catch (err) {
+        listEl.innerHTML = '<p style="font-size:13px; color:var(--muted-color);">Logs unavailable.</p>';
+      }
     }
 
     async function loadCloudData(forceRefresh = false) {
@@ -945,7 +948,7 @@
       if (proj && proj.selected_gallery && Array.isArray(proj.selected_gallery) && proj.selected_gallery.length > 0) {
         activeGallery = proj.selected_gallery;
       } else {
-        activeGallery = allGallery; // عرض كل الصور المتاحة متسلسلة تحت بعضها
+        activeGallery = allGallery;
       }
 
       activeGallery.forEach(imgUrl => {
@@ -1560,12 +1563,17 @@
 
       const userIdentifier = currentUser ? (currentProfile?.full_name || currentUser.email || currentUser.id) : 'Admin';
       try {
-        await supabaseClient.from('import_logs').insert({
+        const logRes = await supabaseClient.from('import_logs').insert({
           unit_count: cleanUnits.length,
           user_email: userIdentifier,
           created_at: new Date().toISOString()
         });
-      } catch (e) {}
+        if (logRes.error) {
+          console.error("Import log insert error:", logRes.error);
+        }
+      } catch (e) {
+        console.error("Import log exception:", e);
+      }
 
       sessionStorage.clear();
       msgEl.style.color = '#34d399'; 
