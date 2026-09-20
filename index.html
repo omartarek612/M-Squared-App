@@ -12,10 +12,12 @@
     :root {
       --bg-color: #0b1329;
       --card-bg: #131b31;
+      /* تم تحديث لون خلفية الصفحات باللون الجديد الذي اخترته */
+      --page-section-bg: #5C697D;
       --text-color: #f1f5f9;
       --border-color: #1e293b;
       --input-bg: #090d16;
-      --muted-color: #64748b;
+      --muted-color: #94a3b8;
       --greeting-bg: #090d16;
       --greeting-text: #93c5fd;
       --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
@@ -27,10 +29,12 @@
     [data-theme="light"] {
       --bg-color: #f8fafc;
       --card-bg: #ffffff;
+      /* خلفية الصفحات للوضع الفاتح مأخوذة بتدرج متناسق مع اللون المطلوب */
+      --page-section-bg: #5C697D;
       --text-color: #0f172a;
-      --border-color: #e2e8f0;
+      --border-color: #cbd5e1;
       --input-bg: #f1f5f9;
-      --muted-color: #64748b;
+      --muted-color: #475569;
       --greeting-bg: #f8fafc;
       --greeting-text: #1e40af;
       --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
@@ -198,12 +202,13 @@
 
     #full-offer-container { display: flex; flex-direction: column; gap: 20px; background: transparent; }
 
+    /* هنا تم تطبيق اللون الجديد #5C697D على خلفية الصفحات */
     .offer-page-section {
-      background: var(--card-bg);
+      background: var(--page-section-bg);
       padding: 20px;
       border-radius: 16px;
-      border: 2px solid rgba(59, 130, 246, 0.35);
-      box-shadow: 0 6px 22px rgba(0,0,0,0.18);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 6px 22px rgba(0,0,0,0.22);
       overflow: hidden;
       break-before: page;
       page-break-before: always;
@@ -219,7 +224,7 @@
       page-break-before: auto;
     }
 
-    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.2); padding-bottom: 10px; margin-bottom: 12px; }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 10px; margin-bottom: 12px; }
     .company-logo { max-height: 30px; width: auto; object-fit: contain; }
     .project-logo { max-height: 26px; max-width: 120px; width: auto; object-fit: contain; }
 
@@ -238,8 +243,8 @@
     .greeting-box .client-highlight { font-size: 14px; font-weight: 700; color: #3b82f6; }
 
     .summary-hero-card {
-      background: var(--input-bg);
-      border: 1px solid var(--border-color);
+      background: rgba(15, 23, 42, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 10px;
       padding: 12px;
       margin-bottom: 10px;
@@ -247,16 +252,16 @@
       border-top: 4px solid #3b82f6;
     }
     .summary-hero-card h4 { margin: 0 0 4px 0; font-size: 11px; color: var(--muted-color); text-transform: uppercase; }
-    .summary-hero-card .unit-big-text { font-size: 24px; font-weight: 700; color: #3b82f6; }
-    .summary-hero-card .project-small-text { font-size: 14px; font-weight: 600; }
+    .summary-hero-card .unit-big-text { font-size: 24px; font-weight: 700; color: #ffffff; }
+    .summary-hero-card .project-small-text { font-size: 14px; font-weight: 600; color: #f1f5f9; }
 
     .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .detail-card { background: var(--input-bg); padding: 10px 12px; border-radius: 8px; border-left: 3px solid #3b82f6; border: 1px solid var(--border-color); word-break: break-word; text-align: left; }
+    .detail-card { background: rgba(15, 23, 42, 0.35); padding: 10px 12px; border-radius: 8px; border-left: 3px solid #3b82f6; border: 1px solid rgba(255, 255, 255, 0.1); word-break: break-word; text-align: left; }
     .detail-card strong { display: block; font-size: 9px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 2px; }
-    .detail-card span { font-size: 13px; font-weight: 700; }
+    .detail-card span { font-size: 13px; font-weight: 700; color: #ffffff; }
 
     .pictures-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; justify-content: center; align-items: center; padding: 10px; }
-    .gallery-card-item { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; aspect-ratio: 1 / 1; max-width: 320px; width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .gallery-card-item { background: rgba(15, 23, 42, 0.35); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; overflow: hidden; aspect-ratio: 1 / 1; max-width: 320px; width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
     .gallery-card-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
@@ -265,10 +270,10 @@
       position: relative; 
       width: 100%; 
       height: 680px; 
-      background: var(--input-bg); 
+      background: rgba(15, 23, 42, 0.35); 
       border-radius: 10px; 
       overflow: hidden;
-      border: 1px solid var(--border-color); 
+      border: 1px solid rgba(255, 255, 255, 0.1); 
       display: flex; 
       justify-content: center; 
       align-items: center;
@@ -308,19 +313,19 @@
       flex-grow: 1;
     }
     .payment-table-box {
-      background: var(--input-bg);
-      border: 1px solid var(--border-color);
+      background: rgba(15, 23, 42, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 10px;
       overflow: hidden;
     }
-    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; }
-    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 7px 8px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
-    .payment-table td { padding: 5px 8px; border-bottom: 1px solid var(--border-color); }
+    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; color: #f1f5f9; }
+    .payment-table th { background: rgba(59, 130, 246, 0.3); color: #93c5fd; padding: 7px 8px; font-weight: 700; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+    .payment-table td { padding: 5px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
 
     .status { margin-top: 4px; font-size: 11px; font-weight: 600; text-align: center; color: var(--muted-color); }
 
     .admin-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    .admin-form-block { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: left; }
+    .admin-form-block { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; text-align: left; }
     .admin-form-block h4 { margin-top: 0; font-size: 12px; }
     .admin-form-block input, .admin-form-block textarea { width: 100%; max-width: 100%; margin-bottom: 6px; }
     .admin-msg { font-size: 11px; margin-top: 4px; }
