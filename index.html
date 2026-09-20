@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -200,7 +200,7 @@
 
     #full-offer-container { display: flex; flex-direction: column; gap: 25px; background: transparent; }
 
-    /* ضبط كل قسم ليملأ الصفحة بالكامل في الـ PDF والـ Preview بدون فراغات وبدون تمطيط العناصر نفسها */
+    /* ملء كل قسم لصفحة كاملة في المعاينة والتحميل بدون فراغات عشوائية وبدون تمطيط */
     .offer-page-section {
       background: var(--page-section-bg);
       padding: 24px;
@@ -212,7 +212,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 98vh; /* ملء كامل لارتفاع الصفحة */
+      min-height: 98vh;
       page-break-inside: avoid;
       break-inside: avoid;
       page-break-after: always;
@@ -333,7 +333,7 @@
       border-radius: 10px;
       overflow: hidden;
     }
-    /* جعل الخطوط داخل جداول الأقساط بـ Bold دائماً */
+    /* جعل الخطوط داخل جدول الأقساط داكنة و Bold دائماً */
     .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; }
     .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 7px 8px; font-weight: 800; border-bottom: 1px solid var(--border-color); }
     .payment-table td { padding: 6px 8px; border-bottom: 1px solid var(--border-color); font-weight: 700; }
@@ -1312,7 +1312,7 @@
           }
           rightHtml += `<tr style="color: #f59e0b; font-weight: bold; background: rgba(245, 158, 11, 0.12);"><td>Maintenance (7%)</td><td>6m before delivery</td><td>${maintenanceAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
           
-          // إضافة إجمالي الوحدة بدون صيانة وبالصيانة بنفس لون الصيانة المميز وبخط غامق
+          // إضافة إجمالي الوحدة بدون صيانة وبالصيانة بنسق واضح ومميز
           rightHtml += `<tr style="color: #f59e0b; font-weight: bold; background: rgba(245, 158, 11, 0.12);"><td>Total Unit (excl. Maint.)</td><td>-</td><td>${unitPriceVal.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
           rightHtml += `<tr style="color: #f59e0b; font-weight: bold; background: rgba(245, 158, 11, 0.18);"><td>Total with Maintenance</td><td>-</td><td>${totalWithMaintenance.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
 
