@@ -200,7 +200,7 @@
 
     #full-offer-container { display: flex; flex-direction: column; gap: 25px; background: transparent; }
 
-    /* دمج العرض في صفحة واحدة متصلة بـ Titles واضحة وفخمة */
+    /* حماية عناصر الـ PDF من الكسر العشوائي وجعل كل قسم كوحدة متكاملة مريحة للعين */
     .offer-page-section {
       background: var(--page-section-bg);
       padding: 24px;
@@ -212,6 +212,8 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
     .section-main-title {
@@ -257,7 +259,6 @@
     .summary-hero-card .unit-big-text { font-size: 30px; font-weight: 800; color: #3b82f6; }
     .summary-hero-card .project-small-text { font-size: 16px; font-weight: 700; color: var(--text-color); }
 
-    /* تنسيق قسم الـ Summary ليصبح Centered وفونتات أكبر وأوضح */
     .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; text-align: center; }
     .detail-card { 
       background: var(--input-bg); 
