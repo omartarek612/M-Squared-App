@@ -55,6 +55,7 @@
       position: relative;
     }
 
+    /* الشريط العلوي متضمن أزرار المعاينة والتحميل للـ Agents */
     .top-global-bar {
       position: sticky;
       top: 0;
@@ -66,20 +67,22 @@
       border-bottom: 1px solid var(--border-color);
       padding: 10px 18px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .top-search-group { display: flex; align-items: center; gap: 10px; }
-    .top-action-group { display: flex; align-items: center; gap: 10px; }
+    .top-search-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .top-action-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .user-welcome-text { font-size: 13px; color: var(--muted-color); font-weight: 600; display: none; }
 
     .btn-theme, .btn-logout {
       background: var(--input-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     }
@@ -87,7 +90,7 @@
     input, select {
       padding: 8px 12px;
       font-family: 'Cairo', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       border: 1px solid var(--border-color);
       background: var(--input-bg);
       color: var(--text-color);
@@ -95,14 +98,14 @@
       outline: none;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    input#unitInput { text-transform: uppercase; font-weight: 600; width: 110px; text-align: left; }
-    select#clientTitleSelect { width: 75px; font-weight: 600; }
-    input#clientInput { width: 150px; text-transform: capitalize; }
+    input#unitInput { text-transform: uppercase; font-weight: 600; width: 100px; text-align: left; }
+    select#clientTitleSelect { width: 70px; font-weight: 600; }
+    input#clientInput { width: 140px; text-transform: capitalize; }
 
     button {
-      padding: 8px 16px;
+      padding: 7px 14px;
       font-family: 'Cairo', sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -116,7 +119,7 @@
     .btn-sync { background: var(--sync-gradient); color: white; }
     .btn-preview { background: var(--preview-gradient); color: #0f172a; }
     .btn-pdf { background: var(--pdf-gradient); color: white; }
-    .btn-delete-img { background: #ef4444; color: white; padding: 5px 10px; font-size: 12px; border-radius: 4px; margin-top: 4px; }
+    .btn-delete-icon { background: #ef4444; color: white; padding: 5px 10px; font-size: 12px; border-radius: 4px; margin-top: 4px; }
 
     #login-screen, #signup-screen, #pending-screen {
       background: var(--card-bg);
@@ -144,36 +147,39 @@
       text-align: center;
     }
 
-    #main-app-content { display: none; max-width: 850px; margin: 20px auto; text-align: left; }
+    #main-app-content { display: none; max-width: 850px; margin: 20px auto 20px 220px; text-align: left; }
 
+    /* الشريط الجانبي في أقصى الشمال تماماً ومكبر شوية */
     .app-sidebar {
       position: fixed;
-      top: 75px;
-      left: max(10px, calc((100% - 850px) / 2 - 200px));
+      top: 65px;
+      left: 0;
       z-index: 9998;
-      width: 185px;
+      width: 205px;
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      padding: 12px;
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      border-top-right-radius: 12px;
+      border-bottom-right-radius: 12px;
+      box-shadow: 4px 10px 25px rgba(0,0,0,0.3);
+      padding: 14px 10px;
       transition: transform 0.3s ease, opacity 0.3s ease;
-      max-height: calc(100vh - 90px);
+      max-height: calc(100vh - 75px);
       overflow-y: auto;
       text-align: left;
     }
-    .app-sidebar.collapsed { transform: translateX(-215px); opacity: 0; pointer-events: none; }
+    .app-sidebar.collapsed { transform: translateX(-220px); opacity: 0; pointer-events: none; }
 
     .sidebar-toggle-btn {
       position: fixed;
       top: 75px;
-      left: max(10px, calc((100% - 850px) / 2 - 200px));
+      left: 10px;
       z-index: 9999;
       background: var(--primary-gradient);
       color: white;
       border: none;
-      width: 35px;
-      height: 35px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       cursor: pointer;
       font-size: 15px;
@@ -183,13 +189,11 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
 
-    .sidebar-section-title { font-size: 12px; text-transform: uppercase; color: var(--muted-color); margin: 10px 0 6px 0; font-weight: 700; text-align: left; }
-    .action-buttons { display: flex; flex-direction: column; gap: 8px; }
-    .action-buttons button { width: 100%; padding: 10px; text-align: left; font-size: 13px; }
-
+    .sidebar-section-title { font-size: 12px; text-transform: uppercase; color: var(--muted-color); margin: 12px 0 6px 0; font-weight: 700; text-align: left; }
+    
     .sidebar-nav-link {
       display: block;
-      padding: 8px 10px;
+      padding: 9px 12px;
       font-size: 13px;
       color: var(--text-color);
       text-decoration: none;
@@ -205,7 +209,7 @@
 
     #full-offer-container { display: flex; flex-direction: column; gap: 30px; background: transparent; }
 
-    /* جعل العرض One Long Page مفتوح ومتصل مع تكبير الخطوط والوضوح التام */
+    /* إزالة فواصل الصفحات تماماً وجعل كل الأقسام متصلة ومناسبة تماماً (Fitted) */
     .offer-page-section {
       background: var(--page-section-bg);
       padding: 30px;
@@ -217,6 +221,8 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
     .section-main-title {
@@ -275,7 +281,7 @@
     .detail-card strong { display: block; font-size: 13px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
     .detail-card span { font-size: 20px; font-weight: 800; color: #3b82f6; }
 
-    /* تعديل المعرض ليأخذ مساحة نصف الصفحة أو الصفحات الإضافية وبأبعاد واضحة ومن غير تمطيط */
+    /* معرض الصور: افتراضياً 3 صور كحد أقصى بأبعاد متناسقة ومن غير تمطيط */
     .pictures-grid { 
       display: flex; 
       flex-direction: column; 
@@ -357,7 +363,6 @@
       border-radius: 10px;
       overflow: hidden;
     }
-    /* تكبير خطوط جدول الأقساط لتكون واضحة وجلية بالكامل */
     .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
     .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 11px 12px; font-weight: 800; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 14px; }
     .payment-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); font-weight: 700; text-align: left; font-size: 13px; }
@@ -408,6 +413,9 @@
       <button class="btn-sync" onclick="loadCloudData(true)" title="Sync Data">Sync</button>
     </div>
     <div class="top-action-group">
+      <!-- أزرار المعاينة والتحميل للـ Agents في البار العلوي -->
+      <button class="btn-preview" onclick="previewFullPDF()">Preview (PDF)</button>
+      <button class="btn-pdf" onclick="exportFullPDF()">Download PDF</button>
       <div id="userWelcomeDisplay" class="user-welcome-text"></div>
       <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">Light</button>
       <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
@@ -463,12 +471,6 @@
         <a href="#sec-layout" class="sidebar-nav-link">📐 Layouts</a>
         <a href="#sec-payment" class="sidebar-nav-link">💳 Payment Plan</a>
         <a href="#sec-admin" class="sidebar-nav-link" id="sidebarAdminLink" style="display:none;">⚙️ Admin Panel</a>
-
-        <div class="sidebar-section-title">PDF Actions</div>
-        <div class="action-buttons">
-          <button class="btn-preview" onclick="previewFullPDF()">Preview (PDF)</button>
-          <button class="btn-pdf" onclick="exportFullPDF()">Download PDF</button>
-        </div>
       </div>
 
       <div id="full-offer-container">
@@ -504,7 +506,7 @@
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <h3 style="margin: 0; font-size: 16px; text-align: left;">Project Views</h3>
             <div id="gallerySelectionControls" class="hide-on-pdf" style="display:none; font-size: 13px;">
-              <button class="btn-sync" style="padding: 6px 12px; font-size: 12px;" onclick="openGallerySelector()">⚙️ Manage Gallery Photos</button>
+              <button class="btn-sync" style="padding: 6px 12px; font-size: 12px;" onclick="openGallerySelector()">⚙️ Manage Gallery Photos (Max 3)</button>
             </div>
           </div>
           <div class="pictures-grid" id="picturesGridContainer"></div>
@@ -634,7 +636,7 @@
             <input type="file" id="adm_single_layout_file" accept="image/*" style="font-size:13px; margin-bottom:8px;">
             <div style="display:flex; gap:8px;">
               <button class="btn-search" onclick="adminSaveSingleLayout()" style="flex:1;">Save/Update Layout</button>
-              <button class="btn-delete-img" onclick="adminDeleteSingleLayout()" style="margin-top:0; flex:1; font-size:13px; padding:9px;">Delete Layout ❌</button>
+              <button class="btn-delete-icon" onclick="adminDeleteSingleLayout()" style="margin-top:0; flex:1; font-size:13px; padding:9px;">Delete Layout ❌</button>
             </div>
             <div class="admin-msg" id="adminSingleLayoutMsg"></div>
           </div>
@@ -666,12 +668,12 @@
 
   <div id="galleryModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:20000; justify-content:center; align-items:center;">
     <div style="background:var(--card-bg); border:1px solid var(--border-color); padding:24px; border-radius:12px; max-width:550px; width:90%; max-height:85vh; overflow-y:auto; text-align:left;">
-      <h3 style="margin-top:0; font-size:16px;">Manage & Order Gallery Photos</h3>
-      <p style="font-size:13px; color:var(--muted-color);">Select photos to display in your offer. You can pick multiple or all photos.</p>
+      <h3 style="margin-top:0; font-size:16px;">Manage Gallery Photos (Maximum 3)</h3>
+      <p style="font-size:13px; color:var(--muted-color);">Select up to 3 photos to display in your offer.</p>
       <div id="modalGalleryPickerList" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-bottom:18px;"></div>
       <div style="display:flex; justify-content:flex-end; gap:10px;">
         <button class="btn-search" onclick="saveSelectedGalleryPhotos()">Apply Selection</button>
-        <button class="btn-delete-img" style="margin-top:0;" onclick="closeGallerySelector()">Cancel</button>
+        <button class="btn-delete-icon" style="margin-top:0;" onclick="closeGallerySelector()">Cancel</button>
       </div>
     </div>
   </div>
@@ -945,10 +947,11 @@
       if (proj && proj.selected_gallery && Array.isArray(proj.selected_gallery) && proj.selected_gallery.length > 0) {
         activeGallery = proj.selected_gallery;
       } else {
-        activeGallery = allGallery; // عرض كل الصور المتاحة متسلسلة تحت بعضها
+        activeGallery = allGallery.slice(0, 3); // افتراضياً أول 3 صور كحد أقصى
       }
 
-      activeGallery.forEach(imgUrl => {
+      // تطبيق أقصى 3 صور كحد أقصى للـ Gallery
+      activeGallery.slice(0, 3).forEach(imgUrl => {
         const div = document.createElement('div');
         div.className = 'gallery-card-item';
         div.innerHTML = `<img src="${imgUrl}" alt="View" crossorigin="anonymous" loading="lazy">`;
@@ -969,7 +972,7 @@
       const container = document.getElementById('modalGalleryPickerList');
       container.innerHTML = '';
       
-      const currentSelected = proj.selected_gallery || proj.gallery;
+      const currentSelected = proj.selected_gallery || proj.gallery.slice(0, 3);
 
       proj.gallery.forEach((imgUrl, idx) => {
         const isChecked = currentSelected.includes(imgUrl) ? 'checked' : '';
@@ -977,7 +980,7 @@
         item.style.cssText = "background:var(--input-bg); border:1px solid var(--border-color); padding:8px; border-radius:6px; text-align:center;";
         item.innerHTML = `
           <img src="${imgUrl}" style="width:100%; height:80px; object-fit:cover; border-radius:4px; margin-bottom:6px;">
-          <label style="font-size:12px; display:block;"><input type="checkbox" name="galleryPick" value="${imgUrl}" ${isChecked}> Select</label>
+          <label style="font-size:12px; display:block;"><input type="checkbox" name="galleryPick" value="${imgUrl}" ${isChecked}> Select (Max 3)</label>
         `;
         container.appendChild(item);
       });
@@ -994,6 +997,7 @@
       const selectedUrls = Array.from(checkboxes).map(cb => cb.value);
 
       if (selectedUrls.length === 0) { alert('Please select at least one photo.'); return; }
+      if (selectedUrls.length > 3) { alert('Maximum 3 photos allowed for the gallery!'); return; }
 
       const projKey = selectedActiveProjectName.toLowerCase().trim();
       let proj = projectsByName[projKey];
@@ -1040,7 +1044,7 @@
           <div style="font-size:13px; color:var(--muted-color); margin-bottom:4px;">Current Logo:</div>
           <div style="display:flex; align-items:center; gap:10px; background:var(--card-bg); padding:8px; border-radius:6px; border:1px solid var(--border-color);">
             <img src="${proj.logo_url}" style="width:70px; height:35px; object-fit:contain; border-radius:4px;">
-            <button class="btn-delete-img" onclick="deleteLogoImage('${name}')">Delete Logo ❌</button>
+            <button class="btn-delete-icon" onclick="deleteLogoImage('${name}')">Delete Logo ❌</button>
           </div>
         `;
       }
@@ -1050,7 +1054,7 @@
           <div style="font-size:13px; color:var(--muted-color); margin-bottom:4px;">Current Masterplan:</div>
           <div style="display:flex; align-items:center; gap:10px; background:var(--card-bg); padding:8px; border-radius:6px; border:1px solid var(--border-color);">
             <img src="${proj.masterplan_image_url}" style="width:70px; height:45px; object-fit:cover; border-radius:4px;">
-            <button class="btn-delete-img" onclick="deleteMasterplanImage('${name}')">Delete Masterplan ❌</button>
+            <button class="btn-delete-icon" onclick="deleteMasterplanImage('${name}')">Delete Masterplan ❌</button>
           </div>
         `;
       }
@@ -1065,7 +1069,7 @@
         item.className = 'admin-gallery-item';
         item.innerHTML = `
           <img src="${imgUrl}" alt="Gallery ${index}">
-          <button class="btn-delete-img" onclick="deleteGalleryImage('${name}', ${index})">Delete ❌</button>
+          <button class="btn-delete-icon" onclick="deleteGalleryImage('${name}', ${index})">Delete ❌</button>
         `;
         container.appendChild(item);
       });
