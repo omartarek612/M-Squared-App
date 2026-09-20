@@ -855,7 +855,6 @@
           const div = document.createElement('div');
           div.className = 'import-log-item';
           const userInfo = log.user_email || 'System Admin';
-
           
           let dateStr = 'Just now';
           if (log.created_at) {
@@ -873,8 +872,7 @@
             }
           }
 
-          const fileInfo = log.file_name ? `📁 ${log.file_name}` : '';
-          div.innerHTML = `<span><b>${log.unit_count || 0}</b> units updated</span><span style="font-size:12px; color:var(--muted-color);">👤 ${userInfo}${fileInfo ? ' | ' + fileInfo : ''} | 🕒 ${dateStr}</span>`;
+          div.innerHTML = `<span><b>${log.unit_count || 0}</b> units updated</span><span style="font-size:12px; color:var(--muted-color);">👤 ${userInfo} | 🕒 ${dateStr}</span>`;
           listEl.appendChild(div);
         });
       } catch (err) {
@@ -1592,12 +1590,12 @@
       }
 
       const userName = currentUser ? (currentProfile?.full_name || currentUser.email || currentUser.id) : 'Admin';
+      const uploaderInfo = `${userName} (File: ${fileName})`;
 
       try {
         const logRes = await supabaseClient.from('import_logs').insert({
           unit_count: cleanUnits.length,
-          user_email: userName,
-          file_name: fileName,
+          user_email: uploaderInfo,
           created_at: new Date().toISOString()
         });
         if (logRes.error) {
