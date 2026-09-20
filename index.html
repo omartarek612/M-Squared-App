@@ -48,7 +48,7 @@
       background: var(--bg-color);
       color: var(--text-color);
       margin: 0;
-      padding: 5px;
+      padding: 10px;
       text-align: left;
       direction: ltr;
       transition: background 0.3s, color 0.3s;
@@ -64,30 +64,30 @@
       align-items: center;
       background: var(--card-bg);
       border-bottom: 1px solid var(--border-color);
-      padding: 8px 16px;
+      padding: 10px 18px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
-    .top-search-group { display: flex; align-items: center; gap: 8px; }
-    .top-action-group { display: flex; align-items: center; gap: 8px; }
-    .user-welcome-text { font-size: 12px; color: var(--muted-color); font-weight: 600; display: none; }
+    .top-search-group { display: flex; align-items: center; gap: 10px; }
+    .top-action-group { display: flex; align-items: center; gap: 10px; }
+    .user-welcome-text { font-size: 13px; color: var(--muted-color); font-weight: 600; display: none; }
 
     .btn-theme, .btn-logout {
       background: var(--input-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 5px 12px;
+      padding: 6px 14px;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
       box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     }
 
     input, select {
-      padding: 6px 10px;
+      padding: 8px 12px;
       font-family: 'Cairo', sans-serif;
-      font-size: 13px;
+      font-size: 14px;
       border: 1px solid var(--border-color);
       background: var(--input-bg);
       color: var(--text-color);
@@ -95,14 +95,14 @@
       outline: none;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    input#unitInput { text-transform: uppercase; font-weight: 600; width: 100px; text-align: left; }
-    select#clientTitleSelect { width: 70px; font-weight: 600; }
-    input#clientInput { width: 140px; text-transform: capitalize; }
+    input#unitInput { text-transform: uppercase; font-weight: 600; width: 110px; text-align: left; }
+    select#clientTitleSelect { width: 75px; font-weight: 600; }
+    input#clientInput { width: 150px; text-transform: capitalize; }
 
     button {
-      padding: 6px 14px;
+      padding: 8px 16px;
       font-family: 'Cairo', sans-serif;
-      font-size: 12px;
+      font-size: 13px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -116,192 +116,187 @@
     .btn-sync { background: var(--sync-gradient); color: white; }
     .btn-preview { background: var(--preview-gradient); color: #0f172a; }
     .btn-pdf { background: var(--pdf-gradient); color: white; }
-    .btn-delete-img { background: #ef4444; color: white; padding: 4px 8px; font-size: 11px; border-radius: 4px; margin-top: 4px; }
+    .btn-delete-img { background: #ef4444; color: white; padding: 5px 10px; font-size: 12px; border-radius: 4px; margin-top: 4px; }
 
     #login-screen, #signup-screen, #pending-screen {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 30px 20px;
-      max-width: 360px;
-      margin: 30px auto;
+      padding: 35px 25px;
+      max-width: 380px;
+      margin: 40px auto;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
       text-align: left;
     }
-    #login-screen input, #signup-screen input { max-width: 100%; margin-bottom: 10px; width: 100%; text-align: left; }
-    #loginError, #signupError { color: #f87171; font-size: 13px; margin-top: 6px; }
-    #signupSuccess { color: #34d399; font-size: 13px; margin-top: 6px; }
+    #login-screen input, #signup-screen input { max-width: 100%; margin-bottom: 12px; width: 100%; text-align: left; }
+    #loginError, #signupError { color: #f87171; font-size: 14px; margin-top: 6px; }
+    #signupSuccess { color: #34d399; font-size: 14px; margin-top: 6px; }
     #signup-screen, #pending-screen { display: none; }
-    .toggle-link { display: block; margin-top: 12px; font-size: 13px; color: #3b82f6; cursor: pointer; text-decoration: underline; }
+    .toggle-link { display: block; margin-top: 14px; font-size: 14px; color: #3b82f6; cursor: pointer; text-decoration: underline; }
 
     #welcome-screen {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 35px 20px;
-      max-width: 500px;
-      margin: 40px auto;
+      padding: 40px 25px;
+      max-width: 520px;
+      margin: 50px auto;
       text-align: center;
     }
 
-    #main-app-content { display: none; max-width: 800px; margin: 15px auto; text-align: left; }
+    #main-app-content { display: none; max-width: 850px; margin: 20px auto; text-align: left; }
 
     .app-sidebar {
       position: fixed;
-      top: 65px;
-      left: max(10px, calc((100% - 800px) / 2 - 195px));
+      top: 75px;
+      left: max(10px, calc((100% - 850px) / 2 - 200px));
       z-index: 9998;
-      width: 180px;
+      width: 185px;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
       border-radius: 12px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      padding: 10px;
+      padding: 12px;
       transition: transform 0.3s ease, opacity 0.3s ease;
-      max-height: calc(100vh - 80px);
+      max-height: calc(100vh - 90px);
       overflow-y: auto;
       text-align: left;
     }
-    .app-sidebar.collapsed { transform: translateX(-210px); opacity: 0; pointer-events: none; }
+    .app-sidebar.collapsed { transform: translateX(-215px); opacity: 0; pointer-events: none; }
 
     .sidebar-toggle-btn {
       position: fixed;
-      top: 65px;
-      left: max(10px, calc((100% - 800px) / 2 - 195px));
+      top: 75px;
+      left: max(10px, calc((100% - 850px) / 2 - 200px));
       z-index: 9999;
       background: var(--primary-gradient);
       color: white;
       border: none;
-      width: 32px;
-      height: 32px;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
 
-    .sidebar-section-title { font-size: 11px; text-transform: uppercase; color: var(--muted-color); margin: 8px 0 4px 0; font-weight: 700; text-align: left; }
-    .action-buttons { display: flex; flex-direction: column; gap: 6px; }
-    .action-buttons button { width: 100%; padding: 9px; text-align: left; font-size: 12px; }
+    .sidebar-section-title { font-size: 12px; text-transform: uppercase; color: var(--muted-color); margin: 10px 0 6px 0; font-weight: 700; text-align: left; }
+    .action-buttons { display: flex; flex-direction: column; gap: 8px; }
+    .action-buttons button { width: 100%; padding: 10px; text-align: left; font-size: 13px; }
 
     .sidebar-nav-link {
       display: block;
-      padding: 7px 10px;
-      font-size: 12px;
+      padding: 8px 10px;
+      font-size: 13px;
       color: var(--text-color);
       text-decoration: none;
       background: var(--input-bg);
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       font-weight: 600;
       transition: background 0.2s;
       text-align: left;
     }
     .sidebar-nav-link:hover { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
 
-    #full-offer-container { display: flex; flex-direction: column; gap: 25px; background: transparent; }
+    #full-offer-container { display: flex; flex-direction: column; gap: 30px; background: transparent; }
 
+    /* جعل العرض One Long Page مفتوح ومتصل مع تكبير الخطوط والوضوح التام */
     .offer-page-section {
       background: var(--page-section-bg);
-      padding: 24px;
+      padding: 30px;
       border-radius: 16px;
       border: 2px solid rgba(59, 130, 246, 0.35);
       box-shadow: 0 6px 22px rgba(0,0,0,0.22);
       overflow: hidden;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 98vh;
-      page-break-inside: avoid;
-      break-inside: avoid;
-      page-break-after: always;
-      break-after: page;
     }
 
     .section-main-title {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
       color: #3b82f6;
       text-align: center;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       text-transform: uppercase;
       letter-spacing: 1px;
       border-bottom: 2px dashed rgba(59, 130, 246, 0.3);
-      padding-bottom: 8px;
+      padding-bottom: 10px;
     }
 
-    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.2); padding-bottom: 10px; margin-bottom: 12px; }
-    .company-logo { max-height: 34px; width: auto; object-fit: contain; }
-    .project-logo { max-height: 30px; max-width: 130px; width: auto; object-fit: contain; }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.2); padding-bottom: 12px; margin-bottom: 15px; }
+    .company-logo { max-height: 38px; width: auto; object-fit: contain; }
+    .project-logo { max-height: 34px; max-width: 140px; width: auto; object-fit: contain; }
 
     .greeting-box {
       display: none;
       background: var(--greeting-bg);
       border-left: 4px solid #3b82f6;
-      padding: 14px 18px;
-      margin-bottom: 14px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
       border-radius: 8px;
       color: var(--greeting-text);
-      font-size: 15px;
+      font-size: 16px;
       border: 1px solid var(--border-color);
       text-align: center;
     }
-    .greeting-box .client-highlight { font-size: 18px; font-weight: 800; color: #3b82f6; }
+    .greeting-box .client-highlight { font-size: 20px; font-weight: 800; color: #3b82f6; }
 
     .summary-hero-card {
       background: var(--input-bg);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 18px;
-      margin-bottom: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
       text-align: center;
       border-top: 4px solid #3b82f6;
     }
-    .summary-hero-card h4 { margin: 0 0 6px 0; font-size: 13px; color: var(--muted-color); text-transform: uppercase; font-weight: 700; }
-    .summary-hero-card .unit-big-text { font-size: 34px; font-weight: 800; color: #3b82f6; }
-    .summary-hero-card .project-small-text { font-size: 18px; font-weight: 700; color: var(--text-color); }
+    .summary-hero-card h4 { margin: 0 0 8px 0; font-size: 14px; color: var(--muted-color); text-transform: uppercase; font-weight: 700; }
+    .summary-hero-card .unit-big-text { font-size: 38px; font-weight: 800; color: #3b82f6; }
+    .summary-hero-card .project-small-text { font-size: 20px; font-weight: 700; color: var(--text-color); }
 
-    .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; text-align: center; flex-grow: 1; align-content: center; }
+    .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; text-align: center; align-content: center; }
     .detail-card { 
       background: var(--input-bg); 
-      padding: 16px; 
+      padding: 18px; 
       border-radius: 10px; 
       border-top: 3px solid #3b82f6; 
       border: 1px solid var(--border-color); 
       word-break: break-word; 
       text-align: center; 
     }
-    .detail-card strong { display: block; font-size: 12px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
-    .detail-card span { font-size: 18px; font-weight: 800; color: var(--text-color); }
+    .detail-card strong { display: block; font-size: 13px; color: var(--muted-color); text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
+    .detail-card span { font-size: 20px; font-weight: 800; color: #3b82f6; }
 
-    /* تعديل المعرض ليصبح الصور تحت بعضها وبدون تمطيط وملء الصفحة بوضوح */
+    /* تعديل المعرض ليأخذ مساحة نصف الصفحة أو الصفحات الإضافية وبأبعاد واضحة ومن غير تمطيط */
     .pictures-grid { 
       display: flex; 
       flex-direction: column; 
-      gap: 15px; 
+      gap: 20px; 
       justify-content: center; 
       align-items: center; 
-      padding: 5px; 
-      flex-grow: 1; 
+      padding: 10px; 
       width: 100%;
     }
     .gallery-card-item { 
       background: var(--input-bg); 
       border: 1px solid var(--border-color); 
-      border-radius: 12px; 
+      border-radius: 14px; 
       overflow: hidden; 
       width: 100%; 
-      max-width: 520px; 
-      height: 125px; 
+      max-width: 650px; 
+      height: 380px; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2); 
     }
     .gallery-card-item img { 
       width: 100%; 
@@ -310,26 +305,25 @@
       display: block; 
     }
 
-    .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .masterplan-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     
     .masterplan-section {
       position: relative; 
       width: 100%; 
-      height: 680px; 
+      height: 720px; 
       background: var(--input-bg); 
-      border-radius: 10px; 
+      border-radius: 12px; 
       overflow: hidden;
       border: 1px solid var(--border-color); 
       display: flex; 
       justify-content: center; 
       align-items: center;
-      padding: 10px;
-      flex-grow: 1;
+      padding: 12px;
     }
 
     .masterplan-img { 
       max-width: 100%; 
-      max-height: 655px;
+      max-height: 695px;
       width: auto;
       height: auto;
       display: block; 
@@ -339,13 +333,13 @@
 
     .unit-marker {
       position: absolute;
-      width: 20px;
-      height: 20px;
-      background-color: rgba(239, 68, 68, 0.75);
+      width: 22px;
+      height: 22px;
+      background-color: rgba(239, 68, 68, 0.85);
       border: 3px solid rgba(255, 255, 255, 0.95);
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      box-shadow: 0 0 10px rgba(239, 68, 68, 0.6), 0 2px 5px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.7), 0 2px 6px rgba(0, 0, 0, 0.5);
       pointer-events: none;
       display: none;
       z-index: 10;
@@ -354,9 +348,8 @@
     .payment-split-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 16px;
       width: 100%;
-      flex-grow: 1;
     }
     .payment-table-box {
       background: var(--input-bg);
@@ -364,36 +357,36 @@
       border-radius: 10px;
       overflow: hidden;
     }
-    /* تكبير خطوط جدول الأقساط لتكون واضحة وجلية */
-    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
-    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 9px 10px; font-weight: 800; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 13px; }
-    .payment-table td { padding: 8px 10px; border-bottom: 1px solid var(--border-color); font-weight: 700; text-align: left; font-size: 12px; }
+    /* تكبير خطوط جدول الأقساط لتكون واضحة وجلية بالكامل */
+    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 11px 12px; font-weight: 800; border-bottom: 1px solid var(--border-color); text-align: left; font-size: 14px; }
+    .payment-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); font-weight: 700; text-align: left; font-size: 13px; }
 
-    .status { margin-top: 4px; font-size: 12px; font-weight: 600; text-align: center; color: #ffffff; }
+    .status { margin-top: 6px; font-size: 13px; font-weight: 600; text-align: center; color: #ffffff; }
 
-    .admin-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    .admin-form-block { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; text-align: left; }
-    .admin-form-block h4 { margin-top: 0; font-size: 13px; text-align: left; }
-    .admin-form-block input, .admin-form-block textarea { width: 100%; max-width: 100%; margin-bottom: 6px; text-align: left; }
-    .admin-msg { font-size: 12px; margin-top: 4px; text-align: left; }
+    .admin-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    .admin-form-block { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; text-align: left; }
+    .admin-form-block h4 { margin-top: 0; font-size: 14px; text-align: left; }
+    .admin-form-block input, .admin-form-block textarea { width: 100%; max-width: 100%; margin-bottom: 8px; text-align: left; }
+    .admin-msg { font-size: 13px; margin-top: 6px; text-align: left; }
 
-    .admin-gallery-manage { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
-    .admin-gallery-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 4px; text-align: center; }
-    .admin-gallery-item img { width: 100%; height: 60px; object-fit: cover; border-radius: 4px; }
+    .admin-gallery-manage { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+    .admin-gallery-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 6px; text-align: center; }
+    .admin-gallery-item img { width: 100%; height: 70px; object-fit: cover; border-radius: 4px; }
 
     .import-log-item, .approval-item {
-      background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 6px;
-      padding: 10px 14px; margin-bottom: 6px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; text-align: left;
+      background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px;
+      padding: 12px 16px; margin-bottom: 8px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; text-align: left;
     }
 
     .app-copyrights {
-      margin: 20px 0 10px 0;
-      font-size: 13px;
+      margin: 25px 0 15px 0;
+      font-size: 14px;
       color: #3b82f6;
       font-weight: 700;
       text-align: center;
       background: var(--card-bg);
-      padding: 10px;
+      padding: 12px;
       border-radius: 8px;
       border: 1px solid var(--border-color);
     }
@@ -425,7 +418,7 @@
     <h2>M Squared Login</h2>
     <input type="email" id="loginEmail" placeholder="Email" autocomplete="username"><br>
     <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" onkeypress="if(event.key==='Enter') login()"><br>
-    <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; margin-bottom: 10px; text-align: left; color: var(--muted-color);">
+    <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 12px; text-align: left; color: var(--muted-color);">
       <input type="checkbox" id="rememberMeCheck" checked style="width: auto; max-width: none; margin: 0;"> Remember Me
     </div>
     <button class="btn-search" style="width:100%;" onclick="login()">Login</button>
@@ -446,7 +439,7 @@
 
   <div id="pending-screen">
     <h2>Pending Approval</h2>
-    <p style="font-size:13px; color:var(--muted-color);">Your account is waiting for admin approval.</p>
+    <p style="font-size:14px; color:var(--muted-color);">Your account is waiting for admin approval.</p>
     <button class="btn-search" onclick="logout()">Logout</button>
   </div>
 
@@ -455,8 +448,8 @@
     <div style="text-align: center;"><div id="status" class="status"></div></div>
 
     <div id="welcome-screen">
-      <h2 style="font-size:1.4rem; margin-bottom:6px;">Welcome M Squared</h2>
-      <p style="font-size:12px; color:var(--muted-color);">Enter unit code above to view offer.</p>
+      <h2 style="font-size:1.5rem; margin-bottom:8px;">Welcome M Squared</h2>
+      <p style="font-size:13px; color:var(--muted-color);">Enter unit code above to view offer.</p>
     </div>
 
     <div id="main-app-content">
@@ -508,10 +501,10 @@
             <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
             <div><img id="projectLogoImgPictures" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
           </div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 style="margin: 0; font-size: 15px; text-align: left;">Project Views</h3>
-            <div id="gallerySelectionControls" class="hide-on-pdf" style="display:none; font-size: 12px;">
-              <button class="btn-sync" style="padding: 5px 10px; font-size: 11px;" onclick="openGallerySelector()">⚙️ Select 4 Photos</button>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="margin: 0; font-size: 16px; text-align: left;">Project Views</h3>
+            <div id="gallerySelectionControls" class="hide-on-pdf" style="display:none; font-size: 13px;">
+              <button class="btn-sync" style="padding: 6px 12px; font-size: 12px;" onclick="openGallerySelector()">⚙️ Manage Gallery Photos</button>
             </div>
           </div>
           <div class="pictures-grid" id="picturesGridContainer"></div>
@@ -527,8 +520,8 @@
               <div><img id="projectLogoImgMasterplan" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
             </div>
             <div class="masterplan-header">
-              <h3 style="margin: 0; font-size:15px;">Masterplan Location</h3>
-              <small id="currentProjectLabel" style="color: var(--muted-color); font-weight: bold; font-size: 12px;"></small>
+              <h3 style="margin: 0; font-size:16px;">Masterplan Location</h3>
+              <small id="currentProjectLabel" style="color: var(--muted-color); font-weight: bold; font-size: 13px;"></small>
             </div>
           </div>
           <div class="masterplan-section" id="masterplanContainer">
@@ -549,8 +542,8 @@
               <div><img id="projectLogoImgLayout" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
             </div>
             <div class="masterplan-header">
-              <h3 style="margin: 0; font-size:15px;">Unit Layouts</h3>
-              <small style="color: var(--muted-color); font-weight: bold; font-size: 12px;" id="layoutSubLabel">Schematic</small>
+              <h3 style="margin: 0; font-size:16px;">Unit Layouts</h3>
+              <small style="color: var(--muted-color); font-weight: bold; font-size: 13px;" id="layoutSubLabel">Schematic</small>
             </div>
           </div>
           <div class="masterplan-section">
@@ -569,9 +562,9 @@
               <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
               <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
             </div>
-            <h3 style="margin: 0 0 10px 0; font-size: 15px; text-align: left;">Payment Schedule</h3>
-            <div class="summary-hero-card" style="margin-bottom: 10px; text-align: left; padding: 10px 14px;">
-              <div style="font-size: 12px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 16px; font-weight: 700; color: #3b82f6;">-</span></div>
+            <h3 style="margin: 0 0 12px 0; font-size: 16px; text-align: left;">Payment Schedule</h3>
+            <div class="summary-hero-card" style="margin-bottom: 12px; text-align: left; padding: 12px 16px;">
+              <div style="font-size: 13px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 18px; font-weight: 700; color: #3b82f6;">-</span></div>
             </div>
           </div>
           <div class="payment-split-container">
@@ -598,50 +591,50 @@
       </div>
 
       <!-- 6. Admin Panel -->
-      <div class="offer-page-section" id="sec-admin" style="display:none; margin-top: 15px; min-height: auto;">
+      <div class="offer-page-section" id="sec-admin" style="display:none; margin-top: 20px; min-height: auto;">
         <div class="section-main-title">Admin Control Panel</div>
-        <h4 style="font-size:13px;">Pending Accounts</h4>
-        <div class="approval-list" id="approvalList"><p style="font-size:12px; color:var(--muted-color);">No pending accounts.</p></div>
+        <h4 style="font-size:14px;">Pending Accounts</h4>
+        <div class="approval-list" id="approvalList"><p style="font-size:13px; color:var(--muted-color);">No pending accounts.</p></div>
 
-        <div class="admin-form-block" style="margin-top:12px;">
+        <div class="admin-form-block" style="margin-top:14px;">
           <h4>Project & Visuals Manager (Required: Enter Project Name)</h4>
           <input type="text" id="adm_proj_name" placeholder="Project Name (e.g. 31 West) - Mandatory" oninput="loadAdminProjectGallery()">
           
-          <label style="font-size:12px; color:var(--muted-color); display:block; margin-bottom:4px;">Upload Project Logo Image:</label>
-          <input type="file" id="adm_proj_logo_file" accept="image/*" style="font-size:12px; margin-bottom:6px;">
-          <div id="adminLogoPreviewContainer" style="margin-bottom:8px;"></div>
+          <label style="font-size:13px; color:var(--muted-color); display:block; margin-bottom:5px;">Upload Project Logo Image:</label>
+          <input type="file" id="adm_proj_logo_file" accept="image/*" style="font-size:13px; margin-bottom:8px;">
+          <div id="adminLogoPreviewContainer" style="margin-bottom:10px;"></div>
           
-          <label style="font-size:12px; color:var(--muted-color); display:block; margin-bottom:4px;">Upload Masterplan Image (High Quality):</label>
-          <input type="file" id="adm_masterplan_file" accept="image/*" style="font-size:12px; margin-bottom:6px;">
-          <div id="adminMasterplanPreviewContainer" style="margin-bottom:8px;"></div>
+          <label style="font-size:13px; color:var(--muted-color); display:block; margin-bottom:5px;">Upload Masterplan Image (High Quality):</label>
+          <input type="file" id="adm_masterplan_file" accept="image/*" style="font-size:13px; margin-bottom:8px;">
+          <div id="adminMasterplanPreviewContainer" style="margin-bottom:10px;"></div>
 
-          <label style="font-size:12px; color:var(--muted-color); display:block; margin-bottom:4px;">Upload New Gallery Images:</label>
-          <input type="file" id="adm_gallery_files" accept="image/*" multiple style="font-size:12px; margin-bottom:6px;">
+          <label style="font-size:13px; color:var(--muted-color); display:block; margin-bottom:5px;">Upload New Gallery Images:</label>
+          <input type="file" id="adm_gallery_files" accept="image/*" multiple style="font-size:13px; margin-bottom:8px;">
           
           <button class="btn-search" onclick="adminSaveProject()">Save Project Visuals</button>
           <div class="admin-msg" id="adminProjMsg"></div>
 
-          <h4 style="font-size:12px; margin-top:15px; color:var(--muted-color);">Currently Uploaded Gallery Images (Click to delete):</h4>
+          <h4 style="font-size:13px; margin-top:18px; color:var(--muted-color);">Currently Uploaded Gallery Images (Click to delete):</h4>
           <div class="admin-gallery-manage" id="adminGalleryPreview"></div>
         </div>
 
-        <div class="admin-form-block" style="margin-top:15px; border: 1px solid rgba(59, 130, 246, 0.4);">
+        <div class="admin-form-block" style="margin-top:18px; border: 1px solid rgba(59, 130, 246, 0.4);">
           <h4 style="color: #3b82f6;">Unit Layouts Manager (Mandatory Project Name)</h4>
           
-          <div style="margin-bottom:12px; background:var(--card-bg); padding:10px; border-radius:6px;">
-            <div style="font-size:12px; font-weight:700; margin-bottom:4px;">1. Batch Upload Layouts (Requires Project Name above, files named by Unit Code):</div>
-            <input type="file" id="adm_batch_layout_files" accept="image/*" multiple style="font-size:12px; margin-bottom:6px;">
+          <div style="margin-bottom:14px; background:var(--card-bg); padding:12px; border-radius:6px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:5px;">1. Batch Upload Layouts (Requires Project Name above, files named by Unit Code):</div>
+            <input type="file" id="adm_batch_layout_files" accept="image/*" multiple style="font-size:13px; margin-bottom:8px;">
             <button class="btn-sync" onclick="adminUploadBatchLayouts()">Upload & Update Layouts</button>
             <div class="admin-msg" id="adminBatchLayoutMsg"></div>
           </div>
 
-          <div style="background:var(--card-bg); padding:10px; border-radius:6px;">
-            <div style="font-size:12px; font-weight:700; margin-bottom:4px;">2. Single Unit Layout Control:</div>
-            <input type="text" id="adm_single_layout_code" placeholder="Unit Code (e.g. A101)" style="margin-bottom:6px; max-width:100%;">
-            <input type="file" id="adm_single_layout_file" accept="image/*" style="font-size:12px; margin-bottom:6px;">
-            <div style="display:flex; gap:6px;">
+          <div style="background:var(--card-bg); padding:12px; border-radius:6px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:5px;">2. Single Unit Layout Control:</div>
+            <input type="text" id="adm_single_layout_code" placeholder="Unit Code (e.g. A101)" style="margin-bottom:8px; max-width:100%;">
+            <input type="file" id="adm_single_layout_file" accept="image/*" style="font-size:13px; margin-bottom:8px;">
+            <div style="display:flex; gap:8px;">
               <button class="btn-search" onclick="adminSaveSingleLayout()" style="flex:1;">Save/Update Layout</button>
-              <button class="btn-delete-img" onclick="adminDeleteSingleLayout()" style="margin-top:0; flex:1; font-size:12px; padding:8px;">Delete Layout ❌</button>
+              <button class="btn-delete-img" onclick="adminDeleteSingleLayout()" style="margin-top:0; flex:1; font-size:13px; padding:9px;">Delete Layout ❌</button>
             </div>
             <div class="admin-msg" id="adminSingleLayoutMsg"></div>
           </div>
@@ -650,18 +643,18 @@
       </div>
 
       <!-- 7. Inventory Section -->
-      <div class="offer-page-section" id="sec-inventory" style="margin-top: 15px; min-height: auto;">
+      <div class="offer-page-section" id="sec-inventory" style="margin-top: 20px; min-height: auto;">
         <div class="section-main-title">Inventory Update & Logs</div>
         <div class="admin-grid">
           <div class="admin-form-block">
             <h4>Import Excel File (.xlsx, .xls)</h4>
-            <input type="file" id="adm_import_file" accept=".xlsx,.xls,.csv" style="font-size:12px;">
+            <input type="file" id="adm_import_file" accept=".xlsx,.xls,.csv" style="font-size:13px;">
             <button class="btn-sync" onclick="adminImportFile()">Import & Overwrite</button>
             <div class="admin-msg" id="adminImportMsg"></div>
           </div>
         </div>
-        <h4 style="margin-top:12px; font-size:13px;">Recent Imports (User & Timestamp Log)</h4>
-        <div class="import-log-list" id="importLogList"><p style="font-size:12px; color:var(--muted-color);">No imports yet.</p></div>
+        <h4 style="margin-top:14px; font-size:14px;">Recent Imports (User & Timestamp Log)</h4>
+        <div class="import-log-list" id="importLogList"><p style="font-size:13px; color:var(--muted-color);">No imports yet.</p></div>
       </div>
 
       <div class="app-copyrights">
@@ -672,11 +665,11 @@
   </div>
 
   <div id="galleryModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:20000; justify-content:center; align-items:center;">
-    <div style="background:var(--card-bg); border:1px solid var(--border-color); padding:20px; border-radius:12px; max-width:500px; width:90%; max-height:80vh; overflow-y:auto; text-align:left;">
-      <h3 style="margin-top:0; font-size:15px;">Select up to 4 Gallery Photos to Display</h3>
-      <p style="font-size:12px; color:var(--muted-color);">Choose exactly 4 images. If none selected, the first 4 will be used automatically.</p>
-      <div id="modalGalleryPickerList" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-bottom:15px;"></div>
-      <div style="display:flex; justify-content:flex-end; gap:8px;">
+    <div style="background:var(--card-bg); border:1px solid var(--border-color); padding:24px; border-radius:12px; max-width:550px; width:90%; max-height:85vh; overflow-y:auto; text-align:left;">
+      <h3 style="margin-top:0; font-size:16px;">Manage & Order Gallery Photos</h3>
+      <p style="font-size:13px; color:var(--muted-color);">Select photos to display in your offer. You can pick multiple or all photos.</p>
+      <div id="modalGalleryPickerList" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-bottom:18px;"></div>
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
         <button class="btn-search" onclick="saveSelectedGalleryPhotos()">Apply Selection</button>
         <button class="btn-delete-img" style="margin-top:0;" onclick="closeGallerySelector()">Cancel</button>
       </div>
@@ -693,7 +686,7 @@
     function placeholderImg(label) {
       const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='800'>
         <rect width='100%' height='100%' fill='#1e293b'/>
-        <text x='50%' y='50%' font-family='sans-serif' font-size='24' fill='#64748b' text-anchor='middle' dominant-baseline='middle'>${label}</text>
+        <text x='50%' y='50%' font-family='sans-serif' font-size='28' fill='#64748b' text-anchor='middle' dominant-baseline='middle'>${label}</text>
       </svg>`;
       return 'data:image/svg+xml;base64,' + btoa(svg);
     }
@@ -827,7 +820,7 @@
       if (!currentProfile || currentProfile.role !== 'admin') return;
       const listEl = document.getElementById('approvalList');
       const { data } = await supabaseClient.from('profiles').select('*').eq('status', 'pending');
-      if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:12px; color:var(--muted-color);">No pending accounts.</p>'; return; }
+      if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:13px; color:var(--muted-color);">No pending accounts.</p>'; return; }
       listEl.innerHTML = '';
       data.forEach(p => {
         const div = document.createElement('div');
@@ -843,14 +836,14 @@
     async function loadImportLogs() {
       const listEl = document.getElementById('importLogList');
       const { data } = await supabaseClient.from('import_logs').select('*').order('created_at', { ascending: false }).limit(5);
-      if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:12px; color:var(--muted-color);">No imports.</p>'; return; }
+      if (!data || !data.length) { listEl.innerHTML = '<p style="font-size:13px; color:var(--muted-color);">No imports.</p>'; return; }
       listEl.innerHTML = '';
       data.forEach(log => {
         const div = document.createElement('div');
         div.className = 'import-log-item';
         const userEmail = log.user_email || 'Unknown';
         const dateStr = log.created_at ? new Date(log.created_at).toLocaleString() : 'Just now';
-        div.innerHTML = `<span><b>${log.unit_count}</b> units updated</span><span style="font-size:11px; color:var(--muted-color);">👤 ${userEmail} | 🕒 ${dateStr}</span>`;
+        div.innerHTML = `<span><b>${log.unit_count}</b> units updated</span><span style="font-size:12px; color:var(--muted-color);">👤 ${userEmail} | 🕒 ${dateStr}</span>`;
         listEl.appendChild(div);
       });
     }
@@ -938,7 +931,7 @@
       const label = document.getElementById('currentProjectLabel');
       let proj = projectsByName[pLower] || Object.values(projectsByName)[0];
 
-      const logoUrl = proj && proj.logo_url ? proj.logo_url : placeholderImg('Logo');
+      const logoUrl = proj && proj.logo_url ? proj.logo_url : "https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2";
       ['Summary','Pictures','Masterplan','Layout','Payment'].forEach(sec => {
         document.getElementById('projectLogoImg' + sec).src = logoUrl;
       });
@@ -952,7 +945,7 @@
       if (proj && proj.selected_gallery && Array.isArray(proj.selected_gallery) && proj.selected_gallery.length > 0) {
         activeGallery = proj.selected_gallery;
       } else {
-        activeGallery = allGallery.slice(0, 4);
+        activeGallery = allGallery; // عرض كل الصور المتاحة متسلسلة تحت بعضها
       }
 
       activeGallery.forEach(imgUrl => {
@@ -976,15 +969,15 @@
       const container = document.getElementById('modalGalleryPickerList');
       container.innerHTML = '';
       
-      const currentSelected = proj.selected_gallery || proj.gallery.slice(0, 4);
+      const currentSelected = proj.selected_gallery || proj.gallery;
 
       proj.gallery.forEach((imgUrl, idx) => {
         const isChecked = currentSelected.includes(imgUrl) ? 'checked' : '';
         const item = document.createElement('div');
-        item.style.cssText = "background:var(--input-bg); border:1px solid var(--border-color); padding:5px; border-radius:6px; text-align:center;";
+        item.style.cssText = "background:var(--input-bg); border:1px solid var(--border-color); padding:8px; border-radius:6px; text-align:center;";
         item.innerHTML = `
-          <img src="${imgUrl}" style="width:100%; height:70px; object-fit:cover; border-radius:4px; margin-bottom:4px;">
-          <label style="font-size:11px; display:block;"><input type="checkbox" name="galleryPick" value="${imgUrl}" ${isChecked}> Select</label>
+          <img src="${imgUrl}" style="width:100%; height:80px; object-fit:cover; border-radius:4px; margin-bottom:6px;">
+          <label style="font-size:12px; display:block;"><input type="checkbox" name="galleryPick" value="${imgUrl}" ${isChecked}> Select</label>
         `;
         container.appendChild(item);
       });
@@ -1001,7 +994,6 @@
       const selectedUrls = Array.from(checkboxes).map(cb => cb.value);
 
       if (selectedUrls.length === 0) { alert('Please select at least one photo.'); return; }
-      if (selectedUrls.length > 4) { alert('You can select a maximum of 4 photos.'); return; }
 
       const projKey = selectedActiveProjectName.toLowerCase().trim();
       let proj = projectsByName[projKey];
@@ -1045,9 +1037,9 @@
 
       if (proj.logo_url) {
         logoContainer.innerHTML = `
-          <div style="font-size:12px; color:var(--muted-color); margin-bottom:4px;">Current Logo:</div>
-          <div style="display:flex; align-items:center; gap:8px; background:var(--card-bg); padding:6px; border-radius:6px; border:1px solid var(--border-color);">
-            <img src="${proj.logo_url}" style="width:60px; height:30px; object-fit:contain; border-radius:4px;">
+          <div style="font-size:13px; color:var(--muted-color); margin-bottom:4px;">Current Logo:</div>
+          <div style="display:flex; align-items:center; gap:10px; background:var(--card-bg); padding:8px; border-radius:6px; border:1px solid var(--border-color);">
+            <img src="${proj.logo_url}" style="width:70px; height:35px; object-fit:contain; border-radius:4px;">
             <button class="btn-delete-img" onclick="deleteLogoImage('${name}')">Delete Logo ❌</button>
           </div>
         `;
@@ -1055,16 +1047,16 @@
 
       if (proj.masterplan_image_url) {
         mpContainer.innerHTML = `
-          <div style="font-size:12px; color:var(--muted-color); margin-bottom:4px;">Current Masterplan:</div>
-          <div style="display:flex; align-items:center; gap:8px; background:var(--card-bg); padding:6px; border-radius:6px; border:1px solid var(--border-color);">
-            <img src="${proj.masterplan_image_url}" style="width:60px; height:40px; object-fit:cover; border-radius:4px;">
+          <div style="font-size:13px; color:var(--muted-color); margin-bottom:4px;">Current Masterplan:</div>
+          <div style="display:flex; align-items:center; gap:10px; background:var(--card-bg); padding:8px; border-radius:6px; border:1px solid var(--border-color);">
+            <img src="${proj.masterplan_image_url}" style="width:70px; height:45px; object-fit:cover; border-radius:4px;">
             <button class="btn-delete-img" onclick="deleteMasterplanImage('${name}')">Delete Masterplan ❌</button>
           </div>
         `;
       }
 
       if (!proj.gallery || !proj.gallery.length) {
-        container.innerHTML = '<p style="font-size:11px; color:var(--muted-color); grid-column: 1/-1;">No uploaded gallery images yet.</p>';
+        container.innerHTML = '<p style="font-size:12px; color:var(--muted-color); grid-column: 1/-1;">No uploaded gallery images yet.</p>';
         return;
       }
 
@@ -1566,7 +1558,6 @@
         await supabaseClient.from('units').insert(batch);
       }
 
-      // تسجيل اسم المستخدم ووقت الرفع وتاريخه الفعلي بدقة
       const userIdentifier = currentUser ? (currentProfile?.full_name || currentUser.email || currentUser.id) : 'Admin';
       try {
         await supabaseClient.from('import_logs').insert({
