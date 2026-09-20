@@ -856,7 +856,6 @@
           div.className = 'import-log-item';
           const userEmail = log.user_email || 'System Admin';
           
-          // ضمان عرض التاريخ والوقت المحلي بدقة متناهية
           let dateStr = 'Just now';
           if (log.created_at) {
             const parsedDate = new Date(log.created_at);
@@ -1609,7 +1608,7 @@
       msgEl.style.color = '#34d399'; 
       msgEl.innerText = `Inventory updated successfully (${cleanUnits.length} units)!`;
       loadCloudData(true);
-      loadImportLogs(); // تحديث فوري للتاريخ والوقت
+      loadImportLogs(); // <-- تحديث فوري للوجز بعد كل عملية رفع ناجحة
     }
 
     function adminImportFile() {
