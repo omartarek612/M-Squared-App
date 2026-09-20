@@ -980,6 +980,9 @@
         activeGallery = allGallery;
       }
 
+      // قصر الصور على أول 3 صور فقط كحد أقصى في العرض
+      activeGallery = activeGallery.slice(0, 3);
+
       activeGallery.forEach(imgUrl => {
         const div = document.createElement('div');
         div.className = 'gallery-card-item';
@@ -1608,7 +1611,7 @@
       msgEl.style.color = '#34d399'; 
       msgEl.innerText = `Inventory updated successfully (${cleanUnits.length} units)!`;
       loadCloudData(true);
-      loadImportLogs(); // <-- تحديث فوري للوجز بعد كل عملية رفع ناجحة
+      loadImportLogs();
     }
 
     function adminImportFile() {
