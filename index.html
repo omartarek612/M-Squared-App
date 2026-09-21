@@ -203,22 +203,20 @@
     }
     .sidebar-nav-link:hover { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
 
-    #full-offer-container { display: flex; flex-direction: column; gap: 0; background: var(--page-section-bg); width: 100%; border-radius: 16px; border: 2px solid rgba(59, 130, 246, 0.35); box-shadow: 0 6px 22px rgba(0,0,0,0.22); overflow: hidden; }
+    #full-offer-container { display: flex; flex-direction: column; gap: 20px; background: transparent; width: 100%; }
 
     .offer-page-section {
       background: var(--page-section-bg);
       padding: 25px;
-      border-radius: 0;
-      border: none;
-      border-bottom: 1px solid rgba(59, 130, 246, 0.2);
-      box-shadow: none;
+      border-radius: 16px;
+      border: 2px solid rgba(59, 130, 246, 0.35);
+      box-shadow: 0 6px 22px rgba(0,0,0,0.22);
       display: flex;
       flex-direction: column;
       width: 100%;
-      margin-bottom: 0;
-    }
-    .offer-page-section:last-child {
-      border-bottom: none;
+      margin-bottom: 20px;
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
     .section-main-title {
@@ -682,7 +680,7 @@
       auth: { persistSession: true, autoRefreshToken: true, storage: window.localStorage }
     });
 
-    const APP_VERSION = "v1.4.13";
+    const APP_VERSION = "v1.4.14";
     document.getElementById('appVersionDisplay').innerText = APP_VERSION;
 
     function placeholderImg(label) {
