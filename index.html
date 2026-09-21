@@ -215,7 +215,6 @@
       flex-direction: column;
       width: 100%;
       margin-bottom: 20px;
-      page-break-inside: avoid;
       break-inside: avoid;
     }
 
@@ -673,7 +672,7 @@
       auth: { persistSession: true, autoRefreshToken: true, storage: window.localStorage }
     });
 
-    const APP_VERSION = "v1.4.15";
+    const APP_VERSION = "v1.4.16";
     document.getElementById('appVersionDisplay').innerText = APP_VERSION;
 
     function placeholderImg(label) {
@@ -1632,7 +1631,7 @@
 
     async function prepareAndGeneratePDF(actionType) {
       const st = document.getElementById('status');
-      st.style.color = "#60a5fa"; st.innerText = "Exporting single continuous page PDF...";
+      st.style.color = "#60a5fa"; st.innerText = "Exporting continuous page PDF...";
 
       const hideElements = document.querySelectorAll('.hide-on-pdf');
       hideElements.forEach(el => el.style.display = 'none');
@@ -1645,7 +1644,7 @@
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true, logging: false, scrollY: 0, letterRendering: true, backgroundColor: '#131b31' },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+        pagebreak:    { mode: ['css', 'legacy'] }
       };
 
       try {
