@@ -872,7 +872,8 @@
             }
           }
 
-          div.innerHTML = `<span><b>${log.unit_count || 0}</b> units updated</span><span style="font-size:12px; color:var(--muted-color);">👤 ${userEmail} | 🕒 ${dateStr}</span>`;
+          const fileInfo = log.file_name ? ` | 📁 ${log.file_name}` : '';
+          div.innerHTML = `<span><b>${log.unit_count || 0}</b> units updated</span><span style="font-size:12px; color:var(--muted-color);">👤 ${userEmail}${fileInfo} | 🕒 ${dateStr}</span>`;
           listEl.appendChild(div);
         });
       } catch (err) {
@@ -1562,7 +1563,7 @@
       return { units: unitsToImport };
     }
 
-    async function performBulkImport(unitsToImport, msgEl) {
+    async function performBulkImport(unitsToImport, msgEl, fileName) {
       msgEl.style.color = '#60a5fa'; 
       msgEl.innerText = `Processing bulk upload (${unitsToImport.length} rows)...`;
       
@@ -1606,6 +1607,7 @@
         const logRes = await supabaseClient.from('import_logs').insert({
           unit_count: cleanUnits.length,
           user_email: userIdentifier,
+          file_name: fileName || 'Unknown file',
           created_at: new Date().toISOString()
         });
         if (logRes.error) {
@@ -1633,7 +1635,7 @@
           const workbook = XLSX.read(e.target.result, { type: 'binary' });
           const result = buildUnitsFromRows(parseWorkbookRows(workbook));
           if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
-          await performBulkImport(result.units, msg);
+          await performBulkImport(result.units, msg, file.name);
         } catch (err) {
           msg.style.color = '#f87171'; msg.innerText = 'Error parsing file.';
         }
