@@ -854,8 +854,9 @@
         data.forEach(log => {
           const div = document.createElement('div');
           div.className = 'import-log-item';
-          const userInfo = log.user_email || 'System Admin';
+          const userEmail = log.user_email || 'System Admin';
           
+          // ضمان عرض التاريخ والوقت المحلي بدقة متناهية
           let dateStr = 'Just now';
           if (log.created_at) {
             const parsedDate = new Date(log.created_at);
@@ -872,7 +873,7 @@
             }
           }
 
-          div.innerHTML = `<span><b>${log.unit_count || 0}</b> units updated</span><span style="font-size:12px; color:var(--muted-color);">👤 ${userInfo} | 🕒 ${dateStr}</span>`;
+          div.innerHTML = `<span><b>${log.unit_count || 0}</b> units updated</span><span style="font-size:12px; color:var(--muted-color);">👤 ${userEmail} | 🕒 ${dateStr}</span>`;
           listEl.appendChild(div);
         });
       } catch (err) {
@@ -1366,9 +1367,10 @@
           for (let qNum = 21; qNum <= 39; qNum++) {
             rightHtml += `<tr><td>Quarterly (${qNum}/39)</td><td>${addMonths(baseDate, qNum * 3)}</td><td>${quarterAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
           }
+          rightHtml += `<tr style="color: #f59e0b; font-weight: bold; background: rgba(245, 158, 11, 0.12);"><td>Maintenance (7%)</td><td>6m before delivery</td><td>${maintenanceAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
           
-          // دمج الصيانة والإجمالي في سطر واحد نهائي ومبسط
-          rightHtml += `<tr style="color: #f59e0b; font-weight: bold; background: rgba(245, 158, 11, 0.15);"><td>Total (incl. 7% Maint. ${maintenanceAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP)</td><td>-</td><td>${totalWithMaintenance.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          rightHtml += `<tr style="color: #f59e0b; font-weight: bold; background: rgba(245, 158, 11, 0.12);"><td>Total Unit (excl. Maint.)</td><td>-</td><td>${unitPriceVal.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
+          rightHtml += `<tr style="color: #f59e0b; font-weight: bold; background: rgba(245, 158, 11, 0.18);"><td>Total with Maintenance</td><td>-</td><td>${totalWithMaintenance.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
 
           tbodyRight.innerHTML = rightHtml;
 
@@ -1558,7 +1560,7 @@
       return { units: unitsToImport };
     }
 
-    async function performBulkImport(unitsToImport, msgEl, fileName = 'Excel File') {
+    async function performBulkImport(unitsToImport, msgEl) {
       msgEl.style.color = '#60a5fa'; 
       msgEl.innerText = `Processing bulk upload (${unitsToImport.length} rows)...`;
       
@@ -1589,13 +1591,11 @@
         await supabaseClient.from('units').insert(batch);
       }
 
-      const userName = currentUser ? (currentProfile?.full_name || currentUser.email || currentUser.id) : 'Admin';
-      const uploaderInfo = `${userName} (File: ${fileName})`;
-
+      const userIdentifier = currentUser ? (currentProfile?.full_name || currentUser.email || currentUser.id) : 'Admin';
       try {
         const logRes = await supabaseClient.from('import_logs').insert({
           unit_count: cleanUnits.length,
-          user_email: uploaderInfo,
+          user_email: userIdentifier,
           created_at: new Date().toISOString()
         });
         if (logRes.error) {
@@ -1609,7 +1609,7 @@
       msgEl.style.color = '#34d399'; 
       msgEl.innerText = `Inventory updated successfully (${cleanUnits.length} units)!`;
       loadCloudData(true);
-      loadImportLogs();
+      loadImportLogs(); // تحديث فوري للتاريخ والوقت
     }
 
     function adminImportFile() {
@@ -1623,7 +1623,7 @@
           const workbook = XLSX.read(e.target.result, { type: 'binary' });
           const result = buildUnitsFromRows(parseWorkbookRows(workbook));
           if (result.error) { msg.style.color = '#f87171'; msg.innerText = result.error; return; }
-          await performBulkImport(result.units, msg, file.name);
+          await performBulkImport(result.units, msg);
         } catch (err) {
           msg.style.color = '#f87171'; msg.innerText = 'Error parsing file.';
         }
