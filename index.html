@@ -856,7 +856,6 @@
           div.className = 'import-log-item';
           const userEmail = log.user_email || 'System Admin';
           
-          // ضمان عرض التاريخ والوقت المحلي بدقة متناهية
           let dateStr = 'Just now';
           if (log.created_at) {
             const parsedDate = new Date(log.created_at);
@@ -980,6 +979,9 @@
       } else {
         activeGallery = allGallery;
       }
+
+      // قصر الصور على أول 3 صور فقط كحد أقصى في العرض
+      activeGallery = activeGallery.slice(0, 3);
 
       activeGallery.forEach(imgUrl => {
         const div = document.createElement('div');
@@ -1609,7 +1611,7 @@
       msgEl.style.color = '#34d399'; 
       msgEl.innerText = `Inventory updated successfully (${cleanUnits.length} units)!`;
       loadCloudData(true);
-      loadImportLogs(); // تحديث فوري للتاريخ والوقت
+      loadImportLogs();
     }
 
     function adminImportFile() {
