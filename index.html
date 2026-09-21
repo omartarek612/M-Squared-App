@@ -474,7 +474,6 @@
 
       <div id="full-offer-container">
 
-        <!-- 1. Summary Section -->
         <div class="offer-page-section" id="sec-summary">
           <div class="section-main-title">Unit Summary & Details</div>
           <div>
@@ -494,7 +493,6 @@
           </div>
         </div>
 
-        <!-- 2. Gallery Section -->
         <div class="offer-page-section" id="sec-pictures">
           <div class="section-main-title">Project Gallery</div>
           <div class="header">
@@ -510,7 +508,6 @@
           <div class="pictures-grid" id="picturesGridContainer"></div>
         </div>
 
-        <!-- 3. Masterplan Section -->
         <div class="offer-page-section" id="sec-masterplan">
           <div class="section-main-title">Masterplan Location</div>
           <div>
@@ -531,7 +528,6 @@
           </div>
         </div>
 
-        <!-- 4. Layout Section -->
         <div class="offer-page-section" id="sec-layout">
           <div class="section-main-title">Unit Layout</div>
           <div>
@@ -551,7 +547,6 @@
           </div>
         </div>
 
-        <!-- 5. Payment Schedule Section -->
         <div class="offer-page-section" id="sec-payment">
           <div class="section-main-title">Payment Schedule</div>
           <div>
@@ -586,7 +581,6 @@
 
       </div>
 
-      <!-- 6. Admin Panel -->
       <div class="offer-page-section" id="sec-admin" style="display:none; margin-top: 20px; min-height: auto;">
         <div class="section-main-title">Admin Control Panel</div>
         <h4 style="font-size:14px;">Pending Accounts</h4>
@@ -638,7 +632,6 @@
 
       </div>
 
-      <!-- 7. Inventory Section -->
       <div class="offer-page-section" id="sec-inventory" style="margin-top: 20px; min-height: auto;">
         <div class="section-main-title">Inventory Update & Logs</div>
         <div class="admin-grid">
@@ -680,7 +673,7 @@
       auth: { persistSession: true, autoRefreshToken: true, storage: window.localStorage }
     });
 
-    const APP_VERSION = "v1.4.14";
+    const APP_VERSION = "v1.4.15";
     document.getElementById('appVersionDisplay').innerText = APP_VERSION;
 
     function placeholderImg(label) {
@@ -904,7 +897,7 @@
 
             st.style.color = "#34d399"; st.innerText = `Ready (Fast Cache)`;
             return;
-          } catch (e) { console.warn("Cache parse failed:", e); }
+          } catch (e) {}
         }
       }
 
@@ -1651,8 +1644,8 @@
         filename:     `M-Squared-Offer-${currentUnitCode || 'Unit'}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true, logging: false, scrollY: 0, letterRendering: true, backgroundColor: '#131b31' },
-        jsPDF:        { unit: 'mm', format: [210, 1400], orientation: 'portrait' },
-        pagebreak:    { mode: 'avoid-all' }
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
       };
 
       try {
