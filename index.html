@@ -980,6 +980,7 @@
         activeGallery = allGallery;
       }
 
+      // قصر الصور على أول 3 صور فقط كحد أقصى في العرض
       activeGallery = activeGallery.slice(0, 3);
 
       activeGallery.forEach(imgUrl => {
@@ -1537,9 +1538,7 @@
         const rawCode = row[codeKey];
         if (rawCode === undefined || rawCode === null) return;
         const unit_code = String(rawCode).toUpperCase().trim();
-        
-        // استبعاد صفوف الإجمالي أو الصفوف الفارغة تماماً
-        if (!unit_code || unit_code.includes('TOTAL') || unit_code.includes('الإجمالي') || unit_code.includes('SUM') || unit_code.length > 25 || unit_code.length < 2) return;
+        if (!unit_code) return;
 
         unitsToImport.push({
           owner_id: currentUser ? currentUser.id : null,
@@ -1579,7 +1578,7 @@
       unitsToImport.forEach(u => {
         if (!u.unit_code) return;
         const code = String(u.unit_code).toUpperCase().trim();
-        if (code === 'TOTAL' || code.includes('TOTAL') || code.includes('الإجمالي') || code.length > 25 || code.length < 2) return;
+        if (code === 'TOTAL' || code.includes('TOTAL') || code.length > 25 || code.length < 2) return;
 
         let layoutUrl = u.layout_image_url || existingLayouts[code] || null;
         uniqueMap.set(code, { ...u, unit_code: code, layout_image_url: layoutUrl });
