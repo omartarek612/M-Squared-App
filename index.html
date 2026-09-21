@@ -203,7 +203,7 @@
     }
     .sidebar-nav-link:hover { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
 
-    #full-offer-container { display: flex; flex-direction: column; gap: 20px; background: transparent; }
+    #full-offer-container { display: flex; flex-direction: column; gap: 20px; background: transparent; width: 100%; }
 
     .offer-page-section {
       background: var(--page-section-bg);
@@ -211,9 +211,10 @@
       border-radius: 16px;
       border: 2px solid rgba(59, 130, 246, 0.35);
       box-shadow: 0 6px 22px rgba(0,0,0,0.22);
-      overflow: hidden;
       display: flex;
       flex-direction: column;
+      width: 100%;
+      page-break-inside: avoid;
     }
 
     .section-main-title {
@@ -1363,7 +1364,6 @@
             rightHtml += `<tr><td>Q${qNum}</td><td>${addMonths(baseDate, qNum * 3)}</td><td>${quarterAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
           }
           
-          // Maintenance & Totals in distinct individual rows
           rightHtml += `<tr style="color: #f59e0b; font-weight: bold; background: rgba(245, 158, 11, 0.12);"><td>Maintenance (7%)</td><td>6m before delivery</td><td>${maintenanceAmount.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
           rightHtml += `<tr style="color: #3b82f6; font-weight: bold; background: rgba(59, 130, 246, 0.12);"><td>Total Unit (excl. Maint.)</td><td>-</td><td>${unitPriceVal.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
           rightHtml += `<tr style="color: #10b981; font-weight: bold; background: rgba(16, 185, 129, 0.15);"><td>Total with Maintenance</td><td>-</td><td>${totalWithMaintenance.toLocaleString('en-US', {maximumFractionDigits:0})} EGP</td></tr>`;
