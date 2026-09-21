@@ -496,7 +496,7 @@
         <a href="#sec-pictures" class="sidebar-nav-link">🖼️ Gallery</a>
         <a href="#sec-masterplan" class="sidebar-nav-link">🗺️ Masterplan</a>
         <a href="#sec-layout" class="sidebar-nav-link">📐 Layouts</a>
-        <a href="#sec-payment" class="sidebar-nav-link">💳 Payment Plan</a>
+        <a href="#sec-layout" class="sidebar-nav-link">💳 Payment Plan</a>
         <a href="#sec-admin" class="sidebar-nav-link" id="sidebarAdminLink" style="display:none;">⚙️ Admin Panel</a>
 
         <div class="sidebar-section-title">PDF Actions</div>
@@ -566,8 +566,8 @@
         </div>
 
         <!-- 4. Layout Section -->
-        <div class="offer-page-section" id="sec-layout">
-          <div class="section-main-title">Unit Layout</div>
+        <div class="offer-page-section" id="sec-layout" style="anchor-name: --sec-payment;">
+          <div class="section-main-title">Unit Layout & Payment Schedule</div>
           <div>
             <div class="header">
               <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
@@ -583,39 +583,35 @@
               <img src="" alt="Unit Layout" class="masterplan-img" id="unitLayoutImg" crossorigin="anonymous" loading="lazy">
             </div>
           </div>
-        </div>
 
-        <!-- 5. Payment Schedule Section -->
-        <div class="offer-page-section" id="sec-payment">
-          <div class="section-main-title">Payment Schedule</div>
-          <div>
-            <div class="header">
-              <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
-              <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
+          <!-- Payment Schedule merged here -->
+          <div id="sec-payment" style="margin-top: 20px;">
+            <div style="border-top: 1px solid rgba(59, 130, 246, 0.25); padding-top: 18px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h3 style="margin: 0; font-size: 15px; text-align: left; color: #3b82f6; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Payment Schedule</h3>
+                <div style="font-size: 13px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 15px; font-weight: 700; color: #3b82f6;">-</span></div>
+              </div>
             </div>
-            <h3 style="margin: 0 0 10px 0; font-size: 15px; text-align: left;">Payment Schedule</h3>
-            <div class="summary-hero-card" style="margin-bottom: 10px; text-align: left; padding: 10px 14px;">
-              <div style="font-size: 13px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 16px; font-weight: 700; color: #3b82f6;">-</span></div>
-            </div>
-          </div>
-          <div class="payment-split-container">
-            <div class="payment-table-box">
-              <table class="payment-table">
-                <thead><tr><th>Milestone</th><th>Timeline</th><th>Amount (EGP)</th></tr></thead>
-                <tbody id="paymentTableBodyLeft">
-                  <tr><td colspan="3" style="text-align: center; color: var(--muted-color);">Loading...</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="payment-table-box">
-              <table class="payment-table">
-                <thead><tr><th>Milestone</th><th>Timeline</th><th>Amount (EGP)</th></tr></thead>
-                <tbody id="paymentTableBodyRight">
-                  <tr><td colspan="3" style="text-align: center; color: var(--muted-color);">Loading...</td></tr>
-                </tbody>
-              </table>
+            <div class="payment-split-container">
+              <div class="payment-table-box">
+                <table class="payment-table">
+                  <thead><tr><th>Milestone</th><th>Timeline</th><th>Amount (EGP)</th></tr></thead>
+                  <tbody id="paymentTableBodyLeft">
+                    <tr><td colspan="3" style="text-align: center; color: var(--muted-color);">Loading...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="payment-table-box">
+                <table class="payment-table">
+                  <thead><tr><th>Milestone</th><th>Timeline</th><th>Amount (EGP)</th></tr></thead>
+                  <tbody id="paymentTableBodyRight">
+                    <tr><td colspan="3" style="text-align: center; color: var(--muted-color);">Loading...</td></tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
+
         </div>
 
       </div>
