@@ -1580,6 +1580,11 @@
         const code = String(u.unit_code).toUpperCase().trim();
         if (code === 'TOTAL' || code.includes('TOTAL') || code.length > 25 || code.length < 2) return;
 
+        // Skip summary rows (Total / Sum / Count) anywhere in the row
+        const rowValues = Object.values(u).map(v => String(v || '').toLowerCase().trim());
+        const isSummaryRow = rowValues.some(v => v === 'total' || v === 'sum' || v === 'count' || v === 'المجموع' || v === 'الإجمالي');
+        if (isSummaryRow) return;
+
         let layoutUrl = u.layout_image_url || existingLayouts[code] || null;
         uniqueMap.set(code, { ...u, unit_code: code, layout_image_url: layoutUrl });
       });
