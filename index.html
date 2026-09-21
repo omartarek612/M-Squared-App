@@ -72,7 +72,7 @@
     .top-action-group { display: flex; align-items: center; gap: 10px; }
     .user-welcome-text { font-size: 13px; color: var(--muted-color); font-weight: 600; display: none; }
 
-    .btn-theme, .btn-logout {
+    .btn-theme, .logout-button-container {
       background: var(--input-bg);
       color: var(--text-color);
       border: 1px solid var(--border-color);
@@ -82,6 +82,35 @@
       font-size: 13px;
       font-weight: 600;
       box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+
+    .logout-button-container {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      padding: 0;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .btn-logout {
+      background: var(--input-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+
+    .version-text {
+      font-size: 11px;
+      color: #888888;
+      margin-bottom: 4px;
+      font-weight: 300;
     }
 
     input, select {
@@ -203,19 +232,22 @@
     }
     .sidebar-nav-link:hover { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
 
-    #full-offer-container { display: flex; flex-direction: column; gap: 20px; background: transparent; width: 100%; }
+    #full-offer-container { display: flex; flex-direction: column; gap: 0; background: var(--page-section-bg); width: 100%; border-radius: 16px; border: 2px solid rgba(59, 130, 246, 0.35); box-shadow: 0 6px 22px rgba(0,0,0,0.22); overflow: hidden; }
 
     .offer-page-section {
       background: var(--page-section-bg);
       padding: 25px;
-      border-radius: 16px;
-      border: 2px solid rgba(59, 130, 246, 0.35);
-      box-shadow: 0 6px 22px rgba(0,0,0,0.22);
+      border-radius: 0;
+      border: none;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+      box-shadow: none;
       display: flex;
       flex-direction: column;
       width: 100%;
-      margin-bottom: 20px;
-      break-inside: avoid;
+      margin-bottom: 0;
+    }
+    .offer-page-section:last-child {
+      border-bottom: none;
     }
 
     .section-main-title {
@@ -410,7 +442,10 @@
     <div class="top-action-group">
       <div id="userWelcomeDisplay" class="user-welcome-text"></div>
       <button class="btn-theme" id="themeToggleBtn" onclick="toggleTheme()">Light</button>
-      <button class="btn-logout" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
+      <div class="logout-button-container" id="logoutContainer" style="display:none;">
+        <span class="version-text">v1.4.13</span>
+        <button class="btn-logout" id="logoutBtn" onclick="logout()">Logout</button>
+      </div>
     </div>
   </div>
 
@@ -473,6 +508,7 @@
 
       <div id="full-offer-container">
 
+        <!-- 1. Summary Section -->
         <div class="offer-page-section" id="sec-summary">
           <div class="section-main-title">Unit Summary & Details</div>
           <div>
@@ -492,6 +528,7 @@
           </div>
         </div>
 
+        <!-- 2. Gallery Section -->
         <div class="offer-page-section" id="sec-pictures">
           <div class="section-main-title">Project Gallery</div>
           <div class="header">
@@ -507,6 +544,7 @@
           <div class="pictures-grid" id="picturesGridContainer"></div>
         </div>
 
+        <!-- 3. Masterplan Section -->
         <div class="offer-page-section" id="sec-masterplan">
           <div class="section-main-title">Masterplan Location</div>
           <div>
@@ -527,6 +565,7 @@
           </div>
         </div>
 
+        <!-- 4. Layout Section -->
         <div class="offer-page-section" id="sec-layout">
           <div class="section-main-title">Unit Layout</div>
           <div>
@@ -546,6 +585,7 @@
           </div>
         </div>
 
+        <!-- 5. Payment Schedule Section -->
         <div class="offer-page-section" id="sec-payment">
           <div class="section-main-title">Payment Schedule</div>
           <div>
@@ -580,6 +620,7 @@
 
       </div>
 
+      <!-- 6. Admin Panel -->
       <div class="offer-page-section" id="sec-admin" style="display:none; margin-top: 20px; min-height: auto;">
         <div class="section-main-title">Admin Control Panel</div>
         <h4 style="font-size:14px;">Pending Accounts</h4>
@@ -631,6 +672,7 @@
 
       </div>
 
+      <!-- 7. Inventory Section -->
       <div class="offer-page-section" id="sec-inventory" style="margin-top: 20px; min-height: auto;">
         <div class="section-main-title">Inventory Update & Logs</div>
         <div class="admin-grid">
@@ -647,7 +689,7 @@
 
       <div class="app-copyrights">
         <span>Developed by Omar Tarek - 01003666683</span>
-        <span id="appVersionDisplay" style="color: var(--muted-color); font-size: 12px;">v1.0.0</span>
+        <span id="appVersionDisplay" style="color: var(--muted-color); font-size: 12px;">v1.4.13</span>
       </div>
 
     </div>
@@ -672,7 +714,7 @@
       auth: { persistSession: true, autoRefreshToken: true, storage: window.localStorage }
     });
 
-    const APP_VERSION = "v1.4.16";
+    const APP_VERSION = "v1.4.13";
     document.getElementById('appVersionDisplay').innerText = APP_VERSION;
 
     function placeholderImg(label) {
@@ -745,7 +787,7 @@
       sessionStorage.clear();
       document.getElementById('app-root').style.display = 'none';
       document.getElementById('pending-screen').style.display = 'none';
-      document.getElementById('logoutBtn').style.display = 'none';
+      document.getElementById('logoutContainer').style.display = 'none';
       document.getElementById('userWelcomeDisplay').style.display = 'none';
       document.getElementById('sidebarAdminLink').style.display = 'none';
       document.getElementById('login-screen').style.display = 'block';
@@ -755,7 +797,7 @@
       currentUser = user;
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('signup-screen').style.display = 'none';
-      document.getElementById('logoutBtn').style.display = 'inline-block';
+      document.getElementById('logoutContainer').style.display = 'flex';
 
       const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
       currentProfile = profile;
@@ -896,7 +938,7 @@
 
             st.style.color = "#34d399"; st.innerText = `Ready (Fast Cache)`;
             return;
-          } catch (e) {}
+          } catch (e) { console.warn("Cache parse failed:", e); }
         }
       }
 
@@ -1631,7 +1673,7 @@
 
     async function prepareAndGeneratePDF(actionType) {
       const st = document.getElementById('status');
-      st.style.color = "#60a5fa"; st.innerText = "Exporting continuous page PDF...";
+      st.style.color = "#60a5fa"; st.innerText = "Exporting single continuous page PDF...";
 
       const hideElements = document.querySelectorAll('.hide-on-pdf');
       hideElements.forEach(el => el.style.display = 'none');
@@ -1643,8 +1685,8 @@
         filename:     `M-Squared-Offer-${currentUnitCode || 'Unit'}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true, logging: false, scrollY: 0, letterRendering: true, backgroundColor: '#131b31' },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak:    { mode: ['css', 'legacy'] }
+        jsPDF:        { unit: 'mm', format: [210, 1400], orientation: 'portrait' },
+        pagebreak:    { mode: 'avoid-all' }
       };
 
       try {
