@@ -205,30 +205,25 @@
 
     #full-offer-container { display: flex; flex-direction: column; gap: 20px; background: transparent; width: 100%; }
 
-    /* تحويل كل قسم لصفحة A4 ممتازة ومملوءة تماماً بالكامل */
+    /* العرض كصفحة واحدة طويلة متصلة ومرتبة بالكامل */
     .offer-page-section {
       background: var(--page-section-bg);
-      padding: 30px;
+      padding: 25px;
       border-radius: 16px;
       border: 2px solid rgba(59, 130, 246, 0.35);
       box-shadow: 0 6px 22px rgba(0,0,0,0.22);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       width: 100%;
-      height: 1100px;
-      box-sizing: border-box;
-      page-break-after: always;
-      break-after: page;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
 
     .section-main-title {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
       color: #3b82f6;
       text-align: center;
-      margin-bottom: 15px;
+      margin-bottom: 14px;
       text-transform: uppercase;
       letter-spacing: 1px;
       border-bottom: 2px dashed rgba(59, 130, 246, 0.3);
@@ -236,8 +231,8 @@
     }
 
     .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(59, 130, 246, 0.2); padding-bottom: 10px; margin-bottom: 12px; }
-    .company-logo { max-height: 38px; width: auto; object-fit: contain; }
-    .project-logo { max-height: 34px; max-width: 140px; width: auto; object-fit: contain; }
+    .company-logo { max-height: 35px; width: auto; object-fit: contain; }
+    .project-logo { max-height: 30px; max-width: 130px; width: auto; object-fit: contain; }
 
     .greeting-box {
       display: none;
@@ -263,7 +258,7 @@
       border-top: 4px solid #3b82f6;
     }
     .summary-hero-card h4 { margin: 0 0 6px 0; font-size: 13px; color: var(--muted-color); text-transform: uppercase; font-weight: 700; }
-    .summary-hero-card .unit-big-text { font-size: 34px; font-weight: 800; color: #3b82f6; }
+    .summary-hero-card .unit-big-text { font-size: 32px; font-weight: 800; color: #3b82f6; }
     .summary-hero-card .project-small-text { font-size: 18px; font-weight: 700; color: var(--text-color); }
 
     .details-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; text-align: center; align-content: center; }
@@ -282,12 +277,11 @@
     .pictures-grid { 
       display: flex; 
       flex-direction: column; 
-      gap: 12px; 
+      gap: 14px; 
       justify-content: center; 
       align-items: center; 
       padding: 5px; 
       width: 100%;
-      flex-grow: 1;
     }
     .gallery-card-item { 
       background: var(--input-bg); 
@@ -295,12 +289,12 @@
       border-radius: 12px; 
       overflow: hidden; 
       width: 100%; 
-      max-width: 650px; 
-      height: 270px; 
+      max-width: 600px; 
+      height: 280px; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
-      box-shadow: 0 6px 16px rgba(0,0,0,0.2); 
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2); 
     }
     .gallery-card-item img { 
       width: 100%; 
@@ -314,7 +308,7 @@
     .masterplan-section {
       position: relative; 
       width: 100%; 
-      height: 750px; 
+      height: 520px; 
       background: var(--input-bg); 
       border-radius: 12px; 
       overflow: hidden;
@@ -323,12 +317,11 @@
       justify-content: center; 
       align-items: center;
       padding: 10px;
-      flex-grow: 1;
     }
 
     .masterplan-img { 
       max-width: 100%; 
-      max-height: 720px;
+      max-height: 500px;
       width: auto;
       height: auto;
       display: block; 
@@ -355,19 +348,16 @@
       grid-template-columns: 1fr 1fr;
       gap: 14px;
       width: 100%;
-      flex-grow: 1;
     }
     .payment-table-box {
       background: var(--input-bg);
       border: 1px solid var(--border-color);
       border-radius: 10px;
       overflow: hidden;
-      max-height: 760px;
-      overflow-y: auto;
     }
-    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
-    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 8px 10px; font-weight: 800; border-bottom: 1px solid var(--border-color); text-align: left; position: sticky; top: 0; }
-    .payment-table td { padding: 6px 10px; border-bottom: 1px solid var(--border-color); font-weight: 700; text-align: left; }
+    .payment-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    .payment-table th { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 10px 12px; font-weight: 800; border-bottom: 1px solid var(--border-color); text-align: left; }
+    .payment-table td { padding: 9px 12px; border-bottom: 1px solid var(--border-color); font-weight: 700; text-align: left; }
 
     .status { margin-top: 6px; font-size: 13px; font-weight: 600; text-align: center; color: #ffffff; }
 
@@ -387,13 +377,13 @@
     }
 
     .app-copyrights {
-      margin: 25px 0 15px 0;
-      font-size: 14px;
+      margin: 20px 0 10px 0;
+      font-size: 13px;
       color: #3b82f6;
       font-weight: 700;
       text-align: center;
       background: var(--card-bg);
-      padding: 12px;
+      padding: 10px;
       border-radius: 8px;
       border: 1px solid var(--border-color);
     }
@@ -503,16 +493,14 @@
         <!-- 2. Gallery Section -->
         <div class="offer-page-section" id="sec-pictures">
           <div class="section-main-title">Project Gallery</div>
-          <div>
-            <div class="header">
-              <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
-              <div><img id="projectLogoImgPictures" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-              <h3 style="margin: 0; font-size: 15px; text-align: left;">Project Views</h3>
-              <div id="gallerySelectionControls" class="hide-on-pdf" style="display:none; font-size: 13px;">
-                <button class="btn-sync" style="padding: 5px 10px; font-size: 12px;" onclick="openGallerySelector()">⚙️ Manage Gallery Photos</button>
-              </div>
+          <div class="header">
+            <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
+            <div><img id="projectLogoImgPictures" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h3 style="margin: 0; font-size: 15px; text-align: left;">Project Views</h3>
+            <div id="gallerySelectionControls" class="hide-on-pdf" style="display:none; font-size: 13px;">
+              <button class="btn-sync" style="padding: 5px 10px; font-size: 12px;" onclick="openGallerySelector()">⚙️ Manage Gallery Photos</button>
             </div>
           </div>
           <div class="pictures-grid" id="picturesGridContainer"></div>
@@ -567,8 +555,8 @@
               <div><img src="https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2" alt="M Squared" class="company-logo" crossorigin="anonymous" loading="lazy"></div>
               <div><img id="projectLogoImgPayment" src="" alt="Project Logo" class="project-logo" crossorigin="anonymous" loading="lazy"></div>
             </div>
-            <h3 style="margin: 0 0 8px 0; font-size: 15px; text-align: left;">Payment Schedule</h3>
-            <div class="summary-hero-card" style="margin-bottom: 8px; text-align: left; padding: 10px 14px;">
+            <h3 style="margin: 0 0 10px 0; font-size: 15px; text-align: left;">Payment Schedule</h3>
+            <div class="summary-hero-card" style="margin-bottom: 10px; text-align: left; padding: 10px 14px;">
               <div style="font-size: 13px; color: var(--muted-color);">Unit Price: <span id="paymentUnitPrice" style="font-size: 16px; font-weight: 700; color: #3b82f6;">-</span></div>
             </div>
           </div>
@@ -1643,7 +1631,7 @@
 
     async function prepareAndGeneratePDF(actionType) {
       const st = document.getElementById('status');
-      st.style.color = "#60a5fa"; st.innerText = "Exporting filled A4 PDF pages...";
+      st.style.color = "#60a5fa"; st.innerText = "Exporting single-page PDF...";
 
       const hideElements = document.querySelectorAll('.hide-on-pdf');
       hideElements.forEach(el => el.style.display = 'none');
@@ -1663,12 +1651,12 @@
           html2pdf().from(element).set(opt).outputPdf('blob').then((pdfBlob) => {
             const blobUrl = URL.createObjectURL(pdfBlob);
             window.open(blobUrl, '_blank');
-            st.style.color = "#34d399"; st.innerText = "PDF filled preview opened!";
+            st.style.color = "#34d399"; st.innerText = "PDF preview opened!";
             hideElements.forEach(el => el.style.display = '');
           });
         } else {
           await html2pdf().from(element).set(opt).save();
-          st.style.color = "#34d399"; st.innerText = "A4 PDF downloaded successfully!";
+          st.style.color = "#34d399"; st.innerText = "PDF downloaded successfully!";
           hideElements.forEach(el => el.style.display = '');
         }
       } catch (err) {
