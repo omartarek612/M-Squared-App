@@ -307,7 +307,7 @@
     .masterplan-section {
       position: relative; 
       width: 100%; 
-      height: 520px; 
+      height: 750px; 
       background: var(--input-bg); 
       border-radius: 12px; 
       overflow: hidden;
@@ -320,7 +320,7 @@
 
     .masterplan-img { 
       max-width: 100%; 
-      max-height: 500px;
+      max-height: 730px;
       width: auto;
       height: auto;
       display: block; 
@@ -678,8 +678,7 @@
       auth: { persistSession: true, autoRefreshToken: true, storage: window.localStorage }
     });
 
-    // نظام تحديث رقم الإصدار تلقائياً (App Versioning)
-    const APP_VERSION = "v1.4.12"; // زود الرقم دة كل ما تعمل تحديث أو تعديل في الكود
+    const APP_VERSION = "v1.4.13";
     document.getElementById('appVersionDisplay').innerText = APP_VERSION;
 
     function placeholderImg(label) {
@@ -1645,7 +1644,6 @@
 
       const element = document.getElementById('full-offer-container');
       
-      // إعدادات الـ PDF مع تحديد خلفية داكنة لتجنب ظهور أي لون أبيض خلف العرض
       const opt = {
         margin:       5,
         filename:     `M-Squared-Offer-${currentUnitCode || 'Unit'}.pdf`,
