@@ -146,11 +146,11 @@
 
     #main-app-content { display: none; max-width: 850px; margin: 20px auto; text-align: left; }
 
-    /* Sidebar Styling - Wider (220px) and Integrated Toggle */
+    /* Sidebar fixed to the far left of the page */
     .app-sidebar {
       position: fixed;
       top: 75px;
-      left: max(10px, calc((100% - 850px) / 2 - 235px));
+      left: 15px;
       z-index: 9998;
       width: 220px;
       background: var(--card-bg);
@@ -163,13 +163,13 @@
       overflow-y: auto;
       text-align: left;
     }
-    .app-sidebar.collapsed { transform: translateX(-240px); opacity: 0; pointer-events: none; }
+    .app-sidebar.collapsed { transform: translateX(-245px); opacity: 0; pointer-events: none; }
 
-    /* Fixed Floating Trigger when Collapsed so user can open it back */
+    /* Floating Open Button when collapsed on the far left */
     .sidebar-floating-open-btn {
       position: fixed;
       top: 75px;
-      left: max(10px, calc((100% - 850px) / 2 - 50px));
+      left: 15px;
       z-index: 9997;
       background: var(--primary-gradient);
       color: white;
@@ -484,12 +484,12 @@
 
     <div id="main-app-content">
 
-      <!-- Sidebar with integrated header toggle button inside the bar -->
-      <button class="sidebar-floating-open-btn" id="sidebarOpenBtn" onclick="toggleSidebar()" title="فتح القائمة">☰</button>
+      <!-- Sidebar anchored to the far left of the page -->
+      <button class="sidebar-floating-open-btn" id="sidebarOpenBtn" onclick="toggleSidebar()" title="Open Menu">☰</button>
       <div class="app-sidebar" id="appSidebar">
         <div class="sidebar-header-row">
           <span class="sidebar-section-title" style="margin: 0;">Menu Bar</span>
-          <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="إخفاء القائمة">✕</button>
+          <button class="sidebar-toggle-btn" id="sidebarToggleBtn" onclick="toggleSidebar()" title="Close Menu">✕</button>
         </div>
         <div class="sidebar-section-title">Quick Navigation</div>
         <a href="#sec-summary" class="sidebar-nav-link">📄 Summary</a>
