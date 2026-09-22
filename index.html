@@ -1003,7 +1003,12 @@
       const pLower = (projectName || '').toLowerCase().trim();
       selectedActiveProjectName = projectName || '';
       const label = document.getElementById('currentProjectLabel');
-      let proj = projectsByName[pLower] || Object.values(projectsByName)[0];
+      
+      let proj = projectsByName[pLower];
+      if (!proj && pLower) {
+        const foundKey = Object.keys(projectsByName).find(k => k.includes(pLower) || pLower.includes(k));
+        if (foundKey) proj = projectsByName[foundKey];
+      }
 
       const logoUrl = proj && proj.logo_url ? proj.logo_url : "https://lh3.googleusercontent.com/d/1Mm5EJjCSYmt7ZmUJzeWImOMMMjy8LNP2";
       ['Summary','Pictures','Masterplan','Layout','Payment'].forEach(sec => {
@@ -1032,7 +1037,7 @@
       });
 
       document.getElementById('mpImg').src = (proj && proj.masterplan_image_url) ? proj.masterplan_image_url : placeholderImg('Masterplan');
-      if (label) label.innerText = proj ? proj.name : 'M Squared';
+      if (label) label.innerText = proj ? proj.name : (projectName || 'M Squared');
 
       loadAdminProjectGallery();
     }
@@ -1186,7 +1191,7 @@
           sessionStorage.clear(); 
           loadCloudData(true); 
           loadAdminProjectGallery(); 
-          setupProjectVisuals(projectName); // Instantly refresh visuals on screen
+          setupProjectVisuals(projectName);
         }
       }
     }
@@ -1511,7 +1516,6 @@
         const { error } = await supabaseClient.from('projects').upsert(row, { onConflict: 'name' });
         if (error) { msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message; return; }
 
-        // Update local memory and refresh visuals instantly
         projectsByName[name.toLowerCase().trim()] = row;
         sessionStorage.clear();
         msg.style.color = '#34d399'; msg.innerText = 'Project visuals saved successfully!';
