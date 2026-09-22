@@ -146,7 +146,6 @@
 
     #main-app-content { display: none; max-width: 850px; margin: 20px auto; text-align: left; }
 
-    /* Sidebar fixed to the far left of the page */
     .app-sidebar {
       position: fixed;
       top: 75px;
@@ -165,7 +164,6 @@
     }
     .app-sidebar.collapsed { transform: translateX(-245px); opacity: 0; pointer-events: none; }
 
-    /* Floating Open Button when collapsed on the far left */
     .sidebar-floating-open-btn {
       position: fixed;
       top: 75px;
@@ -714,7 +712,6 @@
       auth: { persistSession: true, autoRefreshToken: true, storage: window.localStorage }
     });
 
-    /* Semantic Versioning constant, updated automatically on push via workflow */
     const APP_VERSION = "v1.4.15";
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1184,7 +1181,13 @@
           selected_gallery: proj.selected_gallery
         }, { onConflict: 'name' });
 
-        if (!error) { sessionStorage.clear(); loadCloudData(true); loadAdminProjectGallery(); }
+        if (!error) { 
+          projectsByName[projKey] = proj;
+          sessionStorage.clear(); 
+          loadCloudData(true); 
+          loadAdminProjectGallery(); 
+          setupProjectVisuals(projectName); // Instantly refresh visuals on screen
+        }
       }
     }
 
@@ -1508,9 +1511,12 @@
         const { error } = await supabaseClient.from('projects').upsert(row, { onConflict: 'name' });
         if (error) { msg.style.color = '#f87171'; msg.innerText = 'Error: ' + error.message; return; }
 
+        // Update local memory and refresh visuals instantly
+        projectsByName[name.toLowerCase().trim()] = row;
         sessionStorage.clear();
         msg.style.color = '#34d399'; msg.innerText = 'Project visuals saved successfully!';
         loadCloudData(true);
+        setupProjectVisuals(name);
       } catch (err) {
         msg.style.color = '#f87171'; msg.innerText = 'Error processing visuals.';
       }
